@@ -5,7 +5,11 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <div className="flex items-center justify-center">
+        <div className="m-4 mt-14">
+          <Outlet />
+        </div>
+      </div>
     </>
   );
 }

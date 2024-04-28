@@ -21,7 +21,7 @@ export default function Welcome() {
           />
           <h2 className="w-max text-xl self-center">Join the community!</h2>
           <Link
-            to="/users/register"
+            to="/users/signup"
             className="rounded bg-amber-600 text-white p-2 text-center hover:bg-amber-700"
           >
             Sign Up
