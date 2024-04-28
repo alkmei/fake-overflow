@@ -3,12 +3,13 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
-import ErrorPage from "./routes/ErrorPage.tsx";
-import Welcome from "./routes/Welcome.tsx";
+import ErrorPage from "@/routes/ErrorPage.tsx";
+import Welcome from "@/routes/Welcome.tsx";
 import SignUp from "@/routes/users/SignUp.tsx";
 import Login from "@/routes/users/Login.tsx";
 import Questions from "@/routes/Questions.tsx";
 import Content from "@/Content.tsx";
+import Tags from "@/routes/Tags.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Content />,
-    children: [{ path: "/questions", element: <Questions /> }],
+    children: [
+      { path: "/questions", element: <Questions /> },
+      { path: "/tags", element: <Tags /> },
+    ],
   },
 ]);
 
