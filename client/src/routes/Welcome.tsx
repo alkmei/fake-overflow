@@ -1,5 +1,5 @@
-import MaterialSymbolsAppRegistration from "@/components/MaterialSymbolsAppRegistration.tsx";
-import MaterialSymbolsLogin from "@/components/MaterialSymbolsLogin.tsx";
+import MaterialSymbolsAppRegistration from "@/components/svg/MaterialSymbolsAppRegistration.tsx";
+import MaterialSymbolsLogin from "@/components/svg/MaterialSymbolsLogin.tsx";
 import { Link } from "react-router-dom";
 
 export default function Welcome() {
