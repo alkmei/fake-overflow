@@ -1,7 +1,9 @@
+import ContentHeader from "@/components/ContentHeader.tsx";
+
 export default function Questions() {
   return (
-    <section>
-      <h1 className="text-2xl">All Questions</h1>
+    <section className="w-full">
+      <ContentHeader name={"All Questions"} />
     </section>
   );
 }
