@@ -38,7 +38,7 @@ export default function AskQuestion() {
     }
 
     if (text.trim() === "") {
-      setTextError("Text cannot be empty");
+      setTextError("Question text cannot be empty");
       valid = false;
     }
 
@@ -51,7 +51,7 @@ export default function AskQuestion() {
       setTagsError(
         "Should not be more than 5 tags. Each tag is one word, " +
           "hyphenated words are considered one word. " +
-          "The length of a new tag cannot be more than 20 characters",
+          "The length of a new tag cannot be more than 20 characters.",
       );
       valid = false;
     }

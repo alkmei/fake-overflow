@@ -32,6 +32,7 @@ export const validateHyperlinks = (text: string) => {
   while ((matches = linkFormat.exec(text)) !== null) {
     const url = matches[2];
     console.log(url);
+    if (
       url.trim() === "" ||
       (!url.startsWith("http://") && !url.startsWith("https://"))
     ) {
