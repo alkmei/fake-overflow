@@ -10,10 +10,17 @@ const tempQuestions: Question[] = [
       "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
     askDateTime: new Date(),
     askedBy: "MIGUEL ANGEL HERNANDEZ CAMACHO",
+    text: "this is my text",
     views: 2,
     votes: 3,
-    numAnswers: 0,
     id: 1,
+    answers: [
+      {
+        text: "hi this is a good question",
+        ansBy: "me answer q",
+        ansDateTime: new Date(),
+      },
+    ],
     tags: [
       { id: 100, name: "react" },
       { id: 200, name: "wolfie2d" },
@@ -21,14 +28,26 @@ const tempQuestions: Question[] = [
   },
   {
     title: "This is a Title2",
+    text: "this is my text2",
     summary: "This is a summary2",
     askDateTime: new Date(),
     askedBy:
       "me!!!asdasdasdasdsadadfgyuiasghbuisdfghsdfhusdfhudsaabjjbdsdfhusdfhusdfhusdfhusdfhusdfhusdfhusdfhufsdhusdfhuisdfhuisdsdfhuio",
     views: 0,
     votes: 3453,
-    numAnswers: 9999,
     id: 2,
+    answers: [
+      {
+        text: "hi this is a good question 2",
+        ansBy: "me answer q 2",
+        ansDateTime: new Date(),
+      },
+      {
+        text: "hi this is a good question 1231231231231",
+        ansBy: "me answer q 1231231",
+        ansDateTime: new Date(),
+      },
+    ],
     tags: [
       { id: 100, name: "react" },
       { id: 200, name: "wolfie2d" },

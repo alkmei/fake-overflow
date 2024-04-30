@@ -5,15 +5,22 @@ export type Tag = {
   name: string;
 };
 
+export type Answer = {
+  text: string;
+  ansBy: string;
+  ansDateTime: Date;
+};
+
 export type Question = {
+  text: string;
   title: string;
   summary: string;
   askDateTime: Date;
   askedBy: string;
   views: number;
   votes: number;
-  numAnswers: number;
   id: number;
+  answers: Answer[];
   tags: Tag[];
 };
 

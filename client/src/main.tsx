@@ -12,6 +12,7 @@ import Content from "@/Content.tsx";
 import Tags from "@/routes/Tags.tsx";
 import AskQuestion from "@/routes/questions/AskQuestion.tsx";
 import Profile from "@/routes/users/Profile.tsx";
+import Answers from "@/routes/questions/Answers.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/questions", element: <Questions /> },
       { path: "/questions/ask", element: <AskQuestion /> },
+      { path: "/questions/:id/:slug", element: <Answers /> },
       { path: "/tags", element: <Tags /> },
       { path: "/user/:id", element: <Profile /> },
     ],

@@ -4,9 +4,11 @@ import SortButtons from "@/components/SortButtons.tsx";
 export default function ContentHeader({
   name,
   questionCount,
+  subText,
 }: {
   name: string;
-  questionCount: number;
+  questionCount?: number;
+  subText?: string;
 }) {
   return (
     <div className="border-b p-8 pb-4 pr-0">
@@ -20,9 +22,13 @@ export default function ContentHeader({
         </Link>
       </div>
       <div className="flex justify-between items-center">
-        <div>
-          {questionCount} {questionCount === 1 ? "question" : "questions"}
-        </div>
+        {questionCount ? (
+          <div>
+            {questionCount} {questionCount === 1 ? "question" : "questions"}
+          </div>
+        ) : (
+          <div>{subText}</div>
+        )}
         <SortButtons />
       </div>
     </div>

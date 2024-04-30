@@ -28,12 +28,12 @@ export default function QuestionComponent({
         <p className="whitespace-nowrap w-24">
           <span
             className={
-              question.numAnswers > 0
+              question.answers.length > 0
                 ? "border border-green-600 rounded py-0.5 px-1 text-green-600"
                 : ""
             }
           >
-            {question.numAnswers} answers
+            {question.answers.length} answers
           </span>
         </p>
         <p className="whitespace-nowrap w-24">{question.views} views</p>
