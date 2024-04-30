@@ -7,9 +7,10 @@ import ErrorPage from "@/routes/ErrorPage.tsx";
 import Welcome from "@/routes/Welcome.tsx";
 import SignUp from "@/routes/users/SignUp.tsx";
 import Login from "@/routes/users/Login.tsx";
-import Questions from "@/routes/Questions.tsx";
+import Questions from "@/routes/questions/Questions.tsx";
 import Content from "@/Content.tsx";
 import Tags from "@/routes/Tags.tsx";
+import AskQuestion from "@/routes/questions/AskQuestion.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
     element: <Content />,
     children: [
       { path: "/questions", element: <Questions /> },
+      { path: "/questions/ask", element: <AskQuestion /> },
       { path: "/tags", element: <Tags /> },
     ],
   },
