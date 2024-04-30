@@ -1,6 +1,6 @@
 import ContentHeader from "@/components/ContentHeader.tsx";
 import QuestionList from "@/components/questions/QuestionList.tsx";
-import { Question } from "@/components/questions/QuestionList.tsx";
+import Question from "@server/types/question";
 
 const tempQuestions: Question[] = [
   {
@@ -21,10 +21,7 @@ const tempQuestions: Question[] = [
         ansDateTime: new Date(),
       },
     ],
-    tags: [
-      { id: 100, name: "react" },
-      { id: 200, name: "wolfie2d" },
-    ],
+    tags: [{ name: "wolfie", id: 1 }],
   },
   {
     title: "This is a Title2",
@@ -48,10 +45,7 @@ const tempQuestions: Question[] = [
         ansDateTime: new Date(),
       },
     ],
-    tags: [
-      { id: 100, name: "react" },
-      { id: 200, name: "wolfie2d" },
-    ],
+    tags: [{ name: "wolfie", id: 1 }],
   },
 ];
 
