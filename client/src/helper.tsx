@@ -24,3 +24,20 @@ export const timeSinceDate = (dateString: Date) => {
     return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
   else return `${diffInSeconds} second${diffInSeconds > 1 ? "s" : ""} ago`;
 };
+
+export const validateHyperlinks = (text: string) => {
+  const linkFormat = /\[([^\]]*)]\(([^)]*)\)/g;
+  let matches;
+
+  while ((matches = linkFormat.exec(text)) !== null) {
+    const url = matches[2];
+    console.log(url);
+      url.trim() === "" ||
+      (!url.startsWith("http://") && !url.startsWith("https://"))
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
