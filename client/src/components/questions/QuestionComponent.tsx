@@ -63,7 +63,7 @@ export default function QuestionComponent({
               to="/users/"
               className="text-blue-600 hover:text-blue-900 truncate"
             >
-              {question.askedBy}
+              {question.askedBy.username}
             </Link>
             <span className="whitespace-nowrap">
               asked {timeSinceDate(question.askDateTime)}
