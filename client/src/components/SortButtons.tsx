@@ -11,18 +11,21 @@ export default function SortButtons() {
       <Link
         to="?tab=newest"
         className={base.concat(tab == null || tab == "newest" ? active : "")}
+        preventScrollReset={true}
       >
         Newest
       </Link>
       <Link
         to="?tab=active"
         className={base.concat(tab == "active" ? active : "")}
+        preventScrollReset={true}
       >
         Active
       </Link>
       <Link
         to="?tab=unanswered"
         className={base.concat(tab == "unanswered" ? active : "")}
+        preventScrollReset={true}
       >
         Unanswered
       </Link>

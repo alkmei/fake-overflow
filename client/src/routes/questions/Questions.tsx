@@ -1,6 +1,7 @@
 import ContentHeader from "@/components/ContentHeader.tsx";
 import QuestionList from "@/components/questions/QuestionList.tsx";
 import { tempQuestions } from "@/TempData.ts";
+import PageButtons from "@/components/PageButtons.tsx";
 
 export default function Questions() {
   return (
@@ -10,6 +11,7 @@ export default function Questions() {
         questionCount={tempQuestions.length}
       />
       <QuestionList questions={tempQuestions} />
+      <PageButtons />
     </section>
   );
 }
