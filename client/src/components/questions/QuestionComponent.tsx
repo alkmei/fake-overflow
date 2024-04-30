@@ -1,7 +1,7 @@
 import React from "react";
 import { timeSinceDate } from "@/helper.tsx";
 import { Link } from "react-router-dom";
-import { Question } from "@/components/questions/QuestionList.tsx";
+import Question from "@server/types/question";
 
 export default function QuestionComponent({
   question,
