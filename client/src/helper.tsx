@@ -22,7 +22,8 @@ export const timeSinceDate = (dateString: Date) => {
     return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
   else if (diffInMinutes >= 1)
     return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-  else return `${diffInSeconds} second${diffInSeconds > 1 ? "s" : ""} ago`;
+  else
+    return `${diffInSeconds} second${diffInSeconds > 1 || diffInSeconds == 0 ? "s" : ""} ago`;
 };
 
 export const validateHyperlinks = (text: string) => {
