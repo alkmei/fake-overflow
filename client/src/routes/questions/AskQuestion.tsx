@@ -1,3 +1,5 @@
+import FormError from "@/components/FormError.tsx";
+
 export default function AskQuestion() {
   return (
     <section className="w-full p-8">
@@ -13,6 +15,7 @@ export default function AskQuestion() {
             className="rounded p-2 border"
             placeholder="Enter title here..."
           />
+          <FormError message="Title must be 50 characters or less" />
         </div>
         <div className="flex flex-col border rounded p-2 bg-gray-50 gap-2">
           <label htmlFor="summary" className="font-bold text-gray-900">
@@ -23,7 +26,9 @@ export default function AskQuestion() {
             cols={30}
             rows={10}
             className="rounded border p-2"
+            placeholder="Enter summary here..."
           ></textarea>
+          <FormError message="Summary must be 140 characters or less" />
         </div>
         <div className="flex flex-col border rounded p-2 bg-gray-50 gap-2">
           <label htmlFor="body" className="font-bold text-gray-900">
@@ -34,7 +39,9 @@ export default function AskQuestion() {
             cols={30}
             rows={10}
             className="rounded border p-2"
+            placeholder="Enter question text here..."
           ></textarea>
+          <FormError message={"Question Text cannot be empty"} />
         </div>
         <div className="flex flex-col border rounded p-2 bg-gray-50 gap-2">
           <label htmlFor="tags" className="font-bold text-gray-900">
@@ -45,6 +52,13 @@ export default function AskQuestion() {
             name="tags"
             className="rounded p-2 border"
             placeholder="Enter tags here..."
+          />
+          <FormError
+            message={
+              "Should not be more than 5 tags. Each tag is one word, " +
+              "hyphenated words are considered one word. " +
+              "The length of a new tag cannot be more than 20 characters"
+            }
           />
         </div>
         <button className="bg-blue-600 p-2 rounded text-white hover:bg-blue-700">
