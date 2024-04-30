@@ -1,5 +1,4 @@
-import MaterialSymbolsAppRegistration from "@/components/svg/MaterialSymbolsAppRegistration.tsx";
-import MaterialSymbolsLogin from "@/components/svg/MaterialSymbolsLogin.tsx";
+import { IconUserFilled, IconLogin } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 
 export default function Welcome() {
@@ -13,7 +12,7 @@ export default function Welcome() {
       </h1>
       <div className="grid grid-cols-2 grid-rows-2 gap-4">
         <div className="rounded-2xl w-96 bg-amber-100 p-10 flex flex-col justify-between gap-3">
-          <MaterialSymbolsAppRegistration
+          <IconUserFilled
             color="#e7700d"
             width="64"
             height="64"
@@ -28,7 +27,7 @@ export default function Welcome() {
           </Link>
         </div>
         <div className="rounded-2xl w-96 bg-blue-100 p-10 flex flex-col justify-between gap-3">
-          <MaterialSymbolsLogin
+          <IconLogin
             color="#1b75d0"
             width="64"
             height="64"

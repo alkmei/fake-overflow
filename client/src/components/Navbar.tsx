@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import Logo from "@/components/svg/YungPandithersLogo.tsx";
+import { IconBrandStackoverflow } from "@tabler/icons-react";
 
 export default function Navbar() {
   return (
@@ -9,7 +9,7 @@ export default function Navbar() {
           to="/"
           className="text-xl flex items-center hover:bg-gray-200 h-full px-2 rounded"
         >
-          <Logo width={32} height={32} className="rotate-180" />
+          <IconBrandStackoverflow width={32} height={32} color="#e7700d" />
           fake <span className="font-bold ml-0.5">overflow</span>
         </Link>
         <div className="flex items-center flex-grow">
