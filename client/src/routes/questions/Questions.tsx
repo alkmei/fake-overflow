@@ -9,7 +9,7 @@ const tempQuestions: Question[] = [
     summary:
       "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
     askDateTime: new Date(),
-    askedBy: "me!!!",
+    askedBy: "MIGUEL ANGEL HERNANDEZ CAMACHO",
     views: 2,
     votes: 3,
     numAnswers: 0,
@@ -24,7 +24,7 @@ const tempQuestions: Question[] = [
     summary: "This is a summary2",
     askDateTime: new Date(),
     askedBy:
-      "me!!!asdasdasdasdsadadfgyuiasghbuisdfghsdfhusdfhusdfhusdfhusdfhusdfhusdfhusdfhusdfhusdfhufsdhusdfhuisdfhuisdsdfhuio",
+      "me!!!asdasdasdasdsadadfgyuiasghbuisdfghsdfhusdfhudsaabjjbdsdfhusdfhusdfhusdfhusdfhusdfhusdfhusdfhufsdhusdfhuisdfhuisdsdfhuio",
     views: 0,
     votes: 3453,
     numAnswers: 9999,

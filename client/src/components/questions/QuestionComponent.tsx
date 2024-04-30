@@ -58,11 +58,16 @@ export default function QuestionComponent({
               return <TagComponent key={tag.id} name={tag.name} />;
             })}
           </ul>
-          <p className="text-sm text-gray-500 flex justify-end ml-auto gap-1">
-            <Link to="/users/" className="text-blue-600 hover:text-blue-900">
+          <p className="text-sm text-gray-500 flex justify-end ml-auto gap-1 max-w-[62rem]">
+            <Link
+              to="/users/"
+              className="text-blue-600 hover:text-blue-900 truncate"
+            >
               {question.askedBy}
             </Link>
-            asked {timeSinceDate(question.askDateTime)}
+            <span className="whitespace-nowrap">
+              asked {timeSinceDate(question.askDateTime)}
+            </span>
           </p>
         </div>
       </div>

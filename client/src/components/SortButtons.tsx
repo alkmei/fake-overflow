@@ -3,27 +3,26 @@ import { Link, useSearchParams } from "react-router-dom";
 export default function SortButtons() {
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab");
-  const newestClass = tab == null || tab == "newest" ? "bg-gray-200" : "";
-  const activeClass = tab == "active" ? "bg-gray-200" : "";
-  const unansweredClass = tab == "unanswered" ? "bg-gray-200" : "";
+  const base = "rounded hover:bg-gray-200 p-1 text-sm";
+  const active = " bg-gray-200 font-bold";
 
   return (
     <div className="rounded p-2 border flex gap-2">
       <Link
         to="?tab=newest"
-        className={"rounded hover:bg-gray-200 p-1".concat(" ", newestClass)}
+        className={base.concat(tab == null || tab == "newest" ? active : "")}
       >
         Newest
       </Link>
       <Link
         to="?tab=active"
-        className={"rounded hover:bg-gray-200 p-1".concat(" ", activeClass)}
+        className={base.concat(tab == "active" ? active : "")}
       >
         Active
       </Link>
       <Link
         to="?tab=unanswered"
-        className={"rounded hover:bg-gray-200 p-1".concat(" ", unansweredClass)}
+        className={base.concat(tab == "unanswered" ? active : "")}
       >
         Unanswered
       </Link>

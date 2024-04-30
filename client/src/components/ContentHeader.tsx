@@ -9,7 +9,7 @@ export default function ContentHeader({
   questionCount: number;
 }) {
   return (
-    <div className="border-b p-8 pb-4">
+    <div className="border-b p-8 pb-4 pr-0">
       <div className="flex justify-between items-center mb-2">
         <h1 className=" text-2xl">{name}</h1>
         <Link

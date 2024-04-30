@@ -6,7 +6,7 @@ export default function App() {
     <>
       <Navbar />
       <div className="flex items-center justify-center bg-gray-50">
-        <div className="m-4 mt-16">
+        <div className="m-4 mt-16 pt-4 h-[calc(100vh-80px)]">
           <Outlet />
         </div>
       </div>
