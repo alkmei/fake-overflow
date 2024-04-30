@@ -1,11 +1,16 @@
 import { Link, NavLink } from "react-router-dom";
+import Logo from "@/components/svg/YungPandithersLogo.tsx";
 
 export default function Navbar() {
   return (
-    <div className="fixed w-full border-b border-gray-200 bg-white z-50">
-      <header className="p-2 flex items-center gap-4 justify-between h-14 max-w-[1264px] m-auto">
-        <Link to="/" className="font-bold text-xl">
-          Fake Stack Overflow
+    <div className="fixed w-full border-b border-gray-200 bg-white z-50 border-t-[3px] border-t-[#e7700d]">
+      <header className="flex items-center gap-4 justify-between h-14 max-w-[1264px] m-auto">
+        <Link
+          to="/"
+          className="text-xl flex items-center hover:bg-gray-200 h-full px-2 rounded"
+        >
+          <Logo width={32} height={32} className="rotate-180" />
+          fake <span className="font-bold ml-0.5">overflow</span>
         </Link>
         <div className="flex items-center flex-grow">
           <input
