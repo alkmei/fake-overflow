@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
 import SortButtons from "@/components/SortButtons.tsx";
 
-export default function ContentHeader({ name }: { name: string }) {
+export default function ContentHeader({
+  name,
+  questionCount,
+}: {
+  name: string;
+  questionCount: number;
+}) {
   return (
     <div className="border-b p-8 pb-4">
       <div className="flex justify-between items-center mb-2">
@@ -14,7 +20,9 @@ export default function ContentHeader({ name }: { name: string }) {
         </Link>
       </div>
       <div className="flex justify-between items-center">
-        <div>-1 questions</div>
+        <div>
+          {questionCount} {questionCount === 1 ? "question" : "questions"}
+        </div>
         <SortButtons />
       </div>
     </div>

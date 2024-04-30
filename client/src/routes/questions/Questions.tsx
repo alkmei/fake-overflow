@@ -39,7 +39,10 @@ const tempQuestions: Question[] = [
 export default function Questions() {
   return (
     <section className="w-full">
-      <ContentHeader name={"All Questions"} />
+      <ContentHeader
+        name={"All Questions"}
+        questionCount={tempQuestions.length}
+      />
       <QuestionList questions={tempQuestions} />
     </section>
   );
