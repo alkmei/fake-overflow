@@ -1,5 +1,9 @@
+import User from "./user";
+import Comment from "./comment";
+
 export default interface Answer {
-  ansBy: string;
   text: string;
+  ansBy: User;
+  comments: Comment[];
   ansDateTime: Date;
 }

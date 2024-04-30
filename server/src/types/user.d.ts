@@ -1,1 +1,6 @@
-export default interface UserSchema {}
+export default interface User {
+  email: string;
+  username: string;
+  password: string;
+  reputation: number;
+}

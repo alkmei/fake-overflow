@@ -4,36 +4,17 @@ import AnswerComponent from "@/components/questions/AnswerComponent.tsx";
 import PostText from "@/components/questions/PostText.tsx";
 import { Link } from "react-router-dom";
 import ContentHeader from "@/components/ContentHeader.tsx";
+import { tempQuestions } from "@/TempData.ts";
 
 export default function Answers() {
   // const [question, setQuestion] = useState({});
   // const [answers, setAnswers] = useState([]);
   const questionId = new URLSearchParams(window.location.search).get("id");
-
+  // TODO: show updated view count on answers page
   // temp hardcoded question for front end dev
-  const question = {
-    title:
-      "This is a Titleasdfahujioasdhuhuisdhuisdhuisdhuisdhuisdhuisdhuisdhu",
-    summary:
-      "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
-    askDateTime: new Date(),
-    text: "this is my text",
-    askedBy: "me!!!",
-    views: 2,
-    votes: 3,
-    id: 1,
-    answers: [
-      {
-        text: "hi this is a good question",
-        ansBy: "me answer q",
-        ansDateTime: new Date(),
-      },
-    ],
-    tags: [
-      { id: 100, name: "react" },
-      { id: 200, name: "wolfie2d" },
-    ],
-  };
+
+  const question = tempQuestions[0];
+
   const answers = question.answers;
   // useEffect(() => {
   //     axios
