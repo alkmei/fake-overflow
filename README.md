@@ -7,3 +7,7 @@ Add design docs in *images/*
 - Design for navbar, sidebar, and welcome, login, registration, answers pages
 
 ## Team Member 2 Contribution
+- Document Schemas
+- Tag and Tag Question page
+- Question and answer components
+- New Question functionality
