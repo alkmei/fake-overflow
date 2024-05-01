@@ -2,9 +2,38 @@
 Add design docs in *images/*
 
 ## Instructions to setup and run project
+### Frontend
+The frontend uses React and Typescript through Vite. Install dependencies with
+```shell
+npm install
+```
+
+Run the development server with
+```shell
+npm run dev
+```
+The local development server should be hosted on http://localhost:3000
+
+### Backend
+The backend uses Typescript, so you can't just run it through Node. Use these npm scripts to initialize and run the
+```shell
+npm install
+```
+Make sure MongoDB is started on your computer and the port is in its proper configuration for the project (mongodb://127.0.0.1:27017/fake_so)
+
+Initialize the database with
+```shell
+npm run init
+```
+
+Start the express server with
+```shell
+npm run start
+```
 
 ## Team Member 1 Contribution - Alvin
 - Design for navbar, sidebar, and welcome, login, registration, answers pages
+- Backend mongoose initialize script
 
 ## Team Member 2 Contribution
 - Document Schemas

@@ -16,4 +16,5 @@ users.virtual("url").get(function () {
   return `users/${this._id}`;
 });
 
-module.exports = mongoose.model<User>("User", users);
+const UserSchema = mongoose.model<User>("User", users);
+export default UserSchema;

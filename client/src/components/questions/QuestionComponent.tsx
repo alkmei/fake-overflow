@@ -8,7 +8,7 @@ export default function QuestionComponent({
 }: {
   question: Question;
 }) {
-  question.askDateTime = new Date(question.askDateTime);
+  question.creationTime = new Date(question.creationTime);
 
   return (
     <li className="flex justify-between items-start gap-5 text-base border-b py-4">
@@ -52,10 +52,10 @@ export default function QuestionComponent({
               to="/users/"
               className="text-blue-600 hover:text-blue-900 truncate"
             >
-              {question.askedBy.username}
+              {question.author.username}
             </Link>
             <span className="whitespace-nowrap">
-              asked {timeSinceDate(question.askDateTime)}
+              asked {timeSinceDate(question.creationTime)}
             </span>
           </p>
         </div>

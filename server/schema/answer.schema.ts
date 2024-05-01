@@ -5,9 +5,9 @@ import Answer from "../types/answer";
 const answers = new Schema<Answer>(
   {
     text: { type: String, required: true },
-    ansBy: { type: Schema.ObjectId, ref: "User", required: true },
+    author: { type: Schema.ObjectId, ref: "User", required: true },
     comments: [{ type: Schema.ObjectId, ref: "Answer" }],
-    ansDateTime: { type: Date, default: Date.now },
+    creationTime: { type: Date, default: Date.now },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
@@ -16,4 +16,5 @@ answers.virtual("url").get(function () {
   return `posts/answer/${this._id}`;
 });
 
-module.exports = mongoose.model<Answer>("Answer", answers);
+const AnswerSchema = mongoose.model<Answer>("Answer", answers);
+export default AnswerSchema;

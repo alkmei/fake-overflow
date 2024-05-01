@@ -22,10 +22,10 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
-      "@server/*": ["../server/src/*"]
+      "@server/*": ["../server/*"]
     },
     "typeRoots": [
-      "../server/src/types"
+      "../server/types"
     ]
   },
   "include": ["src", "../server/"],

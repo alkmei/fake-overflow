@@ -2,15 +2,16 @@
 import mongoose, { Schema } from "mongoose";
 import Tag from "../types/tag";
 
-const tags = new Schema<Tag>(
+const tagSchema = new Schema<Tag>(
   {
     name: { type: String, required: true },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 
-tags.virtual("url").get(function () {
+tagSchema.virtual("url").get(function () {
   return `posts/tag/${this._id}`;
 });
 
-module.exports = mongoose.model<Tag>("Tag", tags);
+const TagSchema = mongoose.model<Tag>("Tag", tagSchema);
+export default TagSchema;

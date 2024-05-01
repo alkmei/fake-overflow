@@ -3,7 +3,7 @@ import Comment from "./comment";
 
 export default interface Answer {
   text: string;
-  ansBy: User;
+  author: User;
   comments: Comment[];
-  ansDateTime: Date;
+  creationTime: Date;
 }

@@ -6,8 +6,8 @@ const comments = new Schema<Comment>(
   {
     text: { type: String, required: true },
     votes: { type: Number, default: 0 },
-    commentBy: { type: Schema.ObjectId, ref: "User", required: true },
-    commentDateTime: { type: Date, default: Date.now },
+    author: { type: Schema.ObjectId, ref: "User", required: true },
+    creationTime: { type: Date, default: Date.now },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
@@ -16,4 +16,5 @@ comments.virtual("url").get(function () {
   return `posts/comment/${this._id}`;
 });
 
-module.exports = mongoose.model<Comment>("Comment", comments);
+const CommentSchema = mongoose.model<Comment>("Comment", comments);
+export default CommentSchema;

@@ -10,8 +10,8 @@ export default interface Question {
   views: number;
   votes: number;
   id: number;
-  askDateTime: Date;
-  askedBy: User;
+  creationTime: Date;
+  author: User;
   comments: Comment[];
   answers: Answer[];
   tags: Tag[];

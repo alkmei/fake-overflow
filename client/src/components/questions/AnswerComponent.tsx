@@ -7,8 +7,8 @@ export default function AnswerComponent({ answer }: { answer: Answer }) {
     <li className="bottom-separator">
       <PostText text={answer.text} />
       <p className="answer__author">
-        <span className="answer__author-link">{answer.ansBy.username} </span>
-        answered {timeSinceDate(answer.ansDateTime)}
+        <span className="answer__author-link">{answer.author.username} </span>
+        answered {timeSinceDate(answer.creationTime)}
       </p>
     </li>
   );

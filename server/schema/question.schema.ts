@@ -9,8 +9,8 @@ const questions = new Schema<Question>(
     summary: { type: String, required: true },
     views: { type: Number, default: 0 },
     votes: { type: Number, default: 0 },
-    askDateTime: { type: Date, default: Date.now },
-    askedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    creationTime: { type: Date, default: Date.now },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     answers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
     tags: [{ type: Schema.Types.ObjectId, ref: "Tag", required: true }],
@@ -22,4 +22,5 @@ questions.virtual("url").get(function () {
   return `posts/question/${this._id}`;
 });
 
-module.exports = mongoose.model<Question>("Question", questions);
+const QuestionSchema = mongoose.model<Question>("Question", questions);
+export default QuestionSchema;

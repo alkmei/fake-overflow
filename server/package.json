@@ -2,11 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "description": "Back-end directory for FakeStackOverflow app.",
-  "main": "src/server.ts",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsx src/server.ts",
-    "dev": "tsx watch src/server.ts"
+    "start": "tsx server.ts",
+    "dev": "tsx watch server.ts",
+    "init": "tsx init.ts"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "typescript": "^5.4.5",
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.12.7",
     "@types/express": "^4.17.21",
     "tsx": "^4.7.3",

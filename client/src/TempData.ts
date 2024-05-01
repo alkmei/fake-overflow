@@ -20,16 +20,16 @@ export const tags: Tag[] = [
 
 export const comments: Comment[] = [
   {
-    commentBy: user,
+    author: user,
     text: "this is a comment",
     votes: 10,
-    commentDateTime: new Date(),
+    creationTime: new Date(),
   },
   {
-    commentBy: user,
+    author: user,
     text: "this is a comment 2",
     votes: 0,
-    commentDateTime: new Date(),
+    creationTime: new Date(),
   },
 ];
 
@@ -39,8 +39,8 @@ export const tempQuestions: Question[] = [
       "This is a Titleasdfahujioasdhuisdhuisdfhuisdfhuhuisdhuisdhuisdhuisfhuisdfhuhuisdhuisdhuisdhuisdhuisdhuisdhuisdhuisdfhuisdfhuisdfhuisdfhusdfhu",
     summary:
       "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
-    askDateTime: new Date(),
-    askedBy: user,
+    creationTime: new Date(),
+    author: user,
     text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
     views: 2,
     votes: 3,
@@ -49,8 +49,8 @@ export const tempQuestions: Question[] = [
     answers: [
       {
         text: "hi this is a good question",
-        ansBy: user,
-        ansDateTime: new Date(),
+        author: user,
+        creationTime: new Date(),
         comments: comments,
       },
     ],
@@ -60,8 +60,8 @@ export const tempQuestions: Question[] = [
     title: "This is a Title2",
     text: "this is my text2",
     summary: "This is a summary2",
-    askDateTime: new Date(),
-    askedBy: user,
+    creationTime: new Date(),
+    author: user,
     views: 0,
     votes: 3453,
     id: 2,
@@ -69,15 +69,15 @@ export const tempQuestions: Question[] = [
     answers: [
       {
         text: "hi this is a good question 2",
-        ansBy: user,
+        author: user,
         comments: comments,
-        ansDateTime: new Date(),
+        creationTime: new Date(),
       },
       {
         text: "hi this is a good question 1231231231231",
-        ansBy: user,
+        author: user,
         comments: comments,
-        ansDateTime: new Date(),
+        creationTime: new Date(),
       },
     ],
     tags: tags,

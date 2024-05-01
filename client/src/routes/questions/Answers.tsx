@@ -18,7 +18,7 @@ export default function Answers() {
 
   if (questionId && Object.keys(question).length === 0)
     return <p>Page Loading...</p>;
-
+  // TODO - Separate the body into its own component
   return (
     <section className="w-full p-6">
       <section className="w-full">
@@ -47,11 +47,11 @@ export default function Answers() {
             <li className="border-b py-1 text-sm">
               <span>{comment.text}</span> –{" "}
               <Link to={`/users`} className="text-blue-700">
-                {comment.commentBy.username}
+                {comment.author.username}
               </Link>
               <span className="text-gray-500">
                 {" "}
-                {timeSinceDate(comment.commentDateTime)}
+                {timeSinceDate(comment.creationTime)}
               </span>
             </li>
           ))}
