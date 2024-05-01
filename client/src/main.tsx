@@ -13,6 +13,7 @@ import Tags from "@/routes/Tags.tsx";
 import AskQuestion from "@/routes/questions/AskQuestion.tsx";
 import Profile from "@/routes/users/Profile.tsx";
 import Answers from "@/routes/questions/Answers.tsx";
+import TagQuestions from "@/routes/questions/TagQuestions.tsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: "/questions", element: <Questions /> },
       { path: "/questions/ask", element: <AskQuestion /> },
       { path: "/questions/:id/:slug", element: <Answers /> },
+      { path: "/questions/tagged/:tag", element: <TagQuestions /> },
       { path: "/tags", element: <Tags /> },
       { path: "/user/:id", element: <Profile /> },
     ],
