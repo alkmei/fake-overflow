@@ -35,8 +35,8 @@ npm run start
 - Design for navbar, sidebar, and welcome, login, registration, answers pages
 - Backend mongoose initialize script
 
-## Team Member 2 Contribution
+## Team Member 2 Contribution - Andrew
 - Document Schemas
 - Tag and Tag Question page
 - Question and answer components
-- New Question functionality
+- New Question and answer react functionality

@@ -30,7 +30,7 @@ export default function QuestionComponent({
       <div className="w-full">
         <h3 className="text-blue-600 hover:text-blue-900 break-all mb-0.5">
           <Link
-            to={`${question.id}/${question.title
+            to={`/questions/${question.id}/${question.title
               .toLowerCase()
               .replace(/[^\w ]+/g, "")
               .replace(/ +/g, "-")}`}

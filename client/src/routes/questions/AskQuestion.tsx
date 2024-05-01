@@ -69,7 +69,7 @@ export default function AskQuestion() {
         text: text,
         summary: summary,
         tags: Array.from(tagSet),
-        asked_by: "username here",
+        author: "username here", // this will be a user
       };
 
       console.log(newQuestion);

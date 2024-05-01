@@ -1,36 +1,74 @@
-import AnswerComponent from "@/components/questions/AnswerComponent.tsx";
 import PostText from "@/components/questions/PostText.tsx";
-import { Link } from "react-router-dom";
 import { tempQuestions } from "@/TempData.ts";
 import QuestionHeader from "@/components/QuestionHeader.tsx";
 import { IconCaretDownFilled, IconCaretUpFilled } from "@tabler/icons-react";
 import TagComponent from "@/components/TagComponent.tsx";
-import { timeSinceDate } from "@/helper.ts";
+import Comments from "@/components/questions/Comments.tsx";
+import FormError from "@/components/FormError.tsx";
+import { FormEvent, useState } from "react";
+import { validateHyperlinks } from "@/helper.ts";
+import { Link } from "react-router-dom";
 
 export default function Answers() {
   const questionId = new URLSearchParams(window.location.search).get("id");
+  const [text, setText] = useState("");
+  const [textError, setTextError] = useState("");
   // TODO: show updated view count on answers page
   // temp hardcoded question for front end dev
 
-  const question = tempQuestions[0];
+  const question = tempQuestions[1];
 
   const answers = question.answers;
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    let valid = true;
+
+    setTextError("");
+
+    if (!validateHyperlinks(text)) {
+      setTextError("Invalid hyperlink");
+      valid = false;
+    }
+
+    if (text.trim() === "") {
+      setTextError("Answer text cannot be empty");
+      valid = false;
+    }
+
+    if (valid) {
+      const newAnswer = {
+        text: text,
+        author: "test author", // this will be a user later
+      };
+
+      console.log(newAnswer);
+
+      // // TODO: add new answer then reload to show new answer if successful, make sure user is logged in
+      // axios
+      //     .post("http://localhost:8000/posts/answer", newAnswer)
+      //     .then((res) => {
+      //       console.log(res);
+      //       console.log(res.data);
+      //     });
+    }
+  };
 
   if (questionId && Object.keys(question).length === 0)
     return <p>Page Loading...</p>;
   // TODO - Separate the body into its own component
   return (
-    <section className="w-full p-6">
+    <section className="flex flex-col gap-5 w-full p-6">
       <section className="w-full">
         <QuestionHeader question={question} />
       </section>
       <div className="grid gap-4 mt-4">
         <div className="flex flex-col gap-2 items-center col-[1]">
-          <button className="rounded-full border w-10 h-10 flex justify-center items-center">
+          <button className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]">
             <IconCaretUpFilled width={24} height={24} />
           </button>
-          <div className="font-bold">4</div>
-          <button className="rounded-full border w-10 h-10 flex justify-center items-center">
+          <div className="font-bold">{question.votes}</div>
+          <button className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]">
             <IconCaretDownFilled width={24} height={24} />
           </button>
         </div>
@@ -42,32 +80,76 @@ export default function Answers() {
             ))}
           </ol>
         </div>
-        <ol className="col-[2] border-t">
-          {question.comments.map((comment) => (
-            <li className="border-b py-1 text-sm">
-              <span>{comment.text}</span> –{" "}
-              <Link to={`/users`} className="text-blue-700">
-                {comment.author.username}
-              </Link>
-              <span className="text-gray-500">
-                {" "}
-                {timeSinceDate(comment.creationTime)}
-              </span>
-            </li>
-          ))}
-        </ol>
+        <div className="col-[2] justify-self-end">
+          <div className="text-xs bg-blue-50 rounded-md p-3 max-w-56">
+            <p className="text-gray-600">
+              asked {question.creationTime.toLocaleString()}
+            </p>
+            <Link to={`/users`} className="text-sm text-blue-600">
+              {question.author.username}
+            </Link>
+            <p className="font-bold text-gray-600">
+              {question.author.reputation} rep
+            </p>
+          </div>
+        </div>
+        <Comments comments={question.comments} />
       </div>
-      <div className="flex flex-col gap-3">
+      <h2 className="text-xl">
+        {answers.length} {answers.length === 1 ? "Answer" : "Answers"}
+      </h2>
+      <div className="flex flex-col gap-3 overflow-scroll max-h-[650px]">
         <ul id="answer-list">
           {answers.map((answer, index) => (
-            <div key={index}>
-              <AnswerComponent answer={answer} />
+            <div key={index} className="grid gap-4 mt-4">
+              <div className="flex flex-col gap-2 items-center col-[1]">
+                <button className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]">
+                  <IconCaretUpFilled width={24} height={24} />
+                </button>
+                <div className="font-bold">{answer.votes}</div>
+                <button className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]">
+                  <IconCaretDownFilled width={24} height={24} />
+                </button>
+              </div>
+              <div className="flex flex-col justify-between items-start col-[2]">
+                <PostText text={answer.text} />
+              </div>
+              <div className="col-[2] justify-self-end">
+                <div className="text-xs p-3 max-w-56">
+                  <p className="text-gray-600">
+                    answered {answer.creationTime.toLocaleString()}
+                  </p>
+                  <Link to={`/users`} className="text-sm text-blue-600">
+                    {answer.author.username}
+                  </Link>
+                  <p className="font-bold text-gray-600">
+                    {answer.author.reputation} rep
+                  </p>
+                </div>
+              </div>
+              <Comments comments={answer.comments} />
             </div>
           ))}
         </ul>
-
-        <Link to={`/new-answer?id=${questionId}`}>Answer Question</Link>
       </div>
+      <form className="inline-block mb-16 border-t" onSubmit={handleSubmit}>
+        <div className="flex flex-col p-2 bg-gray-50 gap-6">
+          <label htmlFor="new-answer" className="text-xl">
+            Your Answer
+          </label>
+          <textarea
+            name="new-answer"
+            cols={30}
+            rows={7}
+            className="rounded p-2 border"
+            onChange={(e) => setText(e.target.value)}
+          />
+        </div>
+        <FormError message={textError} />
+        <button className="bg-blue-500 p-2 text-white rounded hover:bg-blue-600 text-nowrap mt-5">
+          Post Your Answer
+        </button>
+      </form>
     </section>
   );
 }

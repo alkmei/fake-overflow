@@ -4,7 +4,7 @@ import Comment from "@server/types/comment";
 import Tag from "@server/types/tag";
 
 export const user: User = {
-  username: "MIGUEL ANGEL HERNANDEZ CAMACHO",
+  username: "Miguel Angel Hernandez",
   email: "miguel@wolfie2d.atari2600",
   password: "sfa#&*g388237r87y@doifjsoifH#",
   reputation: 10000,
@@ -22,12 +22,17 @@ export const comments: Comment[] = [
   {
     author: user,
     text: "this is a comment",
-    votes: 10,
+    votes: 12,
     creationTime: new Date(),
   },
   {
     author: user,
-    text: "this is a comment 2",
+    text:
+      "this is a long comment. this is a long comment. this is a long comment. this is a long comment. this is a" +
+      " long comment. this is a long comment. this is a long comment. this is a long comment. this is a " +
+      "long comment. this is a long comment. this is a long comment. this is a long comment. this is a long " +
+      "comment. this is a long comment. this is a long comment. this is a long comment. this is a long comment." +
+      " this is a long comment. this is a long comment. this is a long comment. hi man",
     votes: 0,
     creationTime: new Date(),
   },
@@ -48,9 +53,10 @@ export const tempQuestions: Question[] = [
     comments: comments,
     answers: [
       {
-        text: "hi this is a good question",
+        text: "hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. ",
         author: user,
         creationTime: new Date(),
+        votes: 2,
         comments: comments,
       },
     ],
@@ -71,12 +77,14 @@ export const tempQuestions: Question[] = [
         text: "hi this is a good question 2",
         author: user,
         comments: comments,
+        votes: 0,
         creationTime: new Date(),
       },
       {
         text: "hi this is a good question 1231231231231",
         author: user,
         comments: comments,
+        votes: 100,
         creationTime: new Date(),
       },
     ],

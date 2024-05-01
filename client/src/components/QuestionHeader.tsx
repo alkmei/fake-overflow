@@ -1,5 +1,6 @@
 import Question from "@server/types/question";
 import { Link } from "react-router-dom";
+import { timeSinceDate } from "@/helper.ts";
 
 export default function QuestionHeader({ question }: { question: Question }) {
   return (
@@ -15,10 +16,10 @@ export default function QuestionHeader({ question }: { question: Question }) {
       </div>
       <div className="flex justify-start items-center gap-4 mb-2">
         <div className="text-gray-600">
-          Asked <span className="text-black">today</span>
-        </div>
-        <div className="text-gray-600">
-          Modified <span className="text-black">today</span>
+          Asked{" "}
+          <span className="text-black">
+            {timeSinceDate(question.creationTime)}
+          </span>
         </div>
         <div className="text-gray-600">
           Viewed <span className="text-black">1 time</span>
