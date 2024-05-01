@@ -98,7 +98,7 @@ export default function Answers() {
       <h2 className="text-xl">
         {answers.length} {answers.length === 1 ? "Answer" : "Answers"}
       </h2>
-      <div className="flex flex-col gap-3 overflow-scroll max-h-[650px]">
+      <div className="flex flex-col gap-3 overflow-y-scroll max-h-[650px]">
         <ul id="answer-list">
           {answers.map((answer, index) => (
             <div key={index} className="grid gap-4 mt-4">

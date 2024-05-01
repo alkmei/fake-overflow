@@ -5,7 +5,7 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
   if (questions.length === 0) return <h1>No Questions Found</h1>;
 
   return (
-    <ul className="overflow-scroll max-h-[800px]">
+    <ul className="overflow-y-scroll max-h-[800px]">
       {questions.map((question, index) => (
         <div key={index}>
           <QuestionComponent question={question} />
