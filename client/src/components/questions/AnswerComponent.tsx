@@ -1,4 +1,4 @@
-import { timeSinceDate } from "@/helper.tsx";
+import { timeSinceDate } from "@/helper";
 import PostText from "@/components/questions/PostText.tsx";
 import Answer from "@server/types/answer";
 

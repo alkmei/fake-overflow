@@ -1,4 +1,4 @@
-import { timeSinceDate } from "@/helper.tsx";
+import { timeSinceDate } from "@/helper";
 import { Link } from "react-router-dom";
 import Question from "@server/types/question";
 import TagComponent from "@/components/TagComponent.tsx";
