@@ -1,6 +1,6 @@
 import FormError from "@/components/FormError.tsx";
 import { FormEvent, useState } from "react";
-import { validateHyperlinks } from "@/helper.tsx";
+import { validateHyperlinks } from "@/helper";
 
 export default function AskQuestion() {
   const [title, setTitle] = useState("");

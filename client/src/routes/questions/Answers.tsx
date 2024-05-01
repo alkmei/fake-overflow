@@ -23,8 +23,8 @@ export default function Answers() {
       <section className="w-full">
         <QuestionHeader question={question} />
       </section>
-      <div className="flex">
-        <div className="flex flex-col gap-2 items-center pt-2">
+      <div className="grid gap-4 mt-4">
+        <div className="flex flex-col gap-2 items-center col-[1]">
           <button className="rounded-full border w-10 h-10 flex justify-center items-center">
             <IconCaretUpFilled width={24} height={24} />
           </button>
@@ -33,7 +33,7 @@ export default function Answers() {
             <IconCaretDownFilled width={24} height={24} />
           </button>
         </div>
-        <div className="p-2 pl-4 flex flex-col justify-between items-start">
+        <div className="flex flex-col justify-between items-start col-[2]">
           <PostText text={question.text} />
           <ol className="flex items-center justify-center gap-2">
             {question.tags.map((tag) => (
@@ -41,6 +41,17 @@ export default function Answers() {
             ))}
           </ol>
         </div>
+        <ol className="col-[2] border-t">
+          {question.comments.map((comment) => (
+            <li className="border-b">
+              <span>{comment.text}</span> –{" "}
+              <Link to={`/users`} className="text-blue-700">
+                {comment.commentBy.username}
+              </Link>
+              <span>asked </span>
+            </li>
+          ))}
+        </ol>
       </div>
       <div className="flex flex-col gap-3">
         <ul id="answer-list">
