@@ -11,7 +11,7 @@ export default function Questions() {
         questionCount={tempQuestions.length}
       />
       <QuestionList questions={tempQuestions} />
-      <PageButtons />
+      <PageButtons totalPages={10} />
     </section>
   );
 }

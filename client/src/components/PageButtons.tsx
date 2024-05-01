@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 
-export default function PageButtons() {
+export default function PageButtons({ totalPages }: { totalPages: number }) {
   const [searchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page") ?? "1", 10);
   const generateUrlWithSearchParam = (page: number) => {
@@ -9,9 +9,12 @@ export default function PageButtons() {
     return url.toString();
   };
 
-  const totalPages = 10; // Adjust this value based on the actual total number of pages
-
-  const startPage = Math.max(1, page - 2);
+  const startPage =
+    page == totalPages - 3
+      ? totalPages - 4
+      : page == 4
+        ? 1
+        : Math.min(Math.max(1, page - 2), totalPages - 4);
   const endPage = Math.min(totalPages, startPage + 4);
 
   return (
