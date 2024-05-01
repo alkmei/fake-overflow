@@ -1,6 +1,7 @@
 import Question from "@server/types/question";
 import User from "@server/types/user";
 import Comment from "@server/types/comment";
+import Tag from "@server/types/tag";
 
 export const user: User = {
   username: "MIGUEL ANGEL HERNANDEZ CAMACHO",
@@ -8,6 +9,14 @@ export const user: User = {
   password: "sfa#&*g388237r87y@doifjsoifH#",
   reputation: 10000,
 };
+
+export const tags: Tag[] = [
+  { name: "wolfie", id: 1 },
+  { name: "wolfie2dmaxx", id: 2 },
+  { name: "help", id: 3 },
+  { name: "what", id: 4 },
+  { name: "who", id: 5 },
+];
 
 export const comments: Comment[] = [
   {
@@ -45,7 +54,7 @@ export const tempQuestions: Question[] = [
         comments: comments,
       },
     ],
-    tags: [{ name: "wolfie", id: 1 }],
+    tags: tags,
   },
   {
     title: "This is a Title2",
@@ -71,6 +80,6 @@ export const tempQuestions: Question[] = [
         ansDateTime: new Date(),
       },
     ],
-    tags: [{ name: "wolfie", id: 1 }],
+    tags: tags,
   },
 ];
