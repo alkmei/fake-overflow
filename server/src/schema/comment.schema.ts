@@ -2,7 +2,7 @@
 import mongoose, { Schema } from "mongoose";
 import Comment from "../types/comment";
 
-const comments = new Schema(
+const comments = new Schema<Comment>(
   {
     text: { type: String, required: true },
     votes: { type: Number, default: 0 },

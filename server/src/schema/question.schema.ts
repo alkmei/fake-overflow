@@ -2,7 +2,7 @@
 import mongoose, { Schema } from "mongoose";
 import Question from "../types/question";
 
-const questions = new Schema(
+const questions = new Schema<Question>(
   {
     title: { type: String, required: true },
     text: { type: String, required: true },
