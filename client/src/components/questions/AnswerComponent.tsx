@@ -4,7 +4,7 @@ import Answer from "@server/types/answer";
 
 export default function AnswerComponent({ answer }: { answer: Answer }) {
   return (
-    <li className="answer bottom-separator">
+    <li className="bottom-separator">
       <PostText text={answer.text} />
       <p className="answer__author">
         <span className="answer__author-link">{answer.ansBy.username} </span>

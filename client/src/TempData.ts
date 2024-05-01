@@ -32,7 +32,7 @@ export const tempQuestions: Question[] = [
       "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
     askDateTime: new Date(),
     askedBy: user,
-    text: "this is my text",
+    text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
     views: 2,
     votes: 3,
     id: 1,

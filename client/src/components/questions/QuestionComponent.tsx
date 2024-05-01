@@ -1,24 +1,13 @@
-import React from "react";
 import { timeSinceDate } from "@/helper.tsx";
 import { Link } from "react-router-dom";
 import Question from "@server/types/question";
+import TagComponent from "@/components/TagComponent.tsx";
 
 export default function QuestionComponent({
   question,
 }: {
   question: Question;
 }) {
-  const TagComponent = React.memo(({ name }: { name: string }) => (
-    <li>
-      <Link
-        to="/tags"
-        className="text-sm bg-blue-100 text-blue-900 py-0.5 px-2 rounded-md cursor-pointer transition duration-300 hover:bg-blue-200"
-      >
-        {name}
-      </Link>
-    </li>
-  ));
-
   question.askDateTime = new Date(question.askDateTime);
 
   return (
