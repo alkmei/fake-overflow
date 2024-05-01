@@ -5,6 +5,7 @@ import { tempQuestions } from "@/TempData.ts";
 import QuestionHeader from "@/components/QuestionHeader.tsx";
 import { IconCaretDownFilled, IconCaretUpFilled } from "@tabler/icons-react";
 import TagComponent from "@/components/TagComponent.tsx";
+import { timeSinceDate } from "@/helper.ts";
 
 export default function Answers() {
   const questionId = new URLSearchParams(window.location.search).get("id");
@@ -43,12 +44,15 @@ export default function Answers() {
         </div>
         <ol className="col-[2] border-t">
           {question.comments.map((comment) => (
-            <li className="border-b">
+            <li className="border-b py-1 text-sm">
               <span>{comment.text}</span> –{" "}
               <Link to={`/users`} className="text-blue-700">
                 {comment.commentBy.username}
               </Link>
-              <span>asked </span>
+              <span className="text-gray-500">
+                {" "}
+                {timeSinceDate(comment.commentDateTime)}
+              </span>
             </li>
           ))}
         </ol>
