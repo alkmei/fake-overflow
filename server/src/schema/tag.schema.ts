@@ -2,7 +2,7 @@
 import mongoose, { Schema } from "mongoose";
 import Tag from "../types/tag";
 
-const tags = new Schema(
+const tags = new Schema<Tag>(
   {
     name: { type: String, required: true },
   },

@@ -2,7 +2,7 @@
 import mongoose, { Schema } from "mongoose";
 import Answer from "../types/answer";
 
-const answers = new Schema(
+const answers = new Schema<Answer>(
   {
     text: { type: String, required: true },
     ansBy: { type: Schema.ObjectId, ref: "User", required: true },
