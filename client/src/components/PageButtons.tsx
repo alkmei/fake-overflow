@@ -9,12 +9,14 @@ export default function PageButtons({ totalPages }: { totalPages: number }) {
     return url.toString();
   };
 
-  const startPage =
+  const startPage = Math.max(
+    1,
     page == totalPages - 3
       ? totalPages - 4
       : page == 4
         ? 1
-        : Math.min(Math.max(1, page - 2), totalPages - 4);
+        : Math.min(Math.max(1, page - 2), totalPages - 4),
+  );
   const endPage = Math.min(totalPages, startPage + 4);
 
   return (
