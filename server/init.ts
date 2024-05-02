@@ -38,7 +38,7 @@ async function createUser(name: string, password: string, email: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = new UserSchema({
     username: name,
-    password: password,
+    password: hashedPassword,
     email: email,
   });
   return user.save();

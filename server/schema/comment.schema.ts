@@ -12,9 +12,5 @@ const comments = new Schema<Comment>(
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 
-comments.virtual("url").get(function () {
-  return `posts/comment/${this._id}`;
-});
-
 const CommentSchema = mongoose.model<Comment>("Comment", comments);
 export default CommentSchema;

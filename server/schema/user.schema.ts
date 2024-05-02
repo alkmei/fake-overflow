@@ -13,9 +13,6 @@ const users = new Schema<User>(
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 
-users.virtual("url").get(function () {
-  return `users/${this._id}`;
-});
-
 const UserSchema = mongoose.model<User>("User", users);
+
 export default UserSchema;

@@ -9,9 +9,5 @@ const tagSchema = new Schema<Tag>(
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 
-tagSchema.virtual("url").get(function () {
-  return `posts/tag/${this._id}`;
-});
-
 const TagSchema = mongoose.model<Tag>("Tag", tagSchema);
 export default TagSchema;

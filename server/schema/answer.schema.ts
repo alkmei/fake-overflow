@@ -13,9 +13,5 @@ const answers = new Schema<Answer>(
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 
-answers.virtual("url").get(function () {
-  return `posts/answer/${this._id}`;
-});
-
 const AnswerSchema = mongoose.model<Answer>("Answer", answers);
 export default AnswerSchema;

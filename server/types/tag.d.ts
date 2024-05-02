@@ -1,4 +1,5 @@
-export default interface Tag {
-  id: number;
+import { Document } from "mongoose";
+
+export default interface Tag extends Document {
   name: string;
 }
