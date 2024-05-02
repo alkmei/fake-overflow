@@ -23,7 +23,7 @@ Make sure MongoDB is started on your computer and the port is in its proper conf
 
 Initialize the database with
 ```shell
-npm run init
+npm run init <admin-username> <admin-password>
 ```
 
 Start the express server with
