@@ -20,7 +20,7 @@ if (!adminUsername || !adminPassword) {
 }
 
 mongoose.connect(MONGO_URI, {}).catch((e) => {
-  console.error(e);
+  console.error(`Error: ${e}`);
   process.exit(1);
 });
 
@@ -137,5 +137,4 @@ const populate = async () => {
   console.log("Data populated successfully!");
 };
 
-populate();
-process.exit(0);
+populate().then(() => process.exit(0));

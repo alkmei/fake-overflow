@@ -2,6 +2,7 @@
 Add design docs in *images/*
 
 ## Instructions to setup and run project
+IMPORTANT: MAKE SURE YOUR TERMINAL IS IN THE CORRECT DIRECTORY BEFORE RUNNING ANY COMMANDS
 ### Frontend
 The frontend uses React and Typescript through Vite. Install dependencies with
 ```shell
