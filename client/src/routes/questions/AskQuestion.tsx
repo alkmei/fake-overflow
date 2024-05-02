@@ -1,12 +1,26 @@
 import FormError from "@/components/FormError.tsx";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { validateHyperlinks } from "@/helper";
+import { useParams } from "react-router-dom";
 
-export default function AskQuestion() {
+export default function AskQuestion({ editing }: { editing?: boolean }) {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [tags, setTags] = useState("");
   const [summary, setSummary] = useState("");
+  const { id } = useParams();
+
+  // if editing a question, load in data
+  useEffect(() => {
+    if (editing) {
+      console.log(id);
+      // TODO: Get question from server by id
+      // setTitle(question.title);
+      // setText(question.text);
+      // setTags(question.tags.map((tag) => tag.name).join(" "));
+      // setSummary(question.summary);
+    }
+  }, [editing, id]);
 
   const [titleError, setTitleError] = useState("");
   const [textError, setTextError] = useState("");
@@ -74,13 +88,17 @@ export default function AskQuestion() {
 
       console.log(newQuestion);
 
-      // // TODO: add new question
-      // axios
-      //     .post("http://localhost:8000/posts/question", newQuestion)
-      //     .then((res) => {
-      //       console.log(res);
-      //       console.log(res.data);
-      //     });
+      if (editing) {
+        // TODO: edit question instead of adding it to db
+      } else {
+        // // TODO: add new question
+        // axios
+        //     .post("http://localhost:8000/posts/question", newQuestion)
+        //     .then((res) => {
+        //       console.log(res);
+        //       console.log(res.data);
+        //     });
+      }
 
       // TODO: then send back to home page on successful submit
     }

@@ -49,7 +49,7 @@ export default function QuestionComponent({
           </ul>
           <p className="text-sm text-gray-500 flex justify-end ml-auto gap-1 max-w-[62rem]">
             <Link
-              to="/users/"
+              to={`/users/${question.author.id}`}
               className="text-blue-600 hover:text-blue-900 truncate"
             >
               {question.author.username}

@@ -33,7 +33,10 @@ export default function Comments({ comments }: { comments: Comment[] }) {
                 </p>
                 <div>
                   <span>{comment.text}</span> –{" "}
-                  <Link to={`/users`} className="text-blue-700">
+                  <Link
+                    to={`/users/${comment.author.id}`}
+                    className="text-blue-700"
+                  >
                     {comment.author.username}
                   </Link>
                   <span className="text-gray-500">

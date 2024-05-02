@@ -32,10 +32,11 @@ const router = createBrowserRouter([
     children: [
       { path: "/questions", element: <Questions /> },
       { path: "/questions/ask", element: <AskQuestion /> },
+      { path: "/questions/edit/:id", element: <AskQuestion editing={true} /> },
       { path: "/questions/:id/:slug", element: <Answers /> },
       { path: "/questions/tagged/:tag", element: <TagQuestions /> },
       { path: "/tags", element: <Tags /> },
-      { path: "/user/:id", element: <Profile /> },
+      { path: "/users/:id", element: <Profile /> },
     ],
   },
 ]);

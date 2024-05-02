@@ -99,7 +99,10 @@ export default function Answers() {
             <p className="text-gray-600">
               asked {question.creationTime.toLocaleString()}
             </p>
-            <Link to={`/users`} className="text-sm text-blue-600">
+            <Link
+              to={`/users/${question.author.id}`}
+              className="text-sm text-blue-600"
+            >
               {question.author.username}
             </Link>
             <p className="font-bold text-gray-600">
@@ -142,7 +145,10 @@ export default function Answers() {
                         <p className="text-gray-600">
                           answered {answer.creationTime.toLocaleString()}
                         </p>
-                        <Link to={`/users`} className="text-sm text-blue-600">
+                        <Link
+                          to={`/users/${question.author.id}`}
+                          className="text-sm text-blue-600"
+                        >
                           {answer.author.username}
                         </Link>
                         <p className="font-bold text-gray-600">

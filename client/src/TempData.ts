@@ -7,7 +7,9 @@ export const user: User = {
   username: "Miguel Angel Hernandez",
   email: "miguel@wolfie2d.atari2600",
   password: "sfa#&*g388237r87y@doifjsoifH#",
+  id: 10,
   reputation: 10000,
+  creationTime: new Date(),
 };
 
 export const tags: Tag[] = [

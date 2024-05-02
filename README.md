@@ -37,6 +37,6 @@ npm run start
 
 ## Team Member 2 Contribution - Andrew
 - Document Schemas
-- Tag and Tag Question page
+- Profile, Tag, Tag Question page
 - Question and answer components
 - New Question, answer, page button functionality
