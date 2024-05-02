@@ -4,6 +4,9 @@ import { tempQuestions } from "@/TempData.ts";
 import PageButtons from "@/components/PageButtons.tsx";
 
 export default function Questions() {
+  const numPerPage = 5;
+  const lastPage = Math.floor(tempQuestions.length / numPerPage) + 1;
+
   return (
     <section className="w-full">
       <ContentHeader
@@ -11,7 +14,7 @@ export default function Questions() {
         questionCount={tempQuestions.length}
       />
       <QuestionList questions={tempQuestions} />
-      <PageButtons totalPages={10} />
+      <PageButtons totalPages={lastPage} />
     </section>
   );
 }

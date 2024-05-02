@@ -7,6 +7,9 @@ import { useParams } from "react-router-dom";
 export default function TagQuestions() {
   const tag = useParams().tag;
 
+  const numPerPage = 5;
+  const lastPage = Math.floor(tempQuestions.length / numPerPage) + 1;
+
   return (
     <section className="w-full">
       <ContentHeader
@@ -14,7 +17,7 @@ export default function TagQuestions() {
         questionCount={tempQuestions.length}
       />
       <QuestionList questions={tempQuestions} />
-      <PageButtons totalPages={10} />
+      <PageButtons totalPages={lastPage} />
     </section>
   );
 }

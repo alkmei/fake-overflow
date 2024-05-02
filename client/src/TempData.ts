@@ -27,6 +27,36 @@ export const comments: Comment[] = [
   },
   {
     author: user,
+    text: "this is a comment",
+    votes: 0,
+    creationTime: new Date(),
+  },
+  {
+    author: user,
+    text: "this is a comment",
+    votes: 12,
+    creationTime: new Date(),
+  },
+  {
+    author: user,
+    text: "this is a comment",
+    votes: 12,
+    creationTime: new Date(),
+  },
+  {
+    author: user,
+    text: "this is a comment hi",
+    votes: 12,
+    creationTime: new Date(),
+  },
+  {
+    author: user,
+    text: "this is a comment",
+    votes: 12,
+    creationTime: new Date(),
+  },
+  {
+    author: user,
     text:
       "this is a long comment. this is a long comment. this is a long comment. this is a long comment. this is a" +
       " long comment. this is a long comment. this is a long comment. this is a long comment. this is a " +
@@ -40,8 +70,7 @@ export const comments: Comment[] = [
 
 export const tempQuestions: Question[] = [
   {
-    title:
-      "This is a Titleasdfahujioasdhuisdhuisdfhuisdfhuhuisdhuisdhuisdhuisfhuisdfhuhuisdhuisdhuisdhuisdhuisdhuisdhuisdhuisdfhuisdfhuisdfhuisdfhusdfhu",
+    title: "This is a Titisdfhuisdffhusdfhu 1",
     summary:
       "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
     creationTime: new Date(),
@@ -63,7 +92,95 @@ export const tempQuestions: Question[] = [
     tags: tags,
   },
   {
-    title: "This is a Title2",
+    title: "This is a Titisdfhuisdffhusdfhu 2",
+    summary:
+      "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
+    creationTime: new Date(),
+    author: user,
+    text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
+    views: 2,
+    votes: 3,
+    id: 1,
+    comments: comments,
+    answers: [
+      {
+        text: "hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. ",
+        author: user,
+        creationTime: new Date(),
+        votes: 2,
+        comments: comments,
+      },
+    ],
+    tags: tags,
+  },
+  {
+    title: "This is a Titisdfhuisdffhusdfhu 3",
+    summary:
+      "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
+    creationTime: new Date(),
+    author: user,
+    text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
+    views: 2,
+    votes: 3,
+    id: 1,
+    comments: comments,
+    answers: [
+      {
+        text: "hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. ",
+        author: user,
+        creationTime: new Date(),
+        votes: 2,
+        comments: comments,
+      },
+    ],
+    tags: tags,
+  },
+  {
+    title: "This is a Titisdfhuisdffhusdfhu 4",
+    summary:
+      "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
+    creationTime: new Date(),
+    author: user,
+    text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
+    views: 2,
+    votes: 3,
+    id: 1,
+    comments: comments,
+    answers: [
+      {
+        text: "hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. ",
+        author: user,
+        creationTime: new Date(),
+        votes: 2,
+        comments: comments,
+      },
+    ],
+    tags: tags,
+  },
+  {
+    title: "This is a Titisdfhuisdffhusdfhu 5",
+    summary:
+      "This is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summaryThis is a summary",
+    creationTime: new Date(),
+    author: user,
+    text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
+    views: 2,
+    votes: 3,
+    id: 1,
+    comments: comments,
+    answers: [
+      {
+        text: "hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. ",
+        author: user,
+        creationTime: new Date(),
+        votes: 2,
+        comments: comments,
+      },
+    ],
+    tags: tags,
+  },
+  {
+    title: "This is a Title2 6",
     text: "this is my text2",
     summary: "This is a summary2",
     creationTime: new Date(),
@@ -74,6 +191,13 @@ export const tempQuestions: Question[] = [
     comments: comments,
     answers: [
       {
+        text: "hi this is a good question 1",
+        author: user,
+        comments: comments,
+        votes: 0,
+        creationTime: new Date(),
+      },
+      {
         text: "hi this is a good question 2",
         author: user,
         comments: comments,
@@ -81,7 +205,28 @@ export const tempQuestions: Question[] = [
         creationTime: new Date(),
       },
       {
-        text: "hi this is a good question 1231231231231",
+        text: "hi this is a good question 3",
+        author: user,
+        comments: comments,
+        votes: 0,
+        creationTime: new Date(),
+      },
+      {
+        text: "hi this is a good question 4",
+        author: user,
+        comments: comments,
+        votes: 0,
+        creationTime: new Date(),
+      },
+      {
+        text: "hi this is a good question 5",
+        author: user,
+        comments: comments,
+        votes: 0,
+        creationTime: new Date(),
+      },
+      {
+        text: "hi this is a good question 6",
         author: user,
         comments: comments,
         votes: 100,
