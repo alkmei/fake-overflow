@@ -1,14 +1,16 @@
 import UserSchema from "../schema/user.schema";
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { errorHandler } from "../util";
+import { handleError } from "../util";
+import { JWTPayload, jwtVerify } from "jose";
+import { CustomJWTPayload } from "./session.controller";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await UserSchema.find({}, { password: 0 });
     res.json(users);
   } catch (err: any) {
-    errorHandler(err, res);
+    handleError(err, res);
   }
 };
 
@@ -19,7 +21,7 @@ export const getUser = async (req: Request<{ id: string }>, res: Response) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
   } catch (err) {
-    errorHandler(err, res);
+    handleError(err, res);
   }
 };
 
@@ -40,11 +42,40 @@ export const createUser = async (
     const dbUser = await newUser.save();
     res.status(201).json(dbUser);
   } catch (err) {
-    errorHandler(err, res);
+    handleError(err, res);
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {};
+export const updateUser = async (
+  req: Request<
+    { id: string },
+    {},
+    {
+      email?: string;
+      username?: string;
+      password?: string;
+      reputation?: number;
+      isStaff?: boolean;
+    }
+  >,
+  res: Response,
+) => {
+  const { email, username, password, reputation, isStaff } = req.body;
+  const { id } = req.params;
+  try {
+    const user = await UserSchema.findById(id);
+    if (!user) return res.status(400).json({ message: "User doesn't exist" });
+    const updatedUser = await UserSchema.findByIdAndUpdate(id, {
+      email: email ?? user.email,
+      username: username ?? user.username,
+      password: password ? await bcrypt.hash(password, 10) : user.password,
+      reputation: reputation ?? user.reputation,
+      isStaff: isStaff ?? user.isStaff,
+    });
+  } catch (err) {
+    handleError(err, res);
+  }
+};
 
 export const deleteUser = async (
   req: Request<{ id: string }>,
@@ -56,6 +87,6 @@ export const deleteUser = async (
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(204).json({ message: "User successfully deleted" });
   } catch (err) {
-    errorHandler(err, res);
+    handleError(err, res);
   }
 };

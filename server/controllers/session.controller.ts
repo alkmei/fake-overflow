@@ -1,8 +1,12 @@
 import type { Request, Response } from "express";
 import UserSchema from "../schema/user.schema";
 import bcrypt from "bcrypt";
-import { SignJWT } from "jose";
-import { errorHandler } from "../util";
+import { JWTPayload, SignJWT } from "jose";
+import { handleError } from "../util";
+
+export interface CustomJWTPayload extends JWTPayload {
+  userId: string;
+}
 
 /**
  * Despite the use of "session" this controller uses JWT for authentication
@@ -29,6 +33,6 @@ export const createSession = async (
 
     res.json({ token });
   } catch (err) {
-    errorHandler(err, res);
+    handleError(err, res);
   }
 };

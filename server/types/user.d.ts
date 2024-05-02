@@ -6,4 +6,5 @@ export default interface User extends Document {
   password: string;
   reputation: number;
   creationTime: Date;
+  isStaff: boolean;
 }
