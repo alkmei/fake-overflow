@@ -1,4 +1,4 @@
-import { timeSinceDate } from "@/helper";
+import { sluggify, timeSinceDate } from "@/helper";
 import { Link } from "react-router-dom";
 import Question from "@server/types/question";
 import TagComponent from "@/components/TagComponent.tsx";
@@ -29,12 +29,7 @@ export default function QuestionComponent({
       </div>
       <div className="w-full">
         <h3 className="text-blue-600 hover:text-blue-900 break-all mb-0.5">
-          <Link
-            to={`/questions/${question.id}/${question.title
-              .toLowerCase()
-              .replace(/[^\w ]+/g, "")
-              .replace(/ +/g, "-")}`}
-          >
+          <Link to={`/questions/${question.id}/${sluggify(question.title)}`}>
             {question.title}
           </Link>
         </h3>

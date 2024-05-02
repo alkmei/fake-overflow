@@ -43,3 +43,9 @@ export const validateHyperlinks = (text: string) => {
 
   return true;
 };
+
+export const sluggify = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^\w ]+/g, "")
+    .replace(/ +/g, "-");

@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { tags, tempQuestions, user } from "@/TempData.ts";
-import { timeSinceDate } from "@/helper.ts";
+import { sluggify, timeSinceDate } from "@/helper.ts";
 import TagList from "@/components/TagList.tsx";
 import QuestionList from "@/components/questions/QuestionList.tsx";
 import { IconEdit, IconX } from "@tabler/icons-react";
@@ -27,16 +27,10 @@ export default function Profile() {
         <h2 className="text-2xl mb-5">Questions</h2>
         <ul className="flex flex-col gap-2">
           {tempQuestions.map((q, index) => (
-            <div className="flex flex-col">
+            <div className="flex flex-col" key={index}>
               <div className="flex flex-row justify-between border p-4 rounded-md">
                 <h3 className="text-blue-600 hover:text-blue-900 break-all mb-0.5 self-center">
-                  <Link
-                    to={`/questions/${q.id}/${q.title
-                      .toLowerCase()
-                      .replace(/[^\w ]+/g, "")
-                      .replace(/ +/g, "-")}`}
-                    key={index}
-                  >
+                  <Link to={`/questions/${q.id}/${sluggify(q.title)}`}>
                     {q.title}
                   </Link>
                 </h3>
