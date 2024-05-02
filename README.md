@@ -25,6 +25,7 @@ Initialize the database with
 ```shell
 npm run init <admin-username> <admin-password>
 ```
+(Replace `<admin-username>` and `<admin-password>` with the username and password of your choice.)
 
 Start the express server with
 ```shell
