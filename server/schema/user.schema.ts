@@ -8,6 +8,7 @@ const users = new Schema<User>(
     username: { type: String, required: true },
     password: { type: String, required: true },
     reputation: { type: Number, default: 50 },
+    creationTime: { type: Date, default: Date.now },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );

@@ -2,5 +2,6 @@ export default interface User {
   email: string;
   username: string;
   password: string;
-  reputation?: number;
+  reputation: number;
+  creationTime: Date;
 }
