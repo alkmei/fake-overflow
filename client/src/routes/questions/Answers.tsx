@@ -1,5 +1,5 @@
 import PostText from "@/components/questions/PostText.tsx";
-import { comments, tempQuestions, user } from "@/TempData.ts";
+import { tempQuestions } from "@/TempData.ts";
 import QuestionHeader from "@/components/QuestionHeader.tsx";
 import {
   IconCaretDownFilled,

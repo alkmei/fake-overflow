@@ -1,12 +1,8 @@
 import type { Request, Response } from "express";
 import UserSchema from "../schema/user.schema";
 import bcrypt from "bcrypt";
-import { JWTPayload, SignJWT } from "jose";
-import { handleError } from "../util";
-
-export interface CustomJWTPayload extends JWTPayload {
-  userId: string;
-}
+import { SignJWT } from "jose";
+import { DEV_SECRET, handleError } from "../utils";
 
 /**
  * Despite the use of "session" this controller uses JWT for authentication
@@ -29,7 +25,7 @@ export const createSession = async (
       })
       .setIssuedAt()
       .setExpirationTime("1d")
-      .sign(new TextEncoder().encode("REPLACE_IF_IN_PROD"));
+      .sign(new TextEncoder().encode(DEV_SECRET));
 
     res.json({ token });
   } catch (err) {

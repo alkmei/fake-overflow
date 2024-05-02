@@ -35,6 +35,8 @@ npm run start
 ## Team Member 1 Contribution - Alvin
 - Design for navbar, sidebar, and welcome, login, registration, answers pages
 - Backend mongoose initialize script
+- Backend user and auth routes
+- Backend question routes
 
 ## Team Member 2 Contribution - Andrew
 - Document Schemas

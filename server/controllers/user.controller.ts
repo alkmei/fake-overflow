@@ -1,9 +1,8 @@
 import UserSchema from "../schema/user.schema";
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { handleError } from "../util";
-import { JWTPayload, jwtVerify } from "jose";
-import { CustomJWTPayload } from "./session.controller";
+import { handleError } from "../utils";
+import { AuthRequest } from "../types/express";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
