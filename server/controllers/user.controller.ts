@@ -1,59 +1,61 @@
 import UserSchema from "../schema/user.schema";
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import { errorHandler } from "../util";
 
-export const getAllUsers = (req: Request, res: Response) => {
-  UserSchema.find({})
-    .then((users) => {
-      res.json(users);
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await UserSchema.find({}, { password: 0 });
+    res.json(users);
+  } catch (err: any) {
+    errorHandler(err, res);
+  }
 };
 
-export const getUser = (req: Request<{ id: string }>, res: Response) => {
+export const getUser = async (req: Request<{ id: string }>, res: Response) => {
   const id = req.params.id;
-  UserSchema.findById(id)
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.json(user);
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
+  try {
+    const user = await UserSchema.findById(id, { password: 0 });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (err) {
+    errorHandler(err, res);
+  }
 };
 
-export const createUser = (
+export const createUser = async (
   req: Request<{}, {}, { email: string; username: string; password: string }>,
   res: Response,
 ) => {
   const { email, username, password } = req.body;
-  UserSchema.findOne({ email }).then((user) => {
-    if (user) {
-      res.status(409).json({ message: "User already exists" });
-    }
-  });
-
-  const saltRounds = 10;
-  bcrypt.hash(password, saltRounds).then((hashedPassword) => {
+  try {
+    const user = await UserSchema.findOne({ email });
+    if (user) return res.status(400).json({ message: "User already exists" });
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserSchema({
-      email,
+      email: email,
       username,
       password: hashedPassword,
     });
-    newUser
-      .save()
-      .then((user) => res.status(201).json(user))
-      .catch((err) => res.status(500).json({ message: err.message }));
-  });
+    const dbUser = await newUser.save();
+    res.status(201).json(dbUser);
+  } catch (err) {
+    errorHandler(err, res);
+  }
 };
 
 export const updateUser = async (req: Request, res: Response) => {};
 
 export const deleteUser = async (
-  req: Request<{ email: string }>,
+  req: Request<{ id: string }>,
   res: Response,
-) => {};
+) => {
+  const id = req.params.id;
+  try {
+    const user = await UserSchema.findByIdAndDelete(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(204).json({ message: "User successfully deleted" });
+  } catch (err) {
+    errorHandler(err, res);
+  }
+};
