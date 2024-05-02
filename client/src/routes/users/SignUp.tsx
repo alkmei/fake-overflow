@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import FormError from "@/components/FormError.tsx";
-import User from "@server/types/user";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -12,6 +13,8 @@ export default function SignUp() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [verifyPasswordError, setVerifyPasswordError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -57,21 +60,23 @@ export default function SignUp() {
     }
 
     if (valid) {
-      const newUser: User = {
-        username: name,
+      const newUser = {
         email: email,
+        username: name,
         password: password,
       };
 
-      // TODO: ask server if unique email, break and show errors accordingly
-      // No two users can create an account with the same
-      // email. The email should have a valid form. The
-      // typed password should not contain their first or
-      // last name, or their email id. Nicely styled feedback
-      // must be presented to the user if the account could
-      // not be created due to the above reasons or any
-      // other reason
-      console.log(newUser);
+      // Add to database and handle if non-unique email
+      axios
+        .post("http://localhost:8000/api/users", newUser)
+        .then(() => {
+          // navigate("/users/login");
+        })
+        .catch((err) => {
+          valid = false;
+          setEmailError(err.response.data.message);
+          console.log(err);
+        });
     }
   };
 

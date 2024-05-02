@@ -31,7 +31,10 @@ export const createUser = async (
   const { email, username, password } = req.body;
   try {
     const user = await UserSchema.findOne({ email });
-    if (user) return res.status(400).json({ message: "User already exists" });
+    if (user)
+      return res
+        .status(400)
+        .json({ message: "A user with this email already exists!" });
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserSchema({
       email: email,
