@@ -1,7 +1,8 @@
 import FormError from "@/components/FormError.tsx";
 import { FormEvent, useState, useEffect } from "react";
 import { validateHyperlinks } from "@/helper";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { tempQuestions } from "@/TempData.ts";
 
 export default function AskQuestion({ editing }: { editing?: boolean }) {
   const [title, setTitle] = useState("");
@@ -15,10 +16,11 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
     if (editing) {
       console.log(id);
       // TODO: Get question from server by id
-      // setTitle(question.title);
-      // setText(question.text);
-      // setTags(question.tags.map((tag) => tag.name).join(" "));
-      // setSummary(question.summary);
+      const question = tempQuestions[0];
+      setTitle(question.title);
+      setText(question.text);
+      setTags(question.tags.map((tag) => tag.name).join(" "));
+      setSummary(question.summary);
     }
   }, [editing, id]);
 
@@ -26,6 +28,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
   const [textError, setTextError] = useState("");
   const [tagsError, setTagsError] = useState("");
   const [summaryError, setSummaryError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -100,7 +103,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
         //     });
       }
 
-      // TODO: then send back to home page on successful submit
+      navigate("/questions");
     }
   };
 
@@ -132,6 +135,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
             name="title"
             className="rounded p-2 border"
             placeholder="Enter title here..."
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <FormError message={titleError} />
@@ -144,6 +148,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
             name="summary"
             cols={30}
             rows={10}
+            value={summary}
             className="rounded border p-2"
             placeholder="Enter summary here..."
             onChange={(e) => setSummary(e.target.value)}
@@ -158,6 +163,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
             name="body"
             cols={30}
             rows={10}
+            value={text}
             className="rounded border p-2"
             placeholder="Enter question text here..."
             onChange={(e) => setText(e.target.value)}
@@ -173,6 +179,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
             name="tags"
             className="rounded p-2 border"
             placeholder="Enter tags here..."
+            value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
           <FormError message={tagsError} />

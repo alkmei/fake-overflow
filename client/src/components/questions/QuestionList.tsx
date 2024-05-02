@@ -3,7 +3,13 @@ import Question from "@server/types/question";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-export default function QuestionList({ questions }: { questions: Question[] }) {
+export default function QuestionList({
+  questions,
+  userId,
+}: {
+  questions: Question[];
+  userId?: number;
+}) {
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
 
@@ -34,7 +40,7 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
           if (question) {
             renderedQuestions.push(
               <div key={i}>
-                <QuestionComponent question={question} />
+                <QuestionComponent question={question} userId={userId} />
               </div>,
             );
           }

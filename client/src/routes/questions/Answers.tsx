@@ -1,14 +1,20 @@
 import PostText from "@/components/questions/PostText.tsx";
-import { tempQuestions } from "@/TempData.ts";
+import { comments, tempQuestions, user } from "@/TempData.ts";
 import QuestionHeader from "@/components/QuestionHeader.tsx";
-import { IconCaretDownFilled, IconCaretUpFilled } from "@tabler/icons-react";
+import {
+  IconCaretDownFilled,
+  IconCaretUpFilled,
+  IconEdit,
+  IconX,
+} from "@tabler/icons-react";
 import TagComponent from "@/components/TagComponent.tsx";
 import Comments from "@/components/questions/Comments.tsx";
 import FormError from "@/components/FormError.tsx";
 import { FormEvent, useEffect, useState } from "react";
 import { validateHyperlinks } from "@/helper.ts";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import PageButtons from "@/components/PageButtons.tsx";
+import Answer from "@server/types/answer";
 
 export default function Answers() {
   const questionId = new URLSearchParams(window.location.search).get("id");
@@ -16,6 +22,10 @@ export default function Answers() {
   const [textError, setTextError] = useState("");
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
+  const [editingAnswerId, setEditingAnswerId] = useState<number | null>(null);
+  const [editedText, setEditedText] = useState("");
+  const [editError, setEditError] = useState("");
+  const userId = useParams().uid;
 
   useEffect(() => {
     if (searchParams.get("page")) {
@@ -28,8 +38,20 @@ export default function Answers() {
   }, [searchParams]);
   // TODO: show updated view count on answers page
 
-  const question = tempQuestions[1];
-  const answers = question.answers;
+  // TODO: when querying answers, split the array into answers by user and answers not by the user
+
+  const question = tempQuestions[0];
+  const answers = question.answers.sort(
+    (a, b) => b.creationTime.getTime() - a.creationTime.getTime(),
+  );
+  let userAnswers: Answer[] = [];
+
+  if (userId) {
+    // TODO: Get answers by user
+    userAnswers = question.answers.sort(
+      (a, b) => b.creationTime.getTime() - a.creationTime.getTime(),
+    );
+  }
 
   const numPerPage = 5;
   const lastPage = Math.floor(answers.length / numPerPage) + 1;
@@ -53,7 +75,8 @@ export default function Answers() {
     if (valid) {
       const newAnswer = {
         text: text,
-        author: "test author", // this will be a user later
+        // TODO: Make this current user
+        author: "test author",
       };
 
       console.log(newAnswer);
@@ -66,6 +89,44 @@ export default function Answers() {
       //       console.log(res.data);
       //     });
     }
+  };
+
+  const handleEdit = (answer: Answer) => {
+    if (!(answer.id !== editingAnswerId)) setEditingAnswerId(null);
+    else setEditingAnswerId(answer.id);
+
+    setEditedText(answer.text);
+  };
+
+  const handleEditSubmit = (event: FormEvent, answer: Answer) => {
+    event.preventDefault();
+    let valid = true;
+
+    setEditError("");
+
+    if (!validateHyperlinks(text)) {
+      setEditError("Invalid hyperlink");
+      valid = false;
+    }
+
+    if (editedText.trim() === "") {
+      setEditError("Edited text cannot be empty");
+      valid = false;
+    }
+
+    if (editedText === answer.text) {
+      setEditError("Edited text is identical to answer text");
+      valid = false;
+    }
+
+    if (valid) {
+      // TODO: send POST request to change answer
+      console.log(editedText);
+    }
+  };
+
+  const handleDelete = (answer: Answer) => {
+    console.log(answer);
   };
 
   if (questionId && Object.keys(question).length === 0)
@@ -124,7 +185,13 @@ export default function Answers() {
               i < (page - 1) * numPerPage + numPerPage;
               i++
             ) {
-              const answer = answers[i];
+              let answer;
+              let editableAns = false;
+              if (userId && i < userAnswers.length) {
+                answer = userAnswers[i];
+                editableAns = true;
+              } else answer = answers[i - userAnswers.length];
+
               if (answer) {
                 renderedAnswers.push(
                   <div key={i} className="grid gap-4 mt-4 grid-cols-[1fr_16fr]">
@@ -137,9 +204,41 @@ export default function Answers() {
                         <IconCaretDownFilled width={24} height={24} />
                       </button>
                     </div>
-                    <div className="flex flex-col justify-between items-start col-[2]">
+                    {editableAns && (
+                      <div className="flex flex-col gap-2 col-[1] items-center">
+                        <button
+                          className="rounded-full border w-9 h-9 flex justify-center items-center hover:bg-[#fbdbc0]"
+                          onClick={() => handleEdit(answer)}
+                        >
+                          <IconEdit width={16} height={16} />
+                        </button>
+                        <button
+                          className="rounded-full border w-9 h-9 flex justify-center items-center hover:bg-red-200"
+                          onClick={() => handleDelete(answer)}
+                        >
+                          <IconX width={16} height={16} />
+                        </button>
+                      </div>
+                    )}
+                    <div className="flex flex-col justify-between items-start col-[2] row-[1]">
                       <PostText text={answer.text} />
                     </div>
+                    {editingAnswerId === answer.id && (
+                      <form onSubmit={(e) => handleEditSubmit(e, answer)}>
+                        <textarea
+                          name="edit-answer"
+                          cols={30}
+                          rows={3}
+                          value={editedText}
+                          className="rounded p-2 border w-full mr-10"
+                          onChange={(e) => setEditedText(e.target.value)}
+                        />
+                        <FormError message={editError} />
+                        <button className="bg-blue-500 p-2 text-white rounded hover:bg-blue-600 text-nowrap text-xs mt-2">
+                          Submit Edit
+                        </button>
+                      </form>
+                    )}
                     <div className="col-[2] justify-self-end">
                       <div className="text-xs p-3 max-w-56">
                         <p className="text-gray-600">

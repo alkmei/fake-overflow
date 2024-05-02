@@ -84,11 +84,12 @@ export const tempQuestions: Question[] = [
     comments: comments,
     answers: [
       {
-        text: "hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. hi this is a good question. ",
+        text: "hi this is a good question. hi  is a good question. hi this is a good question. ",
         author: user,
         creationTime: new Date(),
         votes: 2,
         comments: comments,
+        id: 0,
       },
     ],
     tags: tags,
@@ -102,7 +103,7 @@ export const tempQuestions: Question[] = [
     text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
     views: 2,
     votes: 3,
-    id: 1,
+    id: 2,
     comments: comments,
     answers: [
       {
@@ -124,7 +125,7 @@ export const tempQuestions: Question[] = [
     text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
     views: 2,
     votes: 3,
-    id: 1,
+    id: 3,
     comments: comments,
     answers: [
       {
@@ -146,7 +147,7 @@ export const tempQuestions: Question[] = [
     text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
     views: 2,
     votes: 3,
-    id: 1,
+    id: 4,
     comments: comments,
     answers: [
       {
@@ -168,7 +169,7 @@ export const tempQuestions: Question[] = [
     text: "I have my influxdb working in server. When I try to open the influxdb UI using http://my_host:8086. I'm receiving 404 as response. What am I missing ? help me with this please.\n",
     views: 2,
     votes: 3,
-    id: 1,
+    id: 5,
     comments: comments,
     answers: [
       {
@@ -189,7 +190,7 @@ export const tempQuestions: Question[] = [
     author: user,
     views: 0,
     votes: 3453,
-    id: 2,
+    id: 6,
     comments: comments,
     answers: [
       {
@@ -198,6 +199,7 @@ export const tempQuestions: Question[] = [
         comments: comments,
         votes: 0,
         creationTime: new Date(),
+        id: 1,
       },
       {
         text: "hi this is a good question 2",

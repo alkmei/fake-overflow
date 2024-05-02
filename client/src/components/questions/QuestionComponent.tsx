@@ -5,8 +5,10 @@ import TagComponent from "@/components/TagComponent.tsx";
 
 export default function QuestionComponent({
   question,
+  userId,
 }: {
   question: Question;
+  userId?: number;
 }) {
   question.creationTime = new Date(question.creationTime);
 
@@ -29,7 +31,13 @@ export default function QuestionComponent({
       </div>
       <div className="w-full">
         <h3 className="text-blue-600 hover:text-blue-900 break-all mb-0.5">
-          <Link to={`/questions/${question.id}/${sluggify(question.title)}`}>
+          <Link
+            to={
+              userId
+                ? `/questions/edit/${question.id}/answer/${userId}`
+                : `/questions/${question.id}/${sluggify(question.title)}`
+            }
+          >
             {question.title}
           </Link>
         </h3>

@@ -4,9 +4,16 @@ import { sluggify, timeSinceDate } from "@/helper.ts";
 import TagList from "@/components/TagList.tsx";
 import QuestionList from "@/components/questions/QuestionList.tsx";
 import { IconEdit, IconX } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
 export default function Profile() {
+  const [userId, setUserId] = useState(0);
   const { id } = useParams();
+
+  useEffect(() => {
+    if (id) setUserId(parseInt(id));
+  }, [id]);
+
   console.log(id);
 
   return (
@@ -25,7 +32,7 @@ export default function Profile() {
       </div>
       <div>
         <h2 className="text-2xl mb-5">Questions</h2>
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-2 ml-3">
           {tempQuestions.map((q, index) => (
             <div className="flex flex-col" key={index}>
               <div className="flex flex-row justify-between border p-4 rounded-md">
@@ -35,9 +42,12 @@ export default function Profile() {
                   </Link>
                 </h3>
                 <div className="flex flex-row gap-2">
-                  <button className="rounded-full border w-7 h-7 flex justify-center items-center hover:bg-[#fbdbc0]">
+                  <Link
+                    to={`/questions/edit/${q.id}`}
+                    className="rounded-full border w-7 h-7 flex justify-center items-center hover:bg-[#fbdbc0]"
+                  >
                     <IconEdit width={16} height={16} />
-                  </button>
+                  </Link>
                   <button className="rounded-full border w-7 h-7 flex justify-center items-center hover:bg-red-200">
                     <IconX width={16} height={16} />
                   </button>
@@ -59,7 +69,7 @@ export default function Profile() {
            if a question answered by user is clicked, Their answer/s for
            the question is displayed first followed by the rest in Newest order
         */}
-        <QuestionList questions={tempQuestions} />
+        <QuestionList questions={tempQuestions} userId={userId} />
       </div>
     </div>
   );
