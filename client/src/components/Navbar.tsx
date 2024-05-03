@@ -7,26 +7,19 @@ import { useCookies } from "react-cookie";
 
 export default function Navbar() {
   const { loggedIn, setLoggedIn } = useAuthentication();
-  const [cookies, setCookies, removeCookie] = useCookies(["token"]);
+  const [cookies, setCookies] = useCookies(["token"]);
   const navigate = useNavigate();
 
   const logOut = () => {
-    axios
-      .post("http://localhost:8000/api/session/logout", {
-        withCredentials: true,
-      })
-      .then(() => {
-        setCookies("token", "", {
-          sameSite: "strict",
-        });
-        setLoggedIn(false);
-        navigate("/");
-      })
-      .catch((err) => console.error(err));
+    setCookies("token", "", {
+      sameSite: "strict",
+    });
+    setLoggedIn(false);
+    navigate("/");
   };
 
   useEffect(() => {
-    console.log(loggedIn);
+    console.log("Logged in:", loggedIn);
   }, [loggedIn, cookies.token]);
 
   return (

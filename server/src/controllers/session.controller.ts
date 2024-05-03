@@ -44,7 +44,7 @@ export const getSession = async (req: AuthRequest, res: Response) => {
       const token = extractToken(cookieString);
 
       if (!token)
-        return res.status(401).json({ loggedIn: false, isAdmin: false });
+        return res.status(200).json({ loggedIn: false, isAdmin: false });
 
       const { payload } = await jwtVerify(
         token,
