@@ -8,6 +8,7 @@ import UserSchema from "./src/schema/user.schema";
 import AnswerSchema from "./src/schema/answer.schema";
 import CommentSchema from "./src/schema/comment.schema";
 import QuestionSchema from "./src/schema/question.schema";
+import User from "./types/user";
 
 const MONGO_URI = "mongodb://127.0.0.1:27017/fake_so";
 
@@ -29,8 +30,8 @@ mongoose.connection.on(
   console.error.bind(console, "MongoDB connection error:"),
 );
 
-function createTags(name: string) {
-  const tag = new TagSchema({ name: name });
+function createTags(name: string, author: User) {
+  const tag = new TagSchema({ name: name, author: author });
   return tag.save();
 }
 
@@ -95,7 +96,9 @@ const populate = async () => {
 
   // Create some tags
   const tagNames = ["javascript", "python", "react", "node.js", "mongodb"];
-  const tags = await Promise.all(tagNames.map((name) => createTags(name)));
+  const tags = await Promise.all(
+    tagNames.map((name) => createTags(name, testUser)),
+  );
 
   // Create some questions
   await Promise.all([
