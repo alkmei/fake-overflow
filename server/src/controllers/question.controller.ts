@@ -4,6 +4,7 @@ import { handleError, removeUndefinedKeys } from "../utils";
 import { AuthRequest } from "../../types/express";
 import { isAuthorOrStaff } from "../utils/auth";
 import Tag from "../../types/tag";
+import TagSchema from "../schema/tag.schema";
 
 export const getQuestions = async (req: Request, res: Response) => {
   try {
@@ -38,22 +39,37 @@ export const getQuestionById = async (req: Request, res: Response) => {
   }
 };
 
-export const createQuestion = async (req: AuthRequest, res: Response) => {
+export const createQuestion = async (
+  req: AuthRequest<
+    {},
+    {},
+    { title: string; text: string; summary: string; tags: string[] }
+  >,
+  res: Response,
+) => {
   try {
     const { title, text, summary, tags } = req.body;
     const authorId = req.userId;
 
+    const tagObj = tags.map((t) => new TagSchema({ name: t }));
+
     const newQuestion = new QuestionSchema({
-      title,
-      text,
-      summary,
+      title: title,
+      text: text,
+      summary: summary,
       author: authorId,
-      tags,
+      tags: tagObj,
     });
 
+    for (const tag of tagObj) {
+      await tag.save();
+    }
     const savedQuestion = await newQuestion.save();
     res.status(201).json(savedQuestion);
   } catch (err) {
+    if (err.name === "MongoError" && err.code === 11000) {
+      console.error("There was a duplicate key error");
+    }
     handleError(err, res);
   }
 };

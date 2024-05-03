@@ -1,11 +1,18 @@
-import express from "express";
+import express = require("express");
+import cors = require("cors");
 import mongoose from "mongoose";
 import userRoute from "./src/routes/user.route";
 import sessionRoute from "./src/routes/session.route";
 import questionRoute from "./src/routes/question.route";
 import { Request } from "express";
-import cors from "cors";
+
 import tagRoute from "./src/routes/tag.route";
+
+require("./src/schema/tag.schema");
+require("./src/schema/comment.schema");
+require("./src/schema/answer.schema");
+require("./src/schema/user.schema");
+require("./src/schema/question.schema");
 
 const app = express();
 
