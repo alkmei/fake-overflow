@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import axios from "axios";
+
 export const timeSinceDate = (dateString: Date) => {
   const now = new Date();
   const date = new Date(dateString);
@@ -49,3 +53,22 @@ export const sluggify = (s: string) =>
     .toLowerCase()
     .replace(/[^\w ]+/g, "")
     .replace(/ +/g, "-");
+
+export const useAuthentication = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+
+    if (token) {
+      // Check if user is admin
+      axios.get("https://localhost:8000/api/session/status").then((res) => {
+        setIsLoggedIn(res.data.loggedIn);
+        setIsAdmin(res.data.isAdmin);
+      });
+    }
+  }, []);
+
+  return { isLoggedIn, isAdmin };
+};

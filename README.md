@@ -43,3 +43,4 @@ npm run start
 - Profile, Tag, Tag Question page
 - Question and answer components
 - New Question, answer, page button functionality
+- Signup and Login functionality
