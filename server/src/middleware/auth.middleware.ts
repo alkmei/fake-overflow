@@ -24,6 +24,8 @@ export const verifyToken = async (
         req.userId = decodedPayload.userId;
 
         next();
+      } else {
+        res.status(403).json({ message: "No token" });
       }
     }
   } catch (err) {

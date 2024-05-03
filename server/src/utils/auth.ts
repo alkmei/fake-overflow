@@ -1,23 +1,22 @@
 import UserSchema from "../schema/user.schema";
 import QuestionSchema from "../schema/question.schema";
 import { AuthRequest } from "../../types/express";
+import { Model } from "mongoose";
 
 export const isAuthorOrStaff = async (
   req: AuthRequest,
-  questionId: string,
+  id: string,
+  schema: Model<any>,
 ): Promise<boolean> => {
   const userId = req.userId;
 
-  const question = await QuestionSchema.findById(questionId).populate(
-    "author",
-    "isStaff",
-  );
+  const document = await schema.findById(id).populate("author", "isStaff");
 
-  if (!question) {
+  if (!document) {
     return false;
   }
 
-  const isAuthor = question.author._id.toString() === userId;
+  const isAuthor = document.author._id.toString() === userId;
   const isStaff = await UserSchema.exists({ _id: userId, isStaff: true });
 
   return isAuthor || !!isStaff;

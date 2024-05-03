@@ -9,6 +9,7 @@ import { extractToken } from "../utils/auth";
 
 /**
  * Despite the use of "session" this controller uses JWT for authentication
+ * POST /api/session
  */
 export const createSession = async (
   req: Request<{}, {}, { email: string; password: string }>,

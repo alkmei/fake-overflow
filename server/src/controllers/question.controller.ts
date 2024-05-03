@@ -6,7 +6,10 @@ import { isAuthorOrStaff } from "../utils/auth";
 import Tag from "../../types/tag";
 import TagSchema from "../schema/tag.schema";
 import UserSchema from "../schema/user.schema";
+import mongoose from "mongoose";
+import { addTagsToDB } from "../utils/tag";
 
+// GET /api/questions
 export const getQuestions = async (req: Request, res: Response) => {
   try {
     const questions = await QuestionSchema.find()
@@ -18,7 +21,11 @@ export const getQuestions = async (req: Request, res: Response) => {
   }
 };
 
-export const getQuestionById = async (req: Request, res: Response) => {
+// GET /api/questions/:id
+export const getQuestionById = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
   try {
     const questionId = req.params.id;
     const question = await QuestionSchema.findById(questionId)
@@ -40,6 +47,7 @@ export const getQuestionById = async (req: Request, res: Response) => {
   }
 };
 
+// POST /api/questions
 export const createQuestion = async (
   req: AuthRequest<
     {},
@@ -52,22 +60,17 @@ export const createQuestion = async (
     const { title, text, summary, tags } = req.body;
     const authorId = req.userId;
     const author = await UserSchema.findById(authorId);
+    if (!author) return res.status(404).json({ message: "Author not found" });
 
-    const existingTags = await TagSchema.find({ name: { $in: tags } });
-    const newTags = tags
-      .filter((t) => !existingTags.some((et) => et.name === t))
-      .map((t) => new TagSchema({ name: t, author: author }));
-    const tagObj = [...existingTags, ...newTags];
+    const tagDocs = addTagsToDB(author, tags);
 
     const newQuestion = new QuestionSchema({
       title: title,
       text: text,
       summary: summary,
       author: author,
-      tags: tagObj,
+      tags: tagDocs,
     });
-
-    await TagSchema.bulkSave(newTags);
 
     const savedQuestion = await newQuestion.save();
     res.status(201).json(savedQuestion);
@@ -76,45 +79,50 @@ export const createQuestion = async (
   }
 };
 
+// PUT /api/questions/:id
 export const updateQuestion = async (
   req: AuthRequest<
     { id: string },
     {},
-    { title?: string; text?: string; summary?: string; tags?: Tag[] }
+    { title?: string; text?: string; summary?: string; tags?: string[] }
   >,
   res: Response,
 ) => {
   try {
     const questionId = req.params.id;
-    const body = req.body;
+    const body = removeUndefinedKeys(req.body);
 
-    const isAllowed = await isAuthorOrStaff(req, questionId);
+    const isAllowed = await isAuthorOrStaff(req, questionId, QuestionSchema);
 
     if (!isAllowed) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    const updatedQuestion = await QuestionSchema.findByIdAndUpdate(
-      questionId,
-      removeUndefinedKeys(body),
-      { new: true },
-    );
+    const question = await QuestionSchema.findById(questionId);
 
-    if (!updatedQuestion) {
+    if (!question)
       return res.status(404).json({ message: "Question not found" });
+
+    if (body.tags) {
+      question.tags = await addTagsToDB(question.author, body.tags);
     }
 
-    res.json(updatedQuestion);
+    question.save();
+    res.json(question);
   } catch (err) {
     handleError(err, res);
   }
 };
 
-export const deleteQuestion = async (req: AuthRequest, res: Response) => {
+// DELETE /api/questions/:id
+export const deleteQuestion = async (
+  req: AuthRequest<{ id: string }>,
+  res: Response,
+) => {
   try {
     const questionId = req.params.id;
 
-    const isAllowed = await isAuthorOrStaff(req, questionId);
+    const isAllowed = await isAuthorOrStaff(req, questionId, QuestionSchema);
 
     if (!isAllowed) {
       return res.status(403).json({ message: "Forbidden" });

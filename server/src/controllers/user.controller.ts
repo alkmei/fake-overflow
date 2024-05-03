@@ -20,8 +20,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const getUser = async (req: Request<{ id: string }>, res: Response) => {
   const id = req.params.id;
   try {
-    if (!mongoose.Types.ObjectId.isValid(id))
-      return res.status(400).json({ message: "Invalid id" });
     const user = await UserSchema.findById(id, { password: 0 });
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
