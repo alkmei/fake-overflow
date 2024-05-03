@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
 import FormError from "@/components/FormError.tsx";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -7,6 +9,8 @@ export default function Login() {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -31,12 +35,16 @@ export default function Login() {
         password: password,
       };
 
-      // TODO: ask server if correct credentials if so then login if not update errors accordingly
-      // The user enters an unregistered email or an
-      // incorrect password then the application should
-      // report back appropriate feedback to the user on the
-      // same page.
-      console.log(user);
+      // Verify login credentials and login
+      axios
+        .post("http://localhost:8000/api/session", user)
+        .then(() => {
+          navigate("/questions");
+        })
+        .catch((err) => {
+          valid = false;
+          console.log(err);
+        });
     }
   };
 

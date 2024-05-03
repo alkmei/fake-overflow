@@ -70,7 +70,7 @@ export default function SignUp() {
       axios
         .post("http://localhost:8000/api/users", newUser)
         .then(() => {
-          // navigate("/users/login");
+          navigate("/users/login");
         })
         .catch((err) => {
           valid = false;

@@ -16,7 +16,12 @@ require("./src/schema/question.schema");
 
 const app = express();
 
-app.use(cors<Request>());
+app.use(
+  cors<Request>({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 mongoose.connect("mongodb://localhost:27017/fake_so").catch((err) => {

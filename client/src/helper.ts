@@ -1,3 +1,6 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 export const timeSinceDate = (dateString: Date) => {
   const now = new Date();
   const date = new Date(dateString);
@@ -49,3 +52,25 @@ export const sluggify = (s: string) =>
     .toLowerCase()
     .replace(/[^\w ]+/g, "")
     .replace(/ +/g, "-");
+
+export const useAuthentication = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/session/status", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setLoggedIn(res.data.loggedIn);
+        setIsAdmin(res.data.isAdmin);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  return [loggedIn, isAdmin];
+};
