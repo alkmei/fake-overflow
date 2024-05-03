@@ -1,6 +1,6 @@
 // Tag Document Schema
 import mongoose, { Schema } from "mongoose";
-import Tag from "../types/tag";
+import Tag from "../../types/tag";
 
 const tagSchema = new Schema<Tag>(
   {

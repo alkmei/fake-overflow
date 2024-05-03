@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { jwtVerify } from "jose";
-import { UserIdJWTPayload } from "../types/jose";
-import { AuthRequest } from "../types/express";
+import { UserIdJWTPayload } from "../../types/jose";
+import { AuthRequest } from "../../types/express";
 import { DEV_SECRET } from "../utils";
 
 export const verifyToken = async (

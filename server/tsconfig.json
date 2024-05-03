@@ -12,6 +12,8 @@
     /* Type Checking */
     "strict": true,
     "skipLibCheck": true,
-    "typeRoots": ["./types"]
-  }
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "types": ["jest","node"]
+  },
+  "include": ["src/**/*", "tests/**/*"],
 }

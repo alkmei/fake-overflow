@@ -1,6 +1,6 @@
 import UserSchema from "../schema/user.schema";
 import QuestionSchema from "../schema/question.schema";
-import { AuthRequest } from "../types/express";
+import { AuthRequest } from "../../types/express";
 
 export const isAuthorOrStaff = async (
   req: AuthRequest,
@@ -21,4 +21,11 @@ export const isAuthorOrStaff = async (
   const isStaff = await UserSchema.exists({ _id: userId, isStaff: true });
 
   return isAuthor || !!isStaff;
+};
+
+export const isSelfOrStaff = async (req: AuthRequest, userId: string) => {
+  const id = req.userId;
+  const isSelf = id === userId;
+  const isStaff = await UserSchema.exists({ _id: userId, isStaff: true });
+  return !!isStaff || isSelf;
 };

@@ -1,6 +1,6 @@
 // Comment Document Schema
 import mongoose, { Schema } from "mongoose";
-import Comment from "../types/comment";
+import Comment from "../../types/comment";
 
 const comments = new Schema<Comment>(
   {

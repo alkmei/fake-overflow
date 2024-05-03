@@ -1,6 +1,6 @@
 // Answer Document Schema
 import mongoose, { Schema } from "mongoose";
-import Answer from "../types/answer";
+import Answer from "../../types/answer";
 
 const answers = new Schema<Answer>(
   {

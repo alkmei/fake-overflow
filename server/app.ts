@@ -1,8 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
-import userRoute from "./routes/user.route";
-import sessionRoute from "./routes/session.route";
-import questionRoute from "./routes/question.route";
+import userRoute from "./src/routes/user.route";
+import sessionRoute from "./src/routes/session.route";
+import questionRoute from "./src/routes/question.route";
 import { Request } from "express";
 import cors from "cors";
 

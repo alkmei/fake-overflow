@@ -1,8 +1,9 @@
 import QuestionSchema from "../schema/question.schema";
 import { Request, Response } from "express";
-import { handleError } from "../utils";
-import { AuthRequest } from "../types/express";
+import { handleError, removeUndefinedKeys } from "../utils";
+import { AuthRequest } from "../../types/express";
 import { isAuthorOrStaff } from "../utils/auth";
+import Tag from "../../types/tag";
 
 export const getQuestions = async (req: Request, res: Response) => {
   try {
@@ -57,10 +58,17 @@ export const createQuestion = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const updateQuestion = async (req: AuthRequest, res: Response) => {
+export const updateQuestion = async (
+  req: AuthRequest<
+    { id: string },
+    {},
+    { title?: string; text?: string; summary?: string; tags?: Tag[] }
+  >,
+  res: Response,
+) => {
   try {
     const questionId = req.params.id;
-    const { title, text, summary, tags } = req.body;
+    const body = req.body;
 
     const isAllowed = await isAuthorOrStaff(req, questionId);
 
@@ -70,7 +78,7 @@ export const updateQuestion = async (req: AuthRequest, res: Response) => {
 
     const updatedQuestion = await QuestionSchema.findByIdAndUpdate(
       questionId,
-      { title, text, summary, tags },
+      removeUndefinedKeys(body),
       { new: true },
     );
 
@@ -79,6 +87,28 @@ export const updateQuestion = async (req: AuthRequest, res: Response) => {
     }
 
     res.json(updatedQuestion);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+export const deleteQuestion = async (req: AuthRequest, res: Response) => {
+  try {
+    const questionId = req.params.id;
+
+    const isAllowed = await isAuthorOrStaff(req, questionId);
+
+    if (!isAllowed) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const deletedQuestion = await QuestionSchema.findByIdAndDelete(questionId);
+
+    if (!deletedQuestion) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    res.json({ message: "Question deleted successfully" });
   } catch (err) {
     handleError(err, res);
   }

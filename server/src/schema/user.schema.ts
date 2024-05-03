@@ -1,6 +1,6 @@
 // User Document Schema
 import mongoose, { Schema } from "mongoose";
-import User from "../types/user";
+import User from "../../types/user";
 
 const users = new Schema<User>(
   {

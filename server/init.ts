@@ -3,11 +3,11 @@
 // Script should take admin credentials as arguments as described in the requirements doc.
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import TagSchema from "./schema/tag.schema";
-import UserSchema from "./schema/user.schema";
-import AnswerSchema from "./schema/answer.schema";
-import CommentSchema from "./schema/comment.schema";
-import QuestionSchema from "./schema/question.schema";
+import TagSchema from "./src/schema/tag.schema";
+import UserSchema from "./src/schema/user.schema";
+import AnswerSchema from "./src/schema/answer.schema";
+import CommentSchema from "./src/schema/comment.schema";
+import QuestionSchema from "./src/schema/question.schema";
 
 const MONGO_URI = "mongodb://127.0.0.1:27017/fake_so";
 
@@ -24,7 +24,7 @@ mongoose.connect(MONGO_URI, {}).catch((e) => {
   process.exit(1);
 });
 
-const db = mongoose.connection.on(
+mongoose.connection.on(
   "error",
   console.error.bind(console, "MongoDB connection error:"),
 );
@@ -34,12 +34,18 @@ function createTags(name: string) {
   return tag.save();
 }
 
-async function createUser(name: string, password: string, email: string) {
+async function createUser(
+  name: string,
+  password: string,
+  email: string,
+  isStaff: boolean,
+) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = new UserSchema({
     username: name,
     password: hashedPassword,
     email: email,
+    isStaff: isStaff,
   });
   return user.save();
 }
@@ -79,11 +85,12 @@ function createQuestion(
 }
 
 const populate = async () => {
-  await createUser(adminUsername, adminPassword, adminUsername);
+  await createUser(adminUsername, adminPassword, adminUsername, true);
   const testUser = await createUser(
     "testuser",
     "testpassword",
     "testuser@test.com",
+    false,
   );
 
   // Create some tags
