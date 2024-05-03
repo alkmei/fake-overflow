@@ -29,3 +29,10 @@ export const isSelfOrStaff = async (req: AuthRequest, userId: string) => {
   const isStaff = await UserSchema.exists({ _id: userId, isStaff: true });
   return !!isStaff || isSelf;
 };
+
+export const extractToken = (cookieString: string) => {
+  return cookieString
+    .split(";")
+    .find((cookie) => cookie.trim().startsWith("token="))
+    ?.split("=")[1];
+};

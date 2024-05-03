@@ -65,12 +65,11 @@ export const useAuthentication = () => {
       .then((res) => {
         setLoggedIn(res.data.loggedIn);
         setIsAdmin(res.data.isAdmin);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  return [loggedIn, isAdmin];
+  return { loggedIn, isAdmin, setLoggedIn, setIsAdmin };
 };
