@@ -98,7 +98,7 @@ const populate = async () => {
   const tags = await Promise.all(tagNames.map((name) => createTags(name)));
 
   // Create some questions
-  const questions = await Promise.all([
+  await Promise.all([
     createQuestion(
       "What is the difference between let and var in JavaScript?",
       "I'm a bit confused about the differences between let and var in JavaScript. Can someone explain it to me?",
@@ -117,7 +117,7 @@ const populate = async () => {
   ]);
 
   // Create some answers
-  const answers = await Promise.all([
+  await Promise.all([
     createAnswer(
       "The main difference between let and var is the scope. `var` variables are function-scoped, while `let` variables are block-scoped.",
       testUser._id.toString(),
@@ -132,7 +132,7 @@ const populate = async () => {
   ]);
 
   // Create some comments
-  const comments = await Promise.all([
+  await Promise.all([
     createComment("Great explanation, thanks!", testUser._id.toString()),
     createComment(
       "I still don't fully understand promises, any additional resources?",

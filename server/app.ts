@@ -5,6 +5,7 @@ import sessionRoute from "./src/routes/session.route";
 import questionRoute from "./src/routes/question.route";
 import { Request } from "express";
 import cors from "cors";
+import tagRoute from "./src/routes/tag.route";
 
 const app = express();
 
@@ -18,6 +19,7 @@ mongoose.connect("mongodb://localhost:27017/fake_so").catch((err) => {
 
 app.use("/api/users", userRoute);
 app.use("/api/session", sessionRoute);
+app.use("/api/tags", tagRoute);
 app.use("/api/questions", questionRoute);
 
 export default app;
