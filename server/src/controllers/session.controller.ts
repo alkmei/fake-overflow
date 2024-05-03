@@ -3,8 +3,8 @@ import UserSchema from "../schema/user.schema";
 import bcrypt from "bcrypt";
 import { jwtVerify, SignJWT } from "jose";
 import { DEV_SECRET, handleError } from "../utils";
-import { UserIdJWTPayload } from "../types/jose";
-import { AuthRequest } from "../types/express";
+import { UserIdJWTPayload } from "../../types/jose";
+import { AuthRequest } from "../../types/express";
 
 /**
  * Despite the use of "session" this controller uses JWT for authentication
@@ -44,21 +44,29 @@ export const createSession = async (
 };
 
 export const getSession = async (req: AuthRequest, res: Response) => {
-  const token = req.cookies.token;
-  if (!token) return res.status(401).json({ loggedIn: false, isAdmin: false });
+  const cookieString = req.headers.cookie;
+  if (cookieString) {
+    const token = cookieString
+      .split(";")
+      .find((cookie) => cookie.trim().startsWith("token="))
+      ?.split("=")[1];
 
-  try {
-    const { payload } = await jwtVerify(
-      token,
-      new TextEncoder().encode(DEV_SECRET),
-    );
-    const decodedPayload = payload as UserIdJWTPayload;
-    req.userId = decodedPayload.userId;
-    const user = await UserSchema.findById(req.userId);
-    if (!user) return res.status(400).json({ message: "User doesn't exist" });
+    if (!token)
+      return res.status(401).json({ loggedIn: false, isAdmin: false });
 
-    return res.status(200).json({ loggedIn: true, isAdmin: user.isStaff });
-  } catch (err) {
-    handleError(err, res);
+    try {
+      const { payload } = await jwtVerify(
+        token,
+        new TextEncoder().encode(DEV_SECRET),
+      );
+      const decodedPayload = payload as UserIdJWTPayload;
+      req.userId = decodedPayload.userId;
+      const user = await UserSchema.findById(req.userId);
+      if (!user) return res.status(400).json({ message: "User doesn't exist" });
+
+      return res.status(200).json({ loggedIn: true, isAdmin: user.isStaff });
+    } catch (err) {
+      handleError(err, res);
+    }
   }
 };

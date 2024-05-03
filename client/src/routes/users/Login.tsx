@@ -35,7 +35,7 @@ export default function Login() {
         password: password,
       };
 
-      // Verify login credentials then login and save jwt cookie
+      // Verify login credentials and login
       axios
         .post("http://localhost:8000/api/session", user)
         .then(() => {
@@ -43,7 +43,6 @@ export default function Login() {
         })
         .catch((err) => {
           valid = false;
-          setPasswordError(err.response.data.message);
           console.log(err);
         });
     }
