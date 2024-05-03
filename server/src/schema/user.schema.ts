@@ -6,7 +6,7 @@ const users = new Schema<User>(
   {
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true },
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true },
     reputation: { type: Number, default: 50 },
     creationTime: { type: Date, default: Date.now },
     isStaff: { type: Boolean, default: false },

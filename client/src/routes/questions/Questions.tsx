@@ -2,15 +2,10 @@ import ContentHeader from "@/components/ContentHeader.tsx";
 import QuestionList from "@/components/questions/QuestionList.tsx";
 import { tempQuestions } from "@/TempData.ts";
 import PageButtons from "@/components/PageButtons.tsx";
-import { useAuthentication } from "@/helper.ts";
 
 export default function Questions() {
   const numPerPage = 5;
   const lastPage = Math.floor(tempQuestions.length / numPerPage) + 1;
-
-  const [loggedIn, isAdmin] = useAuthentication();
-
-  console.log(loggedIn, isAdmin);
 
   return (
     <section className="w-full">

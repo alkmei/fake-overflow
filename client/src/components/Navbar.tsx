@@ -1,7 +1,34 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { IconBrandStackoverflow, IconSearch } from "@tabler/icons-react";
+import { useEffect } from "react";
+import { useAuthentication } from "@/helper.ts";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 export default function Navbar() {
+  const { loggedIn, setLoggedIn } = useAuthentication();
+  const [cookies, setCookies, removeCookie] = useCookies(["token"]);
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    axios
+      .post("http://localhost:8000/api/session/logout", {
+        withCredentials: true,
+      })
+      .then(() => {
+        setCookies("token", "", {
+          sameSite: "strict",
+        });
+        setLoggedIn(false);
+        navigate("/");
+      })
+      .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    console.log(loggedIn);
+  }, [loggedIn, cookies.token]);
+
   return (
     <div className="fixed w-full border-b border-gray-200 bg-white z-50 border-t-[3px] border-t-[#e7700d]">
       <header className="flex items-center gap-4 justify-between h-14 max-w-[1264px] m-auto">
@@ -25,22 +52,31 @@ export default function Navbar() {
             />
           </div>
         </div>
-        <div>
-          <ol className="flex gap-2">
-            <NavLink
-              to="/users/login"
-              className="border border-blue-700 p-2 rounded text-blue-600 hover:bg-blue-200 focus:outline-none"
-            >
-              Log In
-            </NavLink>
-            <NavLink
-              to="/users/signup"
-              className="bg-blue-600 p-2 rounded text-white hover:bg-blue-700"
-            >
-              Sign Up
-            </NavLink>
-          </ol>
-        </div>
+        {!loggedIn ? (
+          <div>
+            <ol className="flex gap-2">
+              <NavLink
+                to="/users/login"
+                className="border border-blue-700 p-2 rounded text-blue-600 hover:bg-blue-200 focus:outline-none"
+              >
+                Log In
+              </NavLink>
+              <NavLink
+                to="/users/signup"
+                className="bg-blue-500 p-2 rounded text-white hover:bg-blue-600"
+              >
+                Sign Up
+              </NavLink>
+            </ol>
+          </div>
+        ) : (
+          <button
+            onClick={logOut}
+            className="bg-blue-500 p-2 rounded text-white hover:bg-blue-600"
+          >
+            Log Out
+          </button>
+        )}
       </header>
     </div>
   );
