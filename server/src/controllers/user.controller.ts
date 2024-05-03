@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 import { isSelfOrStaff } from "../utils/auth";
+import mongoose from "mongoose";
 
 // GET /api/users/
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -19,6 +20,8 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const getUser = async (req: Request<{ id: string }>, res: Response) => {
   const id = req.params.id;
   try {
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json({ message: "Invalid id" });
     const user = await UserSchema.findById(id, { password: 0 });
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
@@ -32,21 +35,21 @@ export const createUser = async (
   req: Request<{}, {}, { email: string; username: string; password: string }>,
   res: Response,
 ) => {
-  const { email, username, password } = req.body;
+  const { email, username } = req.body;
   try {
     const user = await UserSchema.findOne({ email });
     if (user)
       return res
         .status(400)
         .json({ message: "A user with this email already exists!" });
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new UserSchema({
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const dbUser = await UserSchema.create({
       email: email,
-      username,
+      username: username,
       password: hashedPassword,
     });
-    const dbUser = await newUser.save();
-    res.status(201).json(dbUser);
+    const { password, ...resUser } = dbUser.toObject();
+    res.status(201).json(resUser);
   } catch (err) {
     handleError(err, res);
   }

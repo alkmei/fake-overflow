@@ -10,3 +10,5 @@ export const getTags = async (req: Request, res: Response) => {
     handleError(err, res);
   }
 };
+
+export const getTag = async (req: Request, res: Response) => {};

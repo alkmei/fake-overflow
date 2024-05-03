@@ -5,6 +5,7 @@ import { AuthRequest } from "../../types/express";
 import { isAuthorOrStaff } from "../utils/auth";
 import Tag from "../../types/tag";
 import TagSchema from "../schema/tag.schema";
+import UserSchema from "../schema/user.schema";
 
 export const getQuestions = async (req: Request, res: Response) => {
   try {
@@ -50,26 +51,27 @@ export const createQuestion = async (
   try {
     const { title, text, summary, tags } = req.body;
     const authorId = req.userId;
+    const author = await UserSchema.findById(authorId);
 
-    const tagObj = tags.map((t) => new TagSchema({ name: t }));
+    const existingTags = await TagSchema.find({ name: { $in: tags } });
+    const newTags = tags
+      .filter((t) => !existingTags.some((et) => et.name === t))
+      .map((t) => new TagSchema({ name: t, author: author }));
+    const tagObj = [...existingTags, ...newTags];
 
     const newQuestion = new QuestionSchema({
       title: title,
       text: text,
       summary: summary,
-      author: authorId,
+      author: author,
       tags: tagObj,
     });
 
-    for (const tag of tagObj) {
-      await tag.save();
-    }
+    await TagSchema.bulkSave(newTags);
+
     const savedQuestion = await newQuestion.save();
     res.status(201).json(savedQuestion);
   } catch (err) {
-    if (err.name === "MongoError" && err.code === 11000) {
-      console.error("There was a duplicate key error");
-    }
     handleError(err, res);
   }
 };
