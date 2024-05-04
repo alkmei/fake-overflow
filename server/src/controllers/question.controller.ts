@@ -58,11 +58,10 @@ export const createQuestion = async (
 ) => {
   try {
     const { title, text, summary, tags } = req.body;
-    const authorId = req.userId;
+    const authorId = req.userId!;
     const author = await UserSchema.findById(authorId);
-    if (!author) return res.status(404).json({ message: "Author not found" });
 
-    const tagDocs = await addTagsToDB(author, tags);
+    const tagDocs = await addTagsToDB(author!._id, tags);
 
     const newQuestion = new QuestionSchema({
       title: title,
@@ -71,7 +70,6 @@ export const createQuestion = async (
       author: author,
       tags: tagDocs,
     });
-    console.log(newQuestion);
     const savedQuestion = await newQuestion.save();
     res.status(201).json(savedQuestion);
   } catch (err) {
@@ -104,7 +102,7 @@ export const updateQuestion = async (
       return res.status(404).json({ message: "Question not found" });
 
     if (body.tags) {
-      question.tags = await addTagsToDB(question.author, body.tags);
+      question.tags = await addTagsToDB(question.author._id, body.tags);
     }
 
     question.save();
