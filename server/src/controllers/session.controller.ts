@@ -32,7 +32,12 @@ export const createSession = async (
       .setExpirationTime("1d")
       .sign(new TextEncoder().encode(DEV_SECRET));
 
-    res.status(200).json({ token: token, message: "Login Successful" });
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
+    res.status(200).json({ message: "Login Successful" });
   } catch (err) {
     handleError(err, res);
   }
@@ -40,25 +45,14 @@ export const createSession = async (
 
 export const getSession = async (req: AuthRequest, res: Response) => {
   try {
-    const cookieString = req.headers.cookie;
-    if (cookieString) {
-      const token = extractToken(cookieString);
-
-      if (!token)
-        return res.status(200).json({ loggedIn: false, isAdmin: false });
-
-      const { payload } = await jwtVerify(
-        token,
-        new TextEncoder().encode(DEV_SECRET),
-      );
-      const decodedPayload = payload as UserIdJWTPayload;
-      req.userId = decodedPayload.userId;
-      const user = await UserSchema.findById(req.userId);
-      if (!user) return res.status(400).json({ message: "User doesn't exist" });
-
-      return res.status(200).json({ loggedIn: true, isAdmin: user.isStaff });
-    }
+    const user = await UserSchema.findById(req.userId, { password: 0 });
+    res.status(200).json(user);
   } catch (err) {
     handleError(err, res);
   }
+};
+
+export const deleteSession = async (req: AuthRequest, res: Response) => {
+  res.clearCookie("access_token");
+  res.json({ message: "Logout successful" });
 };

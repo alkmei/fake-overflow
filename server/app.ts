@@ -1,5 +1,6 @@
-import express = require("express");
-import cors = require("cors");
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import userRoute from "./src/routes/user.route";
 import sessionRoute from "./src/routes/session.route";
@@ -16,6 +17,7 @@ require("./src/schema/question.schema");
 
 const app = express();
 
+app.use(cookieParser());
 app.use(
   cors<Request>({
     origin: "http://localhost:3000",
