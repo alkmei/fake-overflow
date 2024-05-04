@@ -8,6 +8,7 @@ import sessionRoute from "./src/routes/session.route";
 import questionRoute from "./src/routes/question.route";
 import tagRoute from "./src/routes/tag.route";
 import answerRoute from "./src/routes/answer.route";
+import commentRoute from "./src/routes/comment.route";
 
 require("./src/schema/tag.schema");
 require("./src/schema/comment.schema");
@@ -36,5 +37,6 @@ app.use("/api/session", sessionRoute);
 app.use("/api/tags", tagRoute);
 app.use("/api/questions", questionRoute);
 app.use("/api/answers", answerRoute);
+app.use("/api/comments", commentRoute);
 
 export default app;
