@@ -1,11 +1,9 @@
 import type { Request, Response } from "express";
 import UserSchema from "../schema/user.schema";
 import bcrypt from "bcrypt";
-import { jwtVerify, SignJWT } from "jose";
+import { SignJWT } from "jose";
 import { DEV_SECRET, handleError } from "../utils";
-import { UserIdJWTPayload } from "../../types/jose";
 import { AuthRequest } from "../../types/express";
-import { extractToken } from "../utils/auth";
 
 /**
  * Despite the use of "session" this controller uses JWT for authentication
