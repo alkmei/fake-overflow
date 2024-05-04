@@ -7,6 +7,7 @@ import UserSchema from "../schema/user.schema";
 import { addTagsToDB, findOrphanTags } from "../utils/tag";
 import AnswerSchema from "../schema/answer.schema";
 import TagSchema from "../schema/tag.schema";
+import CommentSchema from "../schema/comment.schema";
 
 // GET /api/questions
 export const getQuestions = async (req: Request, res: Response) => {
@@ -137,6 +138,8 @@ export const deleteQuestion = async (
     // Delete all associated answers
     await AnswerSchema.deleteMany({ _id: { $in: deletedQuestion.answers } });
 
+    await CommentSchema.deleteMany({ _id: { $in: deletedQuestion.comments } });
+
     const tagsToDelete = await findOrphanTags();
 
     await TagSchema.deleteMany({
@@ -149,6 +152,7 @@ export const deleteQuestion = async (
   }
 };
 
+// POST /api/questions/:id/answers
 export const postAnswer = async (
   req: AuthRequest<{ id: string }, {}, { text: string }>,
   res: Response,
@@ -168,6 +172,31 @@ export const postAnswer = async (
     await question.save();
 
     res.status(201).json(savedAnswer);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+// POST /api/questions/:id/comments
+export const postComment = async (
+  req: AuthRequest<{ id: string }, {}, { text: string }>,
+  res: Response,
+) => {
+  try {
+    const questionId = req.params.id;
+    const { text } = req.body;
+    const authorId = req.userId;
+    const author = await UserSchema.findById(authorId);
+
+    const comment = new CommentSchema({ text: text, author: author!._id });
+    const question = await QuestionSchema.findById(questionId);
+    if (!question) return res.status(404).json({ error: "Question not found" });
+
+    question.comments.push(comment);
+    const savedComment = await comment.save();
+    await question.save();
+
+    res.status(201).json(savedComment);
   } catch (err) {
     handleError(err, res);
   }
