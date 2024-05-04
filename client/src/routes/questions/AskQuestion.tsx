@@ -3,8 +3,11 @@ import { FormEvent, useState, useEffect } from "react";
 import { validateHyperlinks } from "@/helper";
 import { useNavigate, useParams } from "react-router-dom";
 import { tempQuestions } from "@/TempData.ts";
+import { useAuthentication } from "@/helper";
+import axios from "axios";
 
 export default function AskQuestion({ editing }: { editing?: boolean }) {
+  const { user } = useAuthentication();
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [tags, setTags] = useState("");
@@ -28,6 +31,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
   const [textError, setTextError] = useState("");
   const [tagsError, setTagsError] = useState("");
   const [summaryError, setSummaryError] = useState("");
+  const [formError, setFormError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (event: FormEvent) => {
@@ -38,6 +42,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
     setTextError("");
     setTagsError("");
     setSummaryError("");
+    setFormError("");
 
     if (title.trim() === "") {
       setTitleError("Title cannot be empty");
@@ -86,7 +91,6 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
         text: text,
         summary: summary,
         tags: Array.from(tagSet),
-        author: "username here", // this will be a user
       };
 
       console.log(newQuestion);
@@ -94,16 +98,19 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
       if (editing) {
         // TODO: edit question instead of adding it to db
       } else {
-        // // TODO: add new question
-        // axios
-        //     .post("http://localhost:8000/posts/question", newQuestion)
-        //     .then((res) => {
-        //       console.log(res);
-        //       console.log(res.data);
-        //     });
+        axios
+          .post("http://localhost:8000/api/questions/", newQuestion, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log(res.data);
+            navigate("/questions");
+          })
+          .catch((err) => {
+            console.log(err);
+            setFormError(err.response.request.statusText);
+          });
       }
-
-      navigate("/questions");
     }
   };
 
@@ -184,6 +191,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
           />
           <FormError message={tagsError} />
         </div>
+        <FormError message={formError} />
         <button className="bg-blue-600 p-2 rounded text-white hover:bg-blue-700">
           Submit
         </button>

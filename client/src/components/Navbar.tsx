@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 
 export default function Navbar() {
-  const { username, loggedIn, setLoggedIn } = useAuthentication();
+  const { user, loggedIn, setLoggedIn } = useAuthentication();
   const [cookies, setCookies] = useCookies(["access_token"]);
   const navigate = useNavigate();
 
@@ -76,7 +76,7 @@ export default function Navbar() {
             >
               Log Out
             </button>
-            <p className="text-lg">{username}</p>
+            <p className="text-lg">{user?.username}</p>
           </>
         )}
       </header>

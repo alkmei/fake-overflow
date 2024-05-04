@@ -62,7 +62,7 @@ export const createQuestion = async (
     const author = await UserSchema.findById(authorId);
     if (!author) return res.status(404).json({ message: "Author not found" });
 
-    const tagDocs = addTagsToDB(author, tags);
+    const tagDocs = await addTagsToDB(author, tags);
 
     const newQuestion = new QuestionSchema({
       title: title,
@@ -71,7 +71,7 @@ export const createQuestion = async (
       author: author,
       tags: tagDocs,
     });
-
+    console.log(newQuestion);
     const savedQuestion = await newQuestion.save();
     res.status(201).json(savedQuestion);
   } catch (err) {

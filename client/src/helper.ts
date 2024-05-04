@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Question from "@server/types/question";
+import User from "@server/types/user";
 
 export const timeSinceDate = (dateString: Date) => {
   const now = new Date();
@@ -57,7 +58,7 @@ export const sluggify = (s: string) =>
 export const useAuthentication = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     axios
@@ -65,9 +66,9 @@ export const useAuthentication = () => {
         withCredentials: true,
       })
       .then((res) => {
-        if (res.data.id) {
+        if (res.data) {
           setLoggedIn(true);
-          setUsername(res.data.username);
+          setUser(res.data);
           if (res.data.isStaff) setIsAdmin(res.data.isAdmin);
         } else setLoggedIn(false);
       })
@@ -76,7 +77,7 @@ export const useAuthentication = () => {
       });
   }, []);
 
-  return { username, loggedIn, isAdmin, setLoggedIn, setIsAdmin };
+  return { user, loggedIn, isAdmin, setLoggedIn, setIsAdmin };
 };
 
 export const getAnswers = async (question: Question) => {
