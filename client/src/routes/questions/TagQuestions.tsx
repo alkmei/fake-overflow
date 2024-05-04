@@ -12,7 +12,7 @@ export default function TagQuestions() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/questions/tagged/${tag}`)
+      .get(`http://localhost:8000/api/tags/${tag}/questions`)
       .then((res) => {
         setQuestions(res.data);
       })

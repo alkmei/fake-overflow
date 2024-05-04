@@ -45,9 +45,9 @@ export default function QuestionComponent({
           {question.summary}
         </p>
         <div className="flex justify-between flex-wrap items-center">
-          <ul className="flex flex-wrap gap-3" id={`${question.id}__tags`}>
+          <ul className="flex flex-wrap gap-3">
             {question.tags.map((tag) => {
-              return <TagComponent key={tag.id} name={tag.name} />;
+              return <TagComponent key={tag.name} name={tag.name} />;
             })}
           </ul>
           <p className="text-sm text-gray-500 flex justify-end ml-auto gap-1 max-w-[62rem]">

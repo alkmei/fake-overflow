@@ -1,8 +1,30 @@
 import { Link } from "react-router-dom";
 import Tag from "@server/types/tag";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Question from "@server/types/question";
+
+type TagQuestionsMap = { [key: string]: Question[] };
 
 export default function TagList({ tags }: { tags: Tag[] }) {
-  // TODO: request number of questions per tag
+  const [tagQuestions, setTagQuestions] = useState<TagQuestionsMap>();
+  useEffect(() => {
+    const fetchTagQuestions = async () => {
+      const tagQuestionsData: TagQuestionsMap = {};
+      for (const tag of tags) {
+        const res = await axios.get(
+          `http://localhost:8000/api/tags/${tag.name}/questions`,
+        );
+        tagQuestionsData[tag.name] = res.data;
+      }
+      setTagQuestions(tagQuestionsData);
+    };
+
+    fetchTagQuestions().then();
+  }, [tags]);
+  console.log(tagQuestions);
+  if (!tagQuestions) return <p>Page Loading...</p>;
+
   return (
     <ul className="flex flex-wrap gap-6 m-5">
       {tags.map((t, index) => (
@@ -15,8 +37,9 @@ export default function TagList({ tags }: { tags: Tag[] }) {
             {t.name}
           </section>
           <p className="mt-3 text-sm text-gray-500">
-            {/*<span>{tags[t.name].length}&nbsp;</span>*/}604 questions
-            {/*{tagQuestions[t.name].length > 1 ? "s" : ""}*/}
+            <span>{tagQuestions[t.name]?.length || 0}&nbsp;</span>
+            question
+            {(tagQuestions[t.name]?.length || 0) > 1 ? "s" : ""}
           </p>
         </Link>
       ))}
