@@ -3,7 +3,7 @@ import { timeSinceDate, useAuthentication } from "@/helper.ts";
 import Comment from "@server/types/comment";
 import { FormEvent, useState } from "react";
 import FormError from "@/components/FormError.tsx";
-import { IconArrowUp, IconCaretUpFilled } from "@tabler/icons-react";
+import { IconArrowUp } from "@tabler/icons-react";
 
 export default function Comments({ comments }: { comments: Comment[] }) {
   const { loggedIn } = useAuthentication();

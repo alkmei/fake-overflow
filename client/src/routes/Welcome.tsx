@@ -1,7 +1,12 @@
 import { IconUserFilled, IconLogin } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthentication } from "@/helper.ts";
 
 export default function Welcome() {
+  const { loggedIn } = useAuthentication();
+  const navigate = useNavigate();
+  if (loggedIn) navigate("/questions");
+
   return (
     <main className="flex justify-center items-center p-4 flex-col gap-36">
       <h1 className="text-3xl">

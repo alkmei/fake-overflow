@@ -17,7 +17,6 @@ import Answer from "@server/types/answer";
 import Question from "@server/types/question";
 import axios from "axios";
 import { tempQuestions } from "@/TempData.ts";
-import Comment from "@server/types/comment";
 
 export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const questionId = useParams().id;
@@ -63,8 +62,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
         console.error("Error fetching question or answers:", error);
       });
   }, [questionId]);
-  // TODO: show updated view count on answers page
-  //  split the array into answers by user and answers not by the user
+  //  TODO: split the array into answers by user and answers not by the user
 
   const numPerPage = 5;
   const lastPage = Math.floor(answers.length / numPerPage) + 1;
@@ -88,8 +86,6 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
     if (valid) {
       const newAnswer = {
         text: text,
-        // TODO: Make this current user
-        author: "test author",
       };
 
       console.log(newAnswer);
@@ -152,7 +148,6 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
     console.log(post);
   };
 
-  console.log(question);
   if (question === undefined) return <p>Question Not Found...</p>;
   // TODO - Separate the body into its own component
   return (
@@ -180,7 +175,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
           <PostText text={question.text} />
           <ol className="flex items-center justify-center gap-2">
             {question.tags.map((tag) => (
-              <TagComponent name={tag.name} />
+              <TagComponent key={tag.id} name={tag.name} />
             ))}
           </ol>
         </div>

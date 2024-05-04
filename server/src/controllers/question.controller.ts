@@ -28,6 +28,9 @@ export const getQuestionById = async (
 ) => {
   try {
     const questionId = req.params.id;
+    await QuestionSchema.findByIdAndUpdate(questionId, {
+      $inc: { views: 1 },
+    });
     const question = await QuestionSchema.findById(questionId)
       .populate("author", "username reputation creationTime")
       .populate("tags", "name")
@@ -38,7 +41,6 @@ export const getQuestionById = async (
       return res.status(404).json({ message: "Question not found" });
     }
 
-    question.views++;
     await question.save();
 
     res.json(question);
