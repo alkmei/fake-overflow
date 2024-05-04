@@ -37,6 +37,9 @@ npm run start
 - Backend mongoose initialize script
 - Backend user and auth routes
 - Backend question routes
+- Backend comments routes
+- Backend tags routes
+- Backend answers routes
 
 ## Team Member 2 Contribution - Andrew
 - Document Schemas
