@@ -6,10 +6,16 @@ import { IconEdit, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import User from "@server/types/user";
-import { tempQuestions, tags } from "@/TempData.ts";
+import { tempQuestions } from "@/TempData.ts";
+import Question from "@server/types/question";
+import Tag from "@server/types/tag";
 
 export default function Profile() {
   const [user, setUser] = useState<User>();
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [answeredQuestions, setAnsweredQuestions] = useState<Question[]>([]);
+  const [userTags, setUserTags] = useState<Tag[]>([]);
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -22,8 +28,31 @@ export default function Profile() {
         console.log("Error fetching user:", err);
       });
   }, [id]);
-  console.log(user);
+
+  useEffect(() => {
+    // Get questions posted by user
+    axios
+      .get(`http://localhost:8000/api/users/${user?.id}/questions`)
+      .then((res) => {
+        setQuestions(res.data);
+      })
+      .catch((err) => {
+        console.log("Error fetching questions posted by user", err);
+      });
+
+    // Get tags created by user
+    axios
+      .get(`http://localhost:8000/api/users/${user?.id}/tags`)
+      .then((res) => {
+        setUserTags(res.data);
+      })
+      .catch((err) => {
+        console.log("Error fetching tags created by user", err);
+      });
+  }, [user]);
+
   if (user === undefined) return <p>User Not Found...</p>;
+
   return (
     <div className="flex flex-col gap-5 m-10 ml-10 w-full">
       <div className="flex justify-between mb-2">
@@ -41,7 +70,7 @@ export default function Profile() {
       <div>
         <h2 className="text-2xl mb-5">Questions</h2>
         <ul className="flex flex-col gap-2 ml-3">
-          {tempQuestions.map((q, index) => (
+          {questions.map((q, index) => (
             <div className="flex flex-col" key={index}>
               <div className="flex flex-row justify-between border p-4 rounded-md">
                 <h3 className="text-blue-600 hover:text-blue-900 break-all mb-0.5 self-center">
@@ -67,8 +96,7 @@ export default function Profile() {
       </div>
       <div>
         <h2 className="text-2xl mb-5">Created Tags</h2>
-        {/* TODO: Replace with tags created by user*/}
-        <TagList tags={tags} />
+        <TagList tags={userTags} />
       </div>
       <div>
         <h2 className="text-2xl mb-5">Answered Questions</h2>

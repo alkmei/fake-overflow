@@ -27,7 +27,7 @@ export default function ContentHeader({
         )}
       </div>
       <div className="flex justify-between items-center">
-        {questionCount && (
+        {questionCount !== undefined && (
           <div>
             {questionCount} {questionCount === 1 ? "question" : "questions"}
           </div>
