@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import { handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 import { isSelfOrStaff } from "../utils/auth";
-import mongoose from "mongoose";
 import AnswerSchema from "../schema/answer.schema";
 import TagSchema from "../schema/tag.schema";
 import QuestionSchema from "../schema/question.schema";
@@ -48,22 +47,18 @@ export const getQuestionsOfUser = async (
 };
 
 // GET /api/users/:id/questions-answered
-export const getQAnsweredOfUser = async (
+export const getQuestionsAnsweredOfUser = async (
   req: Request<{ id: string }>,
   res: Response,
 ) => {
   const id = req.params.id;
 
   try {
-    const answers = await AnswerSchema.find({ author: id }).populate({
-      path: "question",
-      populate: {
-        path: "author",
-        select: "username",
-      },
+    const author = await UserSchema.findById(id);
+    if (!author) return res.status(404).json({ message: "User not found" });
+    const questions = await QuestionSchema.find({
+      answers: { $elemMatch: { author: author } },
     });
-    console.log(answers);
-    const questions = answers.map((answer) => answer.question);
 
     res.json(questions);
   } catch (err) {
