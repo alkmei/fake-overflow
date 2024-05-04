@@ -17,7 +17,7 @@ export const createSession = async (
 ) => {
   const { email, password } = req.body;
   try {
-    const user = await UserSchema.findOne({ email });
+    const user = await UserSchema.findOne({ email }).select("+password");
     if (!user)
       return res.status(401).json({ message: "Invalid email or password" });
     const isPasswordValid = await bcrypt.compare(password, user.password);

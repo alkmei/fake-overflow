@@ -14,8 +14,10 @@ export const getTags = async (
 
     if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");
-      tags = await TagSchema.find({ name: { $regex: regex } });
-    } else tags = await TagSchema.find({});
+      tags = await TagSchema.find({ name: { $regex: regex } }).populate(
+        "author",
+      );
+    } else tags = await TagSchema.find({}).populate("author");
 
     res.json(tags);
   } catch (err) {
