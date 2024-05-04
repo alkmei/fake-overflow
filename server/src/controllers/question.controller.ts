@@ -4,7 +4,7 @@ import { handleError, removeUndefinedKeys } from "../utils";
 import { AuthRequest } from "../../types/express";
 import { isAuthorOrStaff } from "../utils/auth";
 import UserSchema from "../schema/user.schema";
-import { addTagsToDB } from "../utils/tag";
+import { addTagsToDB, findOrphanTags } from "../utils/tag";
 import AnswerSchema from "../schema/answer.schema";
 import TagSchema from "../schema/tag.schema";
 
@@ -137,12 +137,8 @@ export const deleteQuestion = async (
     // Delete all associated answers
     await AnswerSchema.deleteMany({ _id: { $in: deletedQuestion.answers } });
 
-    const tagsToDelete = await TagSchema.find({
-      _id: { $in: deletedQuestion.tags },
-      $where: "this.questions.length === 1",
-    });
+    const tagsToDelete = await findOrphanTags();
 
-    // TODO - NEED A WAY TO PRUNE TAGS
     await TagSchema.deleteMany({
       _id: { $in: tagsToDelete.map((tag) => tag._id) },
     });
