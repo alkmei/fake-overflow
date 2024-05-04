@@ -3,7 +3,6 @@ import {
   createQuestion,
   deleteQuestion,
   getQuestionById,
-  getQuestionByTag,
   getQuestions,
   postAnswer,
   postCommentToQuestion,
@@ -17,7 +16,6 @@ const router = express.Router();
 router.get("/", getQuestions);
 router.get("/:id", verifyId, getQuestionById);
 router.post("/:id/answers", verifyToken, verifyId, postAnswer);
-router.get("/tagged/:tag", getQuestionByTag);
 router.post("/", verifyToken, createQuestion);
 router.put("/:id", verifyToken, verifyId, updateQuestion);
 router.delete("/:id", verifyToken, verifyId, deleteQuestion);
