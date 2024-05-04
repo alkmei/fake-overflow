@@ -49,6 +49,16 @@ export default function Profile() {
       .catch((err) => {
         console.log("Error fetching tags created by user", err);
       });
+
+    // Get questions answered by user
+    axios
+      .get(`http://localhost:8000/api/users/${user?.id}/questions-answered`)
+      .then((res) => {
+        setAnsweredQuestions(res.data);
+      })
+      .catch((err) => {
+        console.log("Error fetching questions answered by user", err);
+      });
   }, [user]);
 
   if (user === undefined) return <p>User Not Found...</p>;

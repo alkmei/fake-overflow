@@ -47,6 +47,30 @@ export const getQuestionsOfUser = async (
   }
 };
 
+// GET /api/users/:id/questions-answered
+export const getQAnsweredOfUser = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  const id = req.params.id;
+
+  try {
+    const answers = await AnswerSchema.find({ author: id }).populate({
+      path: "question",
+      populate: {
+        path: "author",
+        select: "username",
+      },
+    });
+    console.log(answers);
+    const questions = answers.map((answer) => answer.question);
+
+    res.json(questions);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
 // GET /api/users/:id/tags
 export const getTagsOfUser = async (
   req: Request<{ id: string }>,

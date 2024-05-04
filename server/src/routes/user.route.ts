@@ -4,6 +4,7 @@ import {
   deleteUser,
   getAllUsers,
   getQuestionsOfUser,
+  getQAnsweredOfUser,
   getTagsOfUser,
   getUser,
   updateUser,
@@ -16,6 +17,7 @@ const router = express.Router();
 router.get("/", getAllUsers);
 router.get("/:id", verifyId, getUser);
 router.get("/:id/questions", verifyId, getQuestionsOfUser);
+router.get("/:id/questions-answered", verifyId, getQAnsweredOfUser);
 router.get("/:id/tags", verifyId, getTagsOfUser);
 router.post("/", createUser);
 router.put("/:id", verifyToken, verifyId, updateUser);

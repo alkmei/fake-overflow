@@ -22,8 +22,6 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const questionId = useParams().id;
   const { loggedIn, username } = useAuthentication();
   const [question, setQuestion] = useState<Question>();
-  // const [answers, setAnswers] = useState<Answer[]>([]);
-  const answers = tempQuestions[0].answers;
   const [userAnswers, setUserAnswers] = useState<Answer[]>([]);
 
   const [text, setText] = useState("");
@@ -49,23 +47,13 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
       .get(`http://localhost:8000/api/questions/${questionId}`)
       .then(async (res) => {
         setQuestion(res.data);
-        // TODO: Get answers
-        // const answersData: Answer[] = await getAnswers(res.data);
-        //
-        // setAnswers(
-        //   answersData.sort(
-        //     (a, b) => b.creationTime.getTime() - a.creationTime.getTime(),
-        //   ),
-        // );
       })
       .catch((error) => {
-        console.error("Error fetching question or answers:", error);
+        console.error("Error fetching question:", error);
       });
   }, [questionId]);
-  //  TODO: split the array into answers by user and answers not by the user
 
-  const numPerPage = 5;
-  const lastPage = Math.floor(answers.length / numPerPage) + 1;
+  //  TODO: split the array into answers by user and answers not by the user
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -149,6 +137,10 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   };
 
   if (question === undefined) return <p>Question Not Found...</p>;
+
+  const numPerPage = 5;
+  const lastPage = Math.floor(question.answers.length / numPerPage) + 1;
+  console.log(question);
   // TODO - Separate the body into its own component
   return (
     <section className="flex flex-col gap-5 w-full p-6">
@@ -198,7 +190,8 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
         <Comments comments={question.comments} />
       </div>
       <h2 className="text-xl">
-        {answers.length} {answers.length === 1 ? "Answer" : "Answers"}
+        {question.answers.length}{" "}
+        {question.answers.length === 1 ? "Answer" : "Answers"}
       </h2>
       <div className="flex flex-col gap-3 overflow-y-scroll max-h-[650px]">
         <ul id="answer-list">
@@ -214,7 +207,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
               if (i < userAnswers.length) {
                 answer = userAnswers[i];
                 editableAns = true;
-              } else answer = answers[i - userAnswers.length];
+              } else answer = question.answers[i - userAnswers.length];
 
               if (answer) {
                 renderedAnswers.push(
@@ -272,7 +265,8 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                     <div className="col-[2] justify-self-end">
                       <div className="text-xs p-3 max-w-56">
                         <p className="text-gray-600">
-                          answered {answer.creationTime.toLocaleString()}
+                          answered{" "}
+                          {new Date(answer.creationTime).toLocaleString()}
                         </p>
                         <Link
                           to={`/users/${question.author.id}`}
