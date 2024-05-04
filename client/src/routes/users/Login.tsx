@@ -37,16 +37,13 @@ export default function Login() {
 
       // Verify login credentials and login
       axios
-        .post("http://localhost:8000/api/session", user, {
-          withCredentials: true,
-        })
+        .post("http://localhost:8000/api/session", user)
         .then(() => {
           navigate("/questions");
         })
         .catch((err) => {
           valid = false;
-          // setPasswordError(err.response);
-          console.log(err);
+          setPasswordError(err.response.data.message);
         });
     }
   };

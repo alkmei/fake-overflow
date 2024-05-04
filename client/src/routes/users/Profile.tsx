@@ -1,21 +1,29 @@
 import { Link, useParams } from "react-router-dom";
-import { tags, tempQuestions, user } from "@/TempData.ts";
 import { sluggify, timeSinceDate } from "@/helper.ts";
 import TagList from "@/components/TagList.tsx";
 import QuestionList from "@/components/questions/QuestionList.tsx";
 import { IconEdit, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import User from "@server/types/user";
+import { tempQuestions, tags } from "@/TempData.ts";
 
 export default function Profile() {
-  const [userId, setUserId] = useState(0);
+  const [user, setUser] = useState<User>();
   const { id } = useParams();
 
   useEffect(() => {
-    if (id) setUserId(parseInt(id));
+    axios
+      .get(`http://localhost:8000/api/users/${id}`)
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => {
+        console.log("Error fetching user:", err);
+      });
   }, [id]);
-
-  console.log(id);
-
+  console.log(user);
+  if (user === undefined) return <p>User Not Found...</p>;
   return (
     <div className="flex flex-col gap-5 m-10 ml-10 w-full">
       <div className="flex justify-between mb-2">
@@ -69,7 +77,7 @@ export default function Profile() {
            if a question answered by user is clicked, Their answer/s for
            the question is displayed first followed by the rest in Newest order
         */}
-        <QuestionList questions={tempQuestions} userId={userId} />
+        <QuestionList questions={tempQuestions} fromProfile={true} />
       </div>
     </div>
   );
