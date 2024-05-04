@@ -26,7 +26,7 @@ export default function QuestionList({
   }, [searchParams]);
 
   if (questions.length === 0)
-    return <h1 className="m-5 ml-9 text-xl">No Questions Found</h1>;
+    return <h3 className="m-5 ml-9 text-xl">No Questions Found</h3>;
 
   return (
     <ul className="overflow-y-scroll max-h-[800px]">

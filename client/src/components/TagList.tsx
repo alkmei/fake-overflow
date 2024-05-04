@@ -22,7 +22,7 @@ export default function TagList({ tags }: { tags: Tag[] }) {
 
     fetchTagQuestions().then();
   }, [tags]);
-  console.log(tagQuestions);
+
   if (!tagQuestions) return <p>Page Loading...</p>;
 
   return (

@@ -55,11 +55,18 @@ export const getQuestionsAnsweredOfUser = async (
   try {
     const author = await UserSchema.findById(id);
     if (!author) return res.status(404).json({ message: "User not found" });
-    const questions = await QuestionSchema.find({
-      answers: { $elemMatch: { author: author } },
-    });
 
-    res.json(questions);
+    const questions = await QuestionSchema.find()
+      .populate("answers")
+      .populate("author", "username reputation creationTime")
+      .populate("tags", "name");
+    const filteredQuestions = questions.filter((question) =>
+      question.answers.some(
+        (answer) => answer.author.toString() === author._id.toString(),
+      ),
+    );
+
+    res.json(filteredQuestions);
   } catch (err) {
     handleError(err, res);
   }
