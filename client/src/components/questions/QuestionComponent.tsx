@@ -34,8 +34,8 @@ export default function QuestionComponent({
           <Link
             to={
               userId
-                ? `/questions/edit/${question.id}/answer/${userId}`
-                : `/questions/${question.id}/${sluggify(question.title)}`
+                ? `/questions/edit/${question._id}/answer/${userId}`
+                : `/questions/${question._id}/${sluggify(question.title)}`
             }
           >
             {question.title}

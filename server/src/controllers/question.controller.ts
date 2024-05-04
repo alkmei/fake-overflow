@@ -21,6 +21,65 @@ export const getQuestions = async (req: Request, res: Response) => {
   }
 };
 
+// GET /api/questions/tagged/:tag
+export const getQuestionByTag = async (
+  req: Request<{ tag: string }>,
+  res: Response,
+) => {
+  try {
+    const tagName = req.params.tag;
+    const questions = await QuestionSchema.aggregate([
+      {
+        $lookup: {
+          from: "tags",
+          localField: "tags",
+          foreignField: "_id",
+          as: "tagObjects",
+        },
+      },
+      {
+        $match: {
+          "tagObjects.name": tagName,
+        },
+      },
+      {
+        $lookup: {
+          from: "tags",
+          localField: "tags",
+          foreignField: "_id",
+          as: "populatedTags",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorObject",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          summary: 1,
+          text: 1,
+          tags: "$populatedTags",
+          comments: 1,
+          answers: 1,
+          author: { $arrayElemAt: ["$authorObject", 0] },
+          creationTime: 1,
+          views: 1,
+          votes: 1,
+        },
+      },
+    ]);
+    res.json(questions);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
 // GET /api/questions/:id
 export const getQuestionById = async (
   req: Request<{ id: string }>,
