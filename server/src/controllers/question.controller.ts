@@ -3,10 +3,7 @@ import { Request, Response } from "express";
 import { handleError, removeUndefinedKeys } from "../utils";
 import { AuthRequest } from "../../types/express";
 import { isAuthorOrStaff } from "../utils/auth";
-import Tag from "../../types/tag";
-import TagSchema from "../schema/tag.schema";
 import UserSchema from "../schema/user.schema";
-import mongoose from "mongoose";
 import { addTagsToDB } from "../utils/tag";
 
 // GET /api/questions

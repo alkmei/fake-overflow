@@ -2,12 +2,12 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
+import { Request } from "express";
 import userRoute from "./src/routes/user.route";
 import sessionRoute from "./src/routes/session.route";
 import questionRoute from "./src/routes/question.route";
-import { Request } from "express";
-
 import tagRoute from "./src/routes/tag.route";
+import answerRoute from "./src/routes/answer.route";
 
 require("./src/schema/tag.schema");
 require("./src/schema/comment.schema");
@@ -35,5 +35,6 @@ app.use("/api/users", userRoute);
 app.use("/api/session", sessionRoute);
 app.use("/api/tags", tagRoute);
 app.use("/api/questions", questionRoute);
+app.use("/api/answers", answerRoute);
 
 export default app;
