@@ -5,6 +5,8 @@ import { AuthRequest } from "../../types/express";
 import { isAuthorOrStaff } from "../utils/auth";
 import UserSchema from "../schema/user.schema";
 import { addTagsToDB } from "../utils/tag";
+import AnswerSchema from "../schema/answer.schema";
+import TagSchema from "../schema/tag.schema";
 
 // GET /api/questions
 export const getQuestions = async (req: Request, res: Response) => {
@@ -132,7 +134,44 @@ export const deleteQuestion = async (
       return res.status(404).json({ message: "Question not found" });
     }
 
+    // Delete all associated answers
+    await AnswerSchema.deleteMany({ _id: { $in: deletedQuestion.answers } });
+
+    const tagsToDelete = await TagSchema.find({
+      _id: { $in: deletedQuestion.tags },
+      $where: "this.questions.length === 1",
+    });
+
+    // TODO - NEED A WAY TO PRUNE TAGS
+    await TagSchema.deleteMany({
+      _id: { $in: tagsToDelete.map((tag) => tag._id) },
+    });
+
     res.json({ message: "Question deleted successfully" });
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+export const postAnswer = async (
+  req: AuthRequest<{ id: string }, {}, { text: string }>,
+  res: Response,
+) => {
+  try {
+    const questionId = req.params.id;
+    const { text } = req.body;
+    const authorId = req.userId;
+    const author = await UserSchema.findById(authorId);
+
+    const answer = new AnswerSchema({ text: text, author: author!._id });
+    const question = await QuestionSchema.findById(questionId);
+    if (!question) return res.status(404).json({ error: "Question not found" });
+
+    question.answers.push(answer);
+    const savedAnswer = await answer.save();
+    await question.save();
+
+    res.status(201).json(savedAnswer);
   } catch (err) {
     handleError(err, res);
   }

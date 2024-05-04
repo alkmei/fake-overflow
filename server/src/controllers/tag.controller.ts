@@ -43,6 +43,7 @@ export const updateTag = async (
 ) => {
   try {
     const tag = await TagSchema.findByIdAndUpdate(req.params.id, req.body, {});
+    // TODO - FINISH THIS
     res.json({ message: "WIP" });
   } catch (err) {
     handleError(err, res);

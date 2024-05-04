@@ -5,6 +5,8 @@ import { handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 import { isSelfOrStaff } from "../utils/auth";
 import mongoose from "mongoose";
+import AnswerSchema from "../schema/answer.schema";
+import TagSchema from "../schema/tag.schema";
 
 // GET /api/users/
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -23,6 +25,36 @@ export const getUser = async (req: Request<{ id: string }>, res: Response) => {
     const user = await UserSchema.findById(id, { password: 0 });
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+// GET /api/users/:id/answers
+export const getAnswersOfUser = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  const id = req.params.id;
+  try {
+    const answers = await AnswerSchema.find({ author: id })
+      .populate("comments")
+      .sort({ creationTime: -1 });
+    res.json(answers);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+// GET /api/users/:id/tags
+export const getTagsOfUser = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  const id = req.params.id;
+  try {
+    const answers = await TagSchema.find({ author: id });
+    res.json(answers);
   } catch (err) {
     handleError(err, res);
   }
