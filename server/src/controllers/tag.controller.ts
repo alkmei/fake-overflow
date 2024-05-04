@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import { handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 import QuestionSchema from "../schema/question.schema";
+import { isAuthorOrStaff } from "../utils/auth";
+import UserSchema from "../schema/user.schema";
 
 // GET /api/tags?s=
 export const getTags = async (
@@ -43,15 +45,46 @@ export const updateTag = async (
   res: Response,
 ) => {
   try {
-    const tag = await TagSchema.findByIdAndUpdate(req.params.id, req.body, {});
-    // TODO - FINISH THIS
-    res.json({ message: "WIP" });
+    const tagId = req.params.id;
+    const { name } = req.body;
+
+    const tag = await TagSchema.findById(tagId);
+    if (!tag) {
+      return res.status(404).json({ message: "Tag not found" });
+    }
+
+    const isUserAllowed = await isAuthorOrStaff(req, tagId, TagSchema);
+
+    const questions = await QuestionSchema.find(
+      { tags: tagId },
+      { author: 1, _id: 0 },
+    );
+    const authorIds = new Set(
+      questions.map((question) => question.author.toString()),
+    );
+    const isTagShared = authorIds.size > 1;
+
+    const isStaff = (await UserSchema.findById(req.userId))!.isStaff;
+
+    if (isTagShared && !isStaff) {
+      return res.status(403).json({
+        message: "Forbidden: Only staff members can update a shared tag",
+      });
+    }
+
+    if (isUserAllowed) {
+      tag.name = name;
+      await tag.save();
+      res.json({ message: "Tag updated successfully" });
+    } else {
+      res.status(403).json({ message: "Forbidden" });
+    }
   } catch (err) {
     handleError(err, res);
   }
 };
 
-// GET /api/tags/:name/question
+// GET /api/tags/:name/questions
 export const getQuestionByTag = async (
   req: Request<{ name: string }>,
   res: Response,
