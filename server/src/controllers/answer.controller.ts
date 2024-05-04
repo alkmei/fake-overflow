@@ -36,7 +36,7 @@ export const deleteAnswer = async (
   }
 };
 
-// POST /api/questions/:id/comments
+// POST /api/answers/:id/comments
 export const postCommentToAnswer = async (
   req: AuthRequest<{ id: string }, {}, { text: string }>,
   res: Response,
@@ -56,6 +56,33 @@ export const postCommentToAnswer = async (
     await answer.save();
 
     res.status(201).json(savedComment);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+// POST /api/answers/:id/votes
+export const voteAnswer = async (
+  req: AuthRequest<{ id: string }, {}, { vote: 1 | -1 }>,
+  res: Response,
+) => {
+  try {
+    const answerId = req.params.id;
+    const { vote } = req.body;
+    const voterId = req.userId;
+    const voter = await UserSchema.findById(voterId);
+    if (!voter) return res.status(404).json({ message: "No such voter" });
+    if (voter.reputation < 50)
+      return res.status(400).json({ message: "Not enough reputation" });
+    const answer = await AnswerSchema.findById(answerId);
+    if (!answer) return res.status(404).json({ error: "Answer not found" });
+    const authorId = answer.author._id;
+    const author = await UserSchema.findById(authorId);
+    if (!author) return res.status(404).json({ error: "Author not found" });
+    answer.votes += vote;
+    author.reputation += vote * (vote > 0 ? 5 : 10);
+    answer.save();
+    author.save();
   } catch (err) {
     handleError(err, res);
   }

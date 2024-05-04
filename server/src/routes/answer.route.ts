@@ -3,6 +3,7 @@ import {
   deleteAnswer,
   getAnswers,
   postCommentToAnswer,
+  voteAnswer,
 } from "../controllers/answer.controller";
 import { verifyToken } from "../middleware/auth.middleware";
 import { verifyId } from "../middleware/id.middleware";
@@ -12,5 +13,6 @@ const router = express.Router();
 router.get("/", getAnswers);
 router.delete("/:id", verifyToken, verifyId, deleteAnswer);
 router.post("/:id/comments", verifyToken, verifyId, postCommentToAnswer);
+router.post("/:id/votes", verifyToken, verifyId, voteAnswer);
 
 export default router;

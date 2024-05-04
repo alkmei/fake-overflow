@@ -208,3 +208,30 @@ export const postCommentToQuestion = async (
     handleError(err, res);
   }
 };
+
+// POST /api/questions/:id/votes
+export const voteQuestion = async (
+  req: AuthRequest<{ id: string }, {}, { vote: 1 | -1 }>,
+  res: Response,
+) => {
+  try {
+    const questionId = req.params.id;
+    const { vote } = req.body;
+    const voterId = req.userId;
+    const voter = await UserSchema.findById(voterId);
+    if (!voter) return res.status(404).json({ message: "No such voter" });
+    if (voter.reputation < 50)
+      return res.status(400).json({ message: "Not enough reputation" });
+    const question = await QuestionSchema.findById(questionId);
+    if (!question) return res.status(404).json({ error: "Question not found" });
+    const authorId = question.author._id;
+    const author = await UserSchema.findById(authorId);
+    if (!author) return res.status(404).json({ error: "Author not found" });
+    question.votes += vote;
+    author.reputation += vote * (vote > 0 ? 5 : 10);
+    question.save();
+    author.save();
+  } catch (err) {
+    handleError(err, res);
+  }
+};
