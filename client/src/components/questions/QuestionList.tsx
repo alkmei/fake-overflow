@@ -40,7 +40,7 @@ export default function QuestionList({
           if (question) {
             renderedQuestions.push(
               <div key={i}>
-                <QuestionComponent question={question} />
+                <QuestionComponent key={i} question={question} />
               </div>,
             );
           }
