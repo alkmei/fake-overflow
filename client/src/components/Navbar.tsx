@@ -76,7 +76,12 @@ export default function Navbar() {
             >
               Log Out
             </button>
-            <p className="text-lg">{user?.username}</p>
+            <Link
+              to={`/users/${user?.id}`}
+              className="text-lg text-[#e7700d] hover:text-[#c4610e]"
+            >
+              {user?.username}
+            </Link>
           </>
         )}
       </header>
