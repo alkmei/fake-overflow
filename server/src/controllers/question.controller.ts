@@ -62,8 +62,9 @@ export const createQuestion = async (
     const { title, text, summary, tags } = req.body;
     const authorId = req.userId!;
     const author = await UserSchema.findById(authorId);
+    if (!author) return res.status(401).json({ message: "Invalid user" });
 
-    const tagDocs = await addTagsToDB(author!._id, tags);
+    const tagDocs = await addTagsToDB(author._id, tags);
 
     const newQuestion = new QuestionSchema({
       title: title,

@@ -3,10 +3,20 @@ import { Request, Response } from "express";
 import { handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 
-// GET /api/tags
-export const getTags = async (req: Request, res: Response) => {
+// GET /api/tags?s=
+export const getTags = async (
+  req: Request<{}, {}, {}, { s: string }>,
+  res: Response,
+) => {
   try {
-    const tags = await TagSchema.find({});
+    const searchQuery = req.query.s as string;
+    let tags;
+
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      tags = await TagSchema.find({ name: { $regex: regex } });
+    } else tags = await TagSchema.find({});
+
     res.json(tags);
   } catch (err) {
     handleError(err, res);

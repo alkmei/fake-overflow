@@ -46,13 +46,13 @@ async function createInitialData(adminUsername: string, adminPassword: string) {
   // Create initial tags
   const tag1 = new TagSchema({
     name: "javascript",
-    author: user1.username,
+    author: user1._id,
   });
   await tag1.save();
 
   const tag2 = new TagSchema({
     name: "python",
-    author: adminUser.username,
+    author: adminUser._id,
   });
   await tag2.save();
 
