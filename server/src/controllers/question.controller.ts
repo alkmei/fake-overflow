@@ -109,6 +109,13 @@ export const updateQuestion = async (
     }
 
     question.save();
+
+    const tagsToDelete = await findOrphanTags();
+
+    await TagSchema.deleteMany({
+      _id: { $in: tagsToDelete.map((tag) => tag._id) },
+    });
+
     res.json(question);
   } catch (err) {
     handleError(err, res);
