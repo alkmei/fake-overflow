@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import { handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 import { isSelfOrStaff } from "../utils/auth";
-import AnswerSchema from "../schema/answer.schema";
 import TagSchema from "../schema/tag.schema";
 import QuestionSchema from "../schema/question.schema";
 
@@ -46,7 +45,7 @@ export const getQuestionsOfUser = async (
   }
 };
 
-// GET /api/users/:id/questions-answered
+// GET /api/users/:id/questions/answered
 export const getQuestionsAnsweredOfUser = async (
   req: Request<{ id: string }>,
   res: Response,

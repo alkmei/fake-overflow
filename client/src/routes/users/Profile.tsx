@@ -52,7 +52,7 @@ export default function Profile() {
 
     // Get questions answered by user
     axios
-      .get(`http://localhost:8000/api/users/${user?.id}/questions-answered`)
+      .get(`http://localhost:8000/api/users/${user?.id}/questions/answered`)
       .then((res) => {
         setAnsweredQuestions(res.data);
       })
