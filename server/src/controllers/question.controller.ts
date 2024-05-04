@@ -178,7 +178,7 @@ export const postAnswer = async (
 };
 
 // POST /api/questions/:id/comments
-export const postComment = async (
+export const postCommentToQuestion = async (
   req: AuthRequest<{ id: string }, {}, { text: string }>,
   res: Response,
 ) => {

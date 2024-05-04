@@ -5,6 +5,7 @@ import {
   getQuestionById,
   getQuestions,
   postAnswer,
+  postCommentToQuestion,
   updateQuestion,
 } from "../controllers/question.controller";
 import { verifyToken } from "../middleware/auth.middleware";
@@ -18,5 +19,6 @@ router.post("/:id/answers", verifyToken, verifyId, postAnswer);
 router.post("/", verifyToken, createQuestion);
 router.put("/:id", verifyToken, verifyId, updateQuestion);
 router.delete("/:id", verifyToken, verifyId, deleteQuestion);
+router.post("/:id/comments", verifyToken, verifyId, postCommentToQuestion);
 
 export default router;
