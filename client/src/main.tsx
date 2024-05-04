@@ -14,6 +14,7 @@ import AskQuestion from "@/routes/questions/AskQuestion.tsx";
 import Profile from "@/routes/users/Profile.tsx";
 import Answers from "@/routes/questions/Answers.tsx";
 import TagQuestions from "@/routes/questions/TagQuestions.tsx";
+import AuthRoute from "@/components/AuthRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -31,12 +32,30 @@ const router = createBrowserRouter([
     element: <Content />,
     children: [
       { path: "/questions", element: <Questions /> },
-      { path: "/questions/ask", element: <AskQuestion /> },
-      { path: "/questions/edit/:id", element: <AskQuestion editing={true} /> }, // restrict to admin/logged-in user
+      {
+        path: "/questions/ask",
+        element: (
+          <AuthRoute>
+            <AskQuestion />
+          </AuthRoute>
+        ),
+      },
+      {
+        path: "/questions/edit/:id",
+        element: (
+          <AuthRoute>
+            <AskQuestion editing={true} />
+          </AuthRoute>
+        ),
+      },
       { path: "/questions/:id/:slug", element: <Answers /> },
       {
         path: "/questions/edit/:id/answer/",
-        element: <Answers fromProfile={true} />,
+        element: (
+          <AuthRoute>
+            <Answers fromProfile={true} />
+          </AuthRoute>
+        ),
       },
       { path: "/questions/tagged/:tag", element: <TagQuestions /> },
       { path: "/tags", element: <Tags /> },
