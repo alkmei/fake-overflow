@@ -2,25 +2,31 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { IconBrandStackoverflow, IconSearch } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { useAuthentication } from "@/helper.ts";
-import axios from "axios";
 import { useCookies } from "react-cookie";
+import axios from "axios";
 
 export default function Navbar() {
-  const { loggedIn, setLoggedIn } = useAuthentication();
-  const [cookies, setCookies] = useCookies(["token"]);
+  const { username, loggedIn, setLoggedIn } = useAuthentication();
+  const [cookies, setCookies] = useCookies(["access_token"]);
   const navigate = useNavigate();
 
   const logOut = () => {
-    setCookies("token", "", {
-      sameSite: "strict",
-    });
-    setLoggedIn(false);
-    navigate("/");
+    axios
+      .delete("http://localhost:8000/api/session", { withCredentials: true })
+      .then(() => {
+        setCookies("access_token", "", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "strict",
+        });
+        setLoggedIn(false);
+        navigate("/");
+      });
   };
 
   useEffect(() => {
     console.log("Logged in:", loggedIn);
-  }, [loggedIn, cookies.token]);
+  }, [loggedIn, cookies.access_token]);
 
   return (
     <div className="fixed w-full border-b border-gray-200 bg-white z-50 border-t-[3px] border-t-[#e7700d]">
@@ -63,12 +69,15 @@ export default function Navbar() {
             </ol>
           </div>
         ) : (
-          <button
-            onClick={logOut}
-            className="bg-blue-500 p-2 rounded text-white hover:bg-blue-600"
-          >
-            Log Out
-          </button>
+          <>
+            <button
+              onClick={logOut}
+              className="bg-blue-500 p-2 rounded text-white hover:bg-blue-600"
+            >
+              Log Out
+            </button>
+            <p className="text-lg">{username}</p>
+          </>
         )}
       </header>
     </div>

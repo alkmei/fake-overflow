@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Question from "@server/types/question";
 
 export const timeSinceDate = (dateString: Date) => {
   const now = new Date();
@@ -56,20 +57,37 @@ export const sluggify = (s: string) =>
 export const useAuthentication = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/session/status", {
+      .get("http://localhost:8000/api/session/", {
         withCredentials: true,
       })
       .then((res) => {
-        setLoggedIn(res.data.loggedIn);
-        setIsAdmin(res.data.isAdmin);
+        if (res.data.id) {
+          setLoggedIn(true);
+          setUsername(res.data.username);
+          if (res.data.isStaff) setIsAdmin(res.data.isAdmin);
+        } else setLoggedIn(false);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  return { loggedIn, isAdmin, setLoggedIn, setIsAdmin };
+  return { username, loggedIn, isAdmin, setLoggedIn, setIsAdmin };
+};
+
+export const getAnswers = async (question: Question) => {
+  try {
+    const answersPromises = question.answers.map(async (ansId) => {
+      const res = await axios.get(`http://localhost:8000/api/answers/${ansId}`);
+      return res.data;
+    });
+    return await Promise.all(answersPromises);
+  } catch (error) {
+    console.error("Error fetching answers:", error);
+    return [];
+  }
 };

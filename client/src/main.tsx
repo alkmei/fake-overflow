@@ -35,8 +35,8 @@ const router = createBrowserRouter([
       { path: "/questions/edit/:id", element: <AskQuestion editing={true} /> }, // restrict to admin/logged-in user
       { path: "/questions/:id/:slug", element: <Answers /> },
       {
-        path: "/questions/edit/:qid/answer/:uid",
-        element: <Answers />,
+        path: "/questions/edit/:id/answer/",
+        element: <Answers fromProfile={true} />,
       },
       { path: "/questions/tagged/:tag", element: <TagQuestions /> },
       { path: "/tags", element: <Tags /> },

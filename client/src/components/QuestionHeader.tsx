@@ -22,7 +22,7 @@ export default function QuestionHeader({ question }: { question: Question }) {
           </span>
         </div>
         <div className="text-gray-600">
-          Viewed <span className="text-black">1 time</span>
+          Viewed <span className="text-black">{question.views} times</span>
         </div>
       </div>
     </div>

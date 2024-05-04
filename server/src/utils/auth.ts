@@ -32,6 +32,6 @@ export const isSelfOrStaff = async (req: AuthRequest, userId: string) => {
 export const extractToken = (cookieString: string) => {
   return cookieString
     .split(";")
-    .find((cookie) => cookie.trim().startsWith("token="))
+    .find((cookie) => cookie.trim().startsWith("access_token="))
     ?.split("=")[1];
 };

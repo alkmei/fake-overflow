@@ -2,7 +2,6 @@ import { FormEvent, useState } from "react";
 import FormError from "@/components/FormError.tsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +11,6 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
-  const [cookies, setCookies] = useCookies(["token"]);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -42,15 +40,12 @@ export default function Login() {
         .post("http://localhost:8000/api/session", user, {
           withCredentials: true,
         })
-        .then((res) => {
-          setCookies("token", res.data.token, {
-            sameSite: "strict",
-          });
+        .then(() => {
           navigate("/questions");
         })
         .catch((err) => {
           valid = false;
-          setPasswordError(err.response.data.message);
+          // setPasswordError(err.response);
           console.log(err);
         });
     }

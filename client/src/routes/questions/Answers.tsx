@@ -1,5 +1,4 @@
 import PostText from "@/components/questions/PostText.tsx";
-import { tempQuestions } from "@/TempData.ts";
 import QuestionHeader from "@/components/QuestionHeader.tsx";
 import {
   IconCaretDownFilled,
@@ -11,13 +10,20 @@ import TagComponent from "@/components/TagComponent.tsx";
 import Comments from "@/components/questions/Comments.tsx";
 import FormError from "@/components/FormError.tsx";
 import { FormEvent, useEffect, useState } from "react";
-import { validateHyperlinks } from "@/helper.ts";
+import { useAuthentication, validateHyperlinks, getAnswers } from "@/helper.ts";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import PageButtons from "@/components/PageButtons.tsx";
 import Answer from "@server/types/answer";
+import Question from "@server/types/question";
+import axios from "axios";
 
-export default function Answers() {
-  const questionId = new URLSearchParams(window.location.search).get("id");
+export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
+  const questionId = useParams().id;
+  const { loggedIn, username } = useAuthentication();
+  const [question, setQuestion] = useState<Question>();
+  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [userAnswers, setUserAnswers] = useState<Answer[]>([]);
+
   const [text, setText] = useState("");
   const [textError, setTextError] = useState("");
   const [page, setPage] = useState(1);
@@ -25,7 +31,6 @@ export default function Answers() {
   const [editingAnswerId, setEditingAnswerId] = useState<number | null>(null);
   const [editedText, setEditedText] = useState("");
   const [editError, setEditError] = useState("");
-  const userId = useParams().uid;
 
   useEffect(() => {
     if (searchParams.get("page")) {
@@ -36,22 +41,27 @@ export default function Answers() {
       }
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/questions/${questionId}`)
+      .then(async (res) => {
+        setQuestion(res.data);
+        // TODO: Get answers
+        // const answersData: Answer[] = await getAnswers(res.data);
+        //
+        // setAnswers(
+        //   answersData.sort(
+        //     (a, b) => b.creationTime.getTime() - a.creationTime.getTime(),
+        //   ),
+        // );
+      })
+      .catch((error) => {
+        console.error("Error fetching question or answers:", error);
+      });
+  }, [questionId]);
   // TODO: show updated view count on answers page
-
-  // TODO: when querying answers, split the array into answers by user and answers not by the user
-
-  const question = tempQuestions[0];
-  const answers = question.answers.sort(
-    (a, b) => b.creationTime.getTime() - a.creationTime.getTime(),
-  );
-  let userAnswers: Answer[] = [];
-
-  if (userId) {
-    // TODO: Get answers by user
-    userAnswers = question.answers.sort(
-      (a, b) => b.creationTime.getTime() - a.creationTime.getTime(),
-    );
-  }
+  //  split the array into answers by user and answers not by the user
 
   const numPerPage = 5;
   const lastPage = Math.floor(answers.length / numPerPage) + 1;
@@ -83,7 +93,7 @@ export default function Answers() {
 
       // // TODO: add new answer then reload to show new answer if successful, make sure user is logged in
       // axios
-      //     .post("http://localhost:8000/posts/answer", newAnswer)
+      //     .post("http://localhost:8000/api/answers/", newAnswer, {withCredentials: true})
       //     .then((res) => {
       //       console.log(res);
       //       console.log(res.data);
@@ -128,9 +138,8 @@ export default function Answers() {
   const handleDelete = (answer: Answer) => {
     console.log(answer);
   };
-
-  if (questionId && Object.keys(question).length === 0)
-    return <p>Page Loading...</p>;
+  console.log(question);
+  if (question === undefined) return <p>Question Not Found...</p>;
   // TODO - Separate the body into its own component
   return (
     <section className="flex flex-col gap-5 w-full p-6">
@@ -158,7 +167,7 @@ export default function Answers() {
         <div className="col-[2] justify-self-end">
           <div className="text-xs bg-blue-50 rounded-md p-3 max-w-56">
             <p className="text-gray-600">
-              asked {question.creationTime.toLocaleString()}
+              asked {new Date(question.creationTime).toLocaleString()}
             </p>
             <Link
               to={`/users/${question.author.id}`}
@@ -187,7 +196,7 @@ export default function Answers() {
             ) {
               let answer;
               let editableAns = false;
-              if (userId && i < userAnswers.length) {
+              if (i < userAnswers.length) {
                 answer = userAnswers[i];
                 editableAns = true;
               } else answer = answers[i - userAnswers.length];

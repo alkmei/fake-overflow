@@ -29,7 +29,7 @@ export const getQuestionById = async (
   try {
     const questionId = req.params.id;
     const question = await QuestionSchema.findById(questionId)
-      .populate("author", "username")
+      .populate("author", "username reputation creationTime")
       .populate("tags", "name")
       .populate("comments")
       .populate("answers");

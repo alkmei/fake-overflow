@@ -52,7 +52,11 @@ export const getSession = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const deleteSession = async (req: AuthRequest, res: Response) => {
-  res.clearCookie("access_token");
+export const deleteSession = async (_req: AuthRequest, res: Response) => {
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
   res.json({ message: "Logout successful" });
 };
