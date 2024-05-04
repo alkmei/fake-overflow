@@ -5,7 +5,7 @@ import Tag from "../../types/tag";
 const tagSchema = new Schema<Tag>(
   {
     name: { type: String, required: true, unique: true },
-    author: { type: String, required: true },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
