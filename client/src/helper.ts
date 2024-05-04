@@ -59,23 +59,33 @@ export const useAuthentication = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState<User>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/session", { withCredentials: true })
-      .then((res) => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get("http://localhost:8000/api/session", {
+          withCredentials: true,
+        });
         if (res.data) {
           setLoggedIn(true);
           setUser(res.data);
           if (res.data.isStaff) setIsAdmin(res.data.isAdmin);
-        } else setLoggedIn(false);
-      })
-      .catch((err) => {
+        } else {
+          setLoggedIn(false);
+        }
+      } catch (err) {
         console.log(err);
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData().then();
   }, []);
 
-  return { user, loggedIn, isAdmin, setLoggedIn, setIsAdmin };
+  return { user, loggedIn, isAdmin, setLoggedIn, setIsAdmin, loading };
 };
 
 export const getAnswers = async (question: Question) => {

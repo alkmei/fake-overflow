@@ -59,7 +59,7 @@ export default function Profile() {
         console.log("Error fetching questions answered by user", err);
       });
   }, [id]);
-  console.log(answeredQuestions);
+
   if (user === undefined) return <p>User Not Found...</p>;
 
   return (
