@@ -37,7 +37,9 @@ export default function Login() {
 
       // Verify login credentials and login
       axios
-        .post("http://localhost:8000/api/session", user)
+        .post("http://localhost:8000/api/session", user, {
+          withCredentials: true,
+        })
         .then(() => {
           navigate("/questions");
         })

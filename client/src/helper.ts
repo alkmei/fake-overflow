@@ -62,9 +62,7 @@ export const useAuthentication = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/session/", {
-        withCredentials: true,
-      })
+      .get("http://localhost:8000/api/session", { withCredentials: true })
       .then((res) => {
         if (res.data) {
           setLoggedIn(true);
