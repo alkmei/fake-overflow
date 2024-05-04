@@ -5,11 +5,11 @@ import { useAuthentication } from "@/helper.ts";
 export default function ContentHeader({
   name,
   questionCount,
-  subText,
+  noSort,
 }: {
   name: string;
   questionCount?: number;
-  subText?: string;
+  noSort?: boolean;
 }) {
   const { loggedIn } = useAuthentication();
 
@@ -27,14 +27,12 @@ export default function ContentHeader({
         )}
       </div>
       <div className="flex justify-between items-center">
-        {questionCount ? (
+        {questionCount !== undefined && (
           <div>
             {questionCount} {questionCount === 1 ? "question" : "questions"}
           </div>
-        ) : (
-          <div>{subText}</div>
         )}
-        <SortButtons />
+        {!noSort && <SortButtons />}
       </div>
     </div>
   );

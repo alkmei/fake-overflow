@@ -34,8 +34,32 @@ export const getQuestionById = async (
     const question = await QuestionSchema.findById(questionId)
       .populate("author", "username reputation creationTime")
       .populate("tags", "name")
-      .populate("comments")
-      .populate("answers");
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+          model: "User",
+        },
+      })
+      .populate({
+        path: "answers",
+        populate: {
+          path: "comments",
+          model: "Comment",
+          populate: {
+            path: "author",
+            model: "User",
+          },
+        },
+      })
+      .populate({
+        path: "answers",
+        populate: {
+          path: "author",
+          model: "User",
+          select: "username reputation creationTime",
+        },
+      });
 
     if (!question) {
       return res.status(404).json({ message: "Question not found" });

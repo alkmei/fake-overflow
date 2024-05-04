@@ -16,7 +16,7 @@ export default function Tags() {
   return (
     <div className="flex flex-col w-full">
       <section className="w-full">
-        <ContentHeader name={"Tags"} />
+        <ContentHeader name={"Tags"} noSort={true} />
       </section>
       <TagList tags={tags} />
     </div>

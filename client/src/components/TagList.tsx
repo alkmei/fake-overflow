@@ -39,7 +39,7 @@ export default function TagList({ tags }: { tags: Tag[] }) {
           <p className="mt-3 text-sm text-gray-500">
             <span>{tagQuestions[t.name]?.length || 0}&nbsp;</span>
             question
-            {(tagQuestions[t.name]?.length || 0) > 1 ? "s" : ""}
+            {(tagQuestions[t.name]?.length || 0) === 1 ? "" : "s"}
           </p>
         </Link>
       ))}

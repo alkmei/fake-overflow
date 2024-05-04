@@ -7,6 +7,7 @@ import { isSelfOrStaff } from "../utils/auth";
 import mongoose from "mongoose";
 import AnswerSchema from "../schema/answer.schema";
 import TagSchema from "../schema/tag.schema";
+import QuestionSchema from "../schema/question.schema";
 
 // GET /api/users/
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -30,17 +31,41 @@ export const getUser = async (req: Request<{ id: string }>, res: Response) => {
   }
 };
 
-// GET /api/users/:id/answers
-export const getAnswersOfUser = async (
+// GET /api/users/:id/questions
+export const getQuestionsOfUser = async (
   req: Request<{ id: string }>,
   res: Response,
 ) => {
   const id = req.params.id;
   try {
-    const answers = await AnswerSchema.find({ author: id })
+    const questions = await QuestionSchema.find({ author: id })
       .populate("comments")
       .sort({ creationTime: -1 });
-    res.json(answers);
+    res.json(questions);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+// GET /api/users/:id/questions-answered
+export const getQAnsweredOfUser = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  const id = req.params.id;
+
+  try {
+    const answers = await AnswerSchema.find({ author: id }).populate({
+      path: "question",
+      populate: {
+        path: "author",
+        select: "username",
+      },
+    });
+    console.log(answers);
+    const questions = answers.map((answer) => answer.question);
+
+    res.json(questions);
   } catch (err) {
     handleError(err, res);
   }

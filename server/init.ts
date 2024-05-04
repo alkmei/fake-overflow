@@ -64,7 +64,6 @@ async function createInitialData(adminUsername: string, adminPassword: string) {
     author: user1._id,
     tags: [tag1._id],
   });
-  await question.save();
 
   // Create initial answer
   const answer = new AnswerSchema({
@@ -76,14 +75,22 @@ async function createInitialData(adminUsername: string, adminPassword: string) {
   question.answers.push(answer._id);
   await question.save();
 
-  // Create initial comment
-  const comment = new CommentSchema({
+  // Create initial comments
+  const comment1 = new CommentSchema({
     text: "Thanks for the answer!",
     author: user1._id,
   });
-  await comment.save();
+  await comment1.save();
 
-  answer.comments.push(comment._id);
+  const comment2 = new CommentSchema({
+    text: "Not sure what this question means.",
+    author: adminUser._id,
+  });
+  await comment2.save();
+
+  question.comments.push(comment2._id);
+  await question.save();
+  answer.comments.push(comment1._id);
   await answer.save();
 }
 
