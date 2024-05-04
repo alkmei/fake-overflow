@@ -96,7 +96,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
       console.log(newQuestion);
 
       if (editing) {
-        // TODO: edit question instead of adding it to db
+        // TODO: edit question
       } else {
         axios
           .post("http://localhost:8000/api/questions/", newQuestion, {

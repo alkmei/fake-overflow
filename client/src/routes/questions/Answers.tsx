@@ -16,12 +16,15 @@ import PageButtons from "@/components/PageButtons.tsx";
 import Answer from "@server/types/answer";
 import Question from "@server/types/question";
 import axios from "axios";
+import { tempQuestions } from "@/TempData.ts";
+import Comment from "@server/types/comment";
 
 export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const questionId = useParams().id;
   const { loggedIn, username } = useAuthentication();
   const [question, setQuestion] = useState<Question>();
-  const [answers, setAnswers] = useState<Answer[]>([]);
+  // const [answers, setAnswers] = useState<Answer[]>([]);
+  const answers = tempQuestions[0].answers;
   const [userAnswers, setUserAnswers] = useState<Answer[]>([]);
 
   const [text, setText] = useState("");
@@ -138,6 +141,17 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const handleDelete = (answer: Answer) => {
     console.log(answer);
   };
+
+  const handleUpvote = (post: Question | Answer) => {
+    // TODO: Send POST request to upvote the post
+    console.log(post);
+  };
+
+  const handleDownvote = (post: Question | Answer) => {
+    // TODO: Send POST request to upvote the post
+    console.log(post);
+  };
+
   console.log(question);
   if (question === undefined) return <p>Question Not Found...</p>;
   // TODO - Separate the body into its own component
@@ -148,11 +162,17 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
       </section>
       <div className="grid gap-4 mt-4 grid-cols-[1fr_16fr]">
         <div className="flex flex-col gap-2 items-center col-[1]">
-          <button className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]">
+          <button
+            className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]"
+            onClick={() => handleUpvote(question)}
+          >
             <IconCaretUpFilled width={24} height={24} />
           </button>
           <div className="font-bold">{question.votes}</div>
-          <button className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]">
+          <button
+            className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]"
+            onClick={() => handleDownvote(question)}
+          >
             <IconCaretDownFilled width={24} height={24} />
           </button>
         </div>
@@ -205,11 +225,17 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                 renderedAnswers.push(
                   <div key={i} className="grid gap-4 mt-4 grid-cols-[1fr_16fr]">
                     <div className="flex flex-col gap-2 items-center col-[1]">
-                      <button className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]">
+                      <button
+                        className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]"
+                        onClick={() => handleUpvote(answer)}
+                      >
                         <IconCaretUpFilled width={24} height={24} />
                       </button>
                       <div className="font-bold">{answer.votes}</div>
-                      <button className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]">
+                      <button
+                        className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]"
+                        onClick={() => handleDownvote(answer)}
+                      >
                         <IconCaretDownFilled width={24} height={24} />
                       </button>
                     </div>
@@ -274,24 +300,26 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
         </ul>
       </div>
       <PageButtons totalPages={lastPage} />
-      <form className="inline-block mb-16 border-t" onSubmit={handleSubmit}>
-        <div className="flex flex-col p-2 bg-gray-50 gap-6">
-          <label htmlFor="new-answer" className="text-xl">
-            Your Answer
-          </label>
-          <textarea
-            name="new-answer"
-            cols={30}
-            rows={7}
-            className="rounded p-2 border"
-            onChange={(e) => setText(e.target.value)}
-          />
-        </div>
-        <FormError message={textError} />
-        <button className="bg-blue-500 p-2 text-white rounded hover:bg-blue-600 text-nowrap mt-5">
-          Post Your Answer
-        </button>
-      </form>
+      {loggedIn && (
+        <form className="inline-block mb-16 border-t" onSubmit={handleSubmit}>
+          <div className="flex flex-col p-2 bg-gray-50 gap-6">
+            <label htmlFor="new-answer" className="text-xl">
+              Your Answer
+            </label>
+            <textarea
+              name="new-answer"
+              cols={30}
+              rows={7}
+              className="rounded p-2 border"
+              onChange={(e) => setText(e.target.value)}
+            />
+          </div>
+          <FormError message={textError} />
+          <button className="bg-blue-500 p-2 text-white rounded hover:bg-blue-600 text-nowrap mt-5">
+            Post Your Answer
+          </button>
+        </form>
+      )}
     </section>
   );
 }

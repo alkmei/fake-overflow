@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
-import { timeSinceDate } from "@/helper.ts";
+import { timeSinceDate, useAuthentication } from "@/helper.ts";
 import Comment from "@server/types/comment";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import FormError from "@/components/FormError.tsx";
+import { IconArrowUp, IconCaretUpFilled } from "@tabler/icons-react";
 
 export default function Comments({ comments }: { comments: Comment[] }) {
+  const { loggedIn } = useAuthentication();
+
+  const [commentText, setCommentText] = useState("");
+  const [commentError, setCommentError] = useState("");
   const [page, setPage] = useState(1);
+
   const numPerPage = 3;
   const lastPage = Math.floor(comments.length / numPerPage) + 1;
 
@@ -15,6 +22,30 @@ export default function Comments({ comments }: { comments: Comment[] }) {
     setPage((prevPage) => prevPage - 1);
   };
 
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    let valid = true;
+
+    setCommentError("");
+
+    if (commentText.trim() === "") {
+      valid = false;
+      setCommentError("New comment cannot be empty");
+    }
+
+    if (valid) {
+      // TODO: Send comments POST request for new comment
+      const newComment = {
+        text: commentText,
+      };
+      console.log(newComment);
+    }
+  };
+
+  const handleUpvote = (comment: Comment) => {
+    // TODO: Send POST request to upvote the comment
+    console.log(comment);
+  };
   return (
     <ol className="col-[2] border-t">
       {(() => {
@@ -28,6 +59,12 @@ export default function Comments({ comments }: { comments: Comment[] }) {
           if (comment) {
             renderedComments.push(
               <li key={i} className="border-b py-1 text-sm flex flex-row gap-3">
+                <button
+                  className="rounded-full border w-5 h-5 flex justify-center items-center hover:bg-[#fbdbc0]"
+                  onClick={() => handleUpvote(comment)}
+                >
+                  <IconArrowUp width={14} height={14} />
+                </button>
                 <p className="text-sm text-gray-500 min-w-6 px-1">
                   {comment.votes}
                 </p>
@@ -50,6 +87,24 @@ export default function Comments({ comments }: { comments: Comment[] }) {
         }
         return renderedComments;
       })()}
+      {loggedIn && (
+        <form className="inline-block w-full" onSubmit={handleSubmit}>
+          <div className="flex flex-col pt-2 bg-gray-50 gap-6">
+            <textarea
+              name="new-answer"
+              placeholder="Comment here..."
+              cols={30}
+              rows={1}
+              className="rounded p-2 border text-xs"
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+          </div>
+          <FormError message={commentError} />
+          <button className=" text-blue-500 text-nowrap ml-3 text-xs">
+            Post comment
+          </button>
+        </form>
+      )}
       <ol className="flex gap-2 text-sm p-8 items-center justify-center">
         <li>
           <button
