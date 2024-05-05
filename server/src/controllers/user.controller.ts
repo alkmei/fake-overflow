@@ -6,6 +6,8 @@ import { AuthRequest } from "../../types/express";
 import { isSelfOrStaff } from "../utils/auth";
 import TagSchema from "../schema/tag.schema";
 import QuestionSchema from "../schema/question.schema";
+import AnswerSchema from "../schema/answer.schema";
+import CommentSchema from "../schema/comment.schema";
 
 // GET /api/users/
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -165,7 +167,27 @@ export const deleteUser = async (
     const deleter = await UserSchema.findById(userId);
     if (!deleter || !deleter.isStaff)
       return res.status(401).json({ message: "Forbidden" });
-    await UserSchema.findByIdAndDelete(id);
+    const deletedUser = await UserSchema.findByIdAndDelete(id);
+    if (!deletedUser) return res.status(400).json({ message: "Forbidden" });
+
+    const deletedQuestions = await QuestionSchema.find({
+      author: deletedUser,
+    });
+
+    for (const question of deletedQuestions) {
+      await AnswerSchema.deleteMany({ question: question._id });
+      await CommentSchema.deleteMany({ question: question._id });
+    }
+
+    await CommentSchema.deleteMany({
+      answer: {
+        $in: await AnswerSchema.find({ author: deletedUser }, { _id: 1 }),
+      },
+    });
+
+    await AnswerSchema.deleteMany({ author: deletedUser });
+    await CommentSchema.deleteMany({ author: deletedUser });
+
     res.status(204).json({ message: "User successfully deleted" });
   } catch (err) {
     handleError(err, res);
