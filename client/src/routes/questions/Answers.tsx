@@ -1,21 +1,18 @@
-import PostText from "@/components/questions/PostText.tsx";
 import QuestionHeader from "@/components/QuestionHeader.tsx";
-import {
-  IconCaretDownFilled,
-  IconCaretUpFilled,
-  IconEdit,
-  IconX,
-} from "@tabler/icons-react";
-import TagComponent from "@/components/TagComponent.tsx";
-import Comments from "@/components/questions/Comments.tsx";
 import { useEffect, useState } from "react";
 import { useAuthentication } from "@/helper.ts";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import PageButtons from "@/components/PageButtons.tsx";
 import Answer from "@server/types/answer";
 import Question from "@server/types/question";
-import axios from "axios";
 import FormError from "@/components/FormError.tsx";
+import axios from "axios";
+import AnswerPostComponent from "@/routes/questions/AnswerPostComponent.tsx";
 
 export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const questionId = useParams().qid;
@@ -24,11 +21,14 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const [question, setQuestion] = useState<Question>();
   const [nonUserAnswers, setNonUserAnswers] = useState<Answer[]>([]);
   const [userAnswers, setUserAnswers] = useState<Answer[]>([]);
-  const [deleteError, setDeleteError] = useState("");
+  const [answerVoteError, setAnswerVoteError] = useState("");
+  const [questionVoteError, setQuestionVoteError] = useState("");
 
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
+  // TODO: FIX VIEW COUNT 2 TIMES BUG
   useEffect(() => {
     if (searchParams.get("page")) {
       const pageParam = searchParams.get("page");
@@ -42,7 +42,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/questions/${questionId}`)
-      .then(async (res) => {
+      .then((res) => {
         setQuestion(res.data);
         setAnswers(
           res.data.answers.sort(
@@ -81,29 +81,52 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
       });
   }, [questionId, user?._id]);
 
-  const handleDelete = (answer: Answer) => {
-    setDeleteError("");
+  const handleAnsDelete = (answer: Answer): string => {
+    let errorMsg = "";
     axios
       .delete(`http://localhost:8000/api/answers/${answer._id}`, {
         withCredentials: true,
       })
       .then(() => {
-        window.location.reload();
+        setAnswers((prevAnswers) =>
+          prevAnswers.filter((a) => a._id !== answer._id),
+        );
+        setUserAnswers((prevAnswers) =>
+          prevAnswers.filter((a) => a._id !== answer._id),
+        );
+        return "";
       })
       .catch((err) => {
         console.error(err);
-        setDeleteError(err.response.data.message);
+        errorMsg = err.response.data.message;
       });
+    return errorMsg;
   };
 
-  const handleUpvote = (post: Question | Answer) => {
-    // TODO: Send POST request to upvote the post
-    console.log(post);
-  };
+  const handleVote = async (post: Question | Answer, vote: number) => {
+    if (!loggedIn) navigate("/users/login");
 
-  const handleDownvote = (post: Question | Answer) => {
-    // TODO: Send POST request to upvote the post
-    console.log(post);
+    if ((post as Question).summary) {
+      if (user && user.reputation < 50) {
+        setQuestionVoteError("Not enough reputation");
+        return;
+      }
+      await axios.post(
+        `http://localhost:8000/api/questions/${post._id}/votes`,
+        { vote: vote },
+        { withCredentials: true },
+      );
+    } else {
+      if (user && user.reputation < 50) {
+        setAnswerVoteError("Not enough reputation");
+        return;
+      }
+      await axios.post(
+        `http://localhost:8000/api/answers/${post._id}/votes`,
+        { vote: vote },
+        { withCredentials: true },
+      );
+    }
   };
 
   if (question === undefined) return <p>Question Not Found...</p>;
@@ -116,55 +139,12 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
       <section className="w-full">
         <QuestionHeader question={question} />
       </section>
-      <div className="grid gap-4 mt-4 grid-cols-[1fr_16fr]">
-        <div className="flex flex-col gap-2 items-center col-[1]">
-          <button
-            className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]"
-            onClick={() => handleUpvote(question)}
-          >
-            <IconCaretUpFilled width={24} height={24} />
-          </button>
-          <div className="font-bold">{question.votes}</div>
-          <button
-            className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]"
-            onClick={() => handleDownvote(question)}
-          >
-            <IconCaretDownFilled width={24} height={24} />
-          </button>
-        </div>
-        <div className="flex flex-col justify-between items-start col-[2]">
-          <PostText text={question.text} />
-          <ol className="flex items-center justify-center gap-2">
-            {question.tags.map((tag) => (
-              <TagComponent key={tag.id} name={tag.name} />
-            ))}
-          </ol>
-        </div>
-        <div className="col-[2] justify-self-end">
-          <div className="text-xs bg-blue-50 rounded-md p-3 max-w-56">
-            <p className="text-gray-600">
-              asked {new Date(question.creationTime).toLocaleString()}
-            </p>
-            <Link
-              to={`/users/${question.author.id}`}
-              className="text-sm text-blue-600"
-            >
-              {question.author.username}
-            </Link>
-            <p className="font-bold text-gray-600">
-              {question.author.reputation} rep
-            </p>
-          </div>
-        </div>
-        <Comments
-          comments={question.comments}
-          from="questions"
-          id={question._id}
-        />
-      </div>
+      <FormError message={questionVoteError} />
+      <AnswerPostComponent post={question} voteCallback={handleVote} />
       <h2 className="text-xl">
         {answers.length} {answers.length === 1 ? "Answer" : "Answers"}
       </h2>
+      <FormError message={answerVoteError} />
       <div className="flex flex-col gap-3 overflow-y-scroll max-h-[650px]">
         <ul id="answer-list">
           {(() => {
@@ -182,68 +162,15 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                   editableAns = true;
                 } else answer = nonUserAnswers[i - userAnswers.length];
               } else answer = answers[i];
-
               if (answer) {
                 renderedAnswers.push(
-                  <div key={i} className="grid gap-4 mt-4 grid-cols-[1fr_16fr]">
-                    <div className="flex flex-col gap-2 items-center col-[1]">
-                      <button
-                        className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]"
-                        onClick={() => handleUpvote(answer)}
-                      >
-                        <IconCaretUpFilled width={24} height={24} />
-                      </button>
-                      <div className="font-bold">{answer.votes}</div>
-                      <button
-                        className="rounded-full border w-10 h-10 flex justify-center items-center hover:bg-[#fbdbc0]"
-                        onClick={() => handleDownvote(answer)}
-                      >
-                        <IconCaretDownFilled width={24} height={24} />
-                      </button>
-                    </div>
-                    {editableAns && (
-                      <div className="flex flex-col gap-2 col-[1] items-center">
-                        <Link
-                          to={`/questions/${question._id}/answer/${answer._id}/edit`}
-                          className="rounded-full border w-9 h-9 flex justify-center items-center hover:bg-[#fbdbc0]"
-                        >
-                          <IconEdit width={16} height={16} />
-                        </Link>
-                        <button
-                          className="rounded-full border w-9 h-9 flex justify-center items-center hover:bg-red-200"
-                          onClick={() => handleDelete(answer)}
-                        >
-                          <IconX width={16} height={16} />
-                        </button>
-                        <FormError message={deleteError} />
-                      </div>
-                    )}
-                    <div className="flex flex-col justify-between items-start col-[2] row-[1]">
-                      <PostText text={answer.text} />
-                    </div>
-                    <div className="col-[2] justify-self-end">
-                      <div className="text-xs p-3 max-w-56">
-                        <p className="text-gray-600">
-                          answered{" "}
-                          {new Date(answer.creationTime).toLocaleString()}
-                        </p>
-                        <Link
-                          to={`/users/${question.author.id}`}
-                          className="text-sm text-blue-600"
-                        >
-                          {answer.author.username}
-                        </Link>
-                        <p className="font-bold text-gray-600">
-                          {answer.author.reputation} rep
-                        </p>
-                      </div>
-                    </div>
-                    <Comments
-                      comments={answer.comments}
-                      from="answers"
-                      id={answer._id}
-                    />
-                  </div>,
+                  <AnswerPostComponent
+                    post={answer}
+                    question={question}
+                    editableAns={editableAns}
+                    voteCallback={handleVote}
+                    deleteAnsCallback={handleAnsDelete}
+                  />,
                 );
               }
             }

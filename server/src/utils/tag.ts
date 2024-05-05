@@ -7,7 +7,7 @@ export const addTagsToDB = async (authorId: ObjectId, tags: string[]) => {
   const author = await UserSchema.findById(authorId);
   const existingTags = await TagSchema.find({ name: { $in: tags } });
   const newTags =
-    author!.reputation >= 50
+    author!.reputation >= 50 || author!.isStaff
       ? tags
           .filter((t) => !existingTags.some((et) => et.name === t))
           .map(

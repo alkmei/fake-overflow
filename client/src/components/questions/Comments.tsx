@@ -1,10 +1,9 @@
-import { Link } from "react-router-dom";
-import { timeSinceDate, useAuthentication } from "@/helper.ts";
+import { useAuthentication } from "@/helper.ts";
 import Comment from "@server/types/comment";
 import { FormEvent, useState } from "react";
 import FormError from "@/components/FormError.tsx";
-import { IconArrowUp } from "@tabler/icons-react";
 import axios from "axios";
+import CommentComponent from "@/components/questions/CommentComponent.tsx";
 
 export default function Comments({
   comments,
@@ -65,8 +64,14 @@ export default function Comments({
   };
 
   const handleUpvote = (comment: Comment) => {
-    // TODO: Send POST request to upvote the comment
-    console.log(comment);
+    axios
+      .post(
+        `http://localhost:8000/api/comments/${comment._id}/votes`,
+        {},
+        { withCredentials: true },
+      )
+      .then(() => {})
+      .catch(() => console.log("Help me"));
   };
   return (
     <ol className="col-[2] border-t">
@@ -80,30 +85,11 @@ export default function Comments({
           const comment = comments[i];
           if (comment) {
             renderedComments.push(
-              <li key={i} className="border-b py-1 text-sm flex flex-row gap-3">
-                <button
-                  className="rounded-full border w-5 h-5 flex justify-center items-center hover:bg-[#fbdbc0]"
-                  onClick={() => handleUpvote(comment)}
-                >
-                  <IconArrowUp width={14} height={14} />
-                </button>
-                <p className="text-sm text-gray-500 min-w-6 px-1">
-                  {comment.votes}
-                </p>
-                <div>
-                  <span>{comment.text}</span> –{" "}
-                  <Link
-                    to={`/users/${comment.author.id}`}
-                    className="text-blue-700"
-                  >
-                    {comment.author.username}
-                  </Link>
-                  <span className="text-gray-500">
-                    {" "}
-                    {timeSinceDate(comment.creationTime)}
-                  </span>
-                </div>
-              </li>,
+              <CommentComponent
+                key={i}
+                comment={comment}
+                voteCallback={() => handleUpvote(comment)}
+              />,
             );
           }
         }

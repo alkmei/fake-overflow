@@ -259,7 +259,7 @@ export const postCommentToQuestion = async (
     const { text } = req.body;
     const authorId = req.userId;
     const author = await UserSchema.findById(authorId);
-    if (author && author.reputation < 50)
+    if (author && author.reputation < 50 && !author.isStaff)
       return res.status(400).json({ message: "Not enough reputation" });
 
     const comment = new CommentSchema({ text: text, author: author!._id });
@@ -287,7 +287,7 @@ export const voteQuestion = async (
     const voterId = req.userId;
     const voter = await UserSchema.findById(voterId);
     if (!voter) return res.status(404).json({ message: "No such voter" });
-    if (voter.reputation < 50)
+    if (voter.reputation < 50 && !voter.isStaff)
       return res.status(400).json({ message: "Not enough reputation" });
     const question = await QuestionSchema.findById(questionId);
     if (!question) return res.status(404).json({ error: "Question not found" });
@@ -298,6 +298,7 @@ export const voteQuestion = async (
     author.reputation += vote * (vote > 0 ? 5 : 10);
     question.save();
     author.save();
+    res.json(author.reputation);
   } catch (err) {
     handleError(err, res);
   }

@@ -32,21 +32,21 @@ export const deleteComment = async (
 
 // POST /api/comments/:id/votes
 export const voteComment = async (
-  req: AuthRequest<{ id: string }, {}, { vote: 1 | -1 }>,
+  req: AuthRequest<{ id: string }>,
   res: Response,
 ) => {
   try {
     const commentId = req.params.id;
-    const { vote } = req.body;
     const voterId = req.userId;
     const voter = await UserSchema.findById(voterId);
     if (!voter) return res.status(404).json({ message: "No such voter" });
-    if (voter.reputation < 50)
+    if (voter.reputation < 50 && !voter.isStaff)
       return res.status(400).json({ message: "Not enough reputation" });
     const comment = await CommentSchema.findById(commentId);
     if (!comment) return res.status(404).json({ error: "Comment not found" });
-    comment.votes += vote;
+    comment.votes += 1;
     comment.save();
+    res.json(comment.votes);
   } catch (err) {
     handleError(err, res);
   }
