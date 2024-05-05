@@ -28,7 +28,6 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // TODO: FIX VIEW COUNT 2 TIMES BUG
   useEffect(() => {
     if (searchParams.get("page")) {
       const pageParam = searchParams.get("page");
@@ -44,42 +43,47 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
       .get(`http://localhost:8000/api/questions/${questionId}`)
       .then((res) => {
         setQuestion(res.data);
-        setAnswers(
-          res.data.answers.sort(
-            (a: Answer, b: Answer) =>
-              new Date(b.creationTime).getTime() -
-              new Date(a.creationTime).getTime(),
-          ),
-        );
-        // Split answers into user's answers and non-user's answers
-        const userAnswersArray: Answer[] = [];
-        const nonUserAnswersArray: Answer[] = [];
-        res.data.answers.forEach((answer: Answer) => {
-          if (answer.author._id === user?._id) {
-            userAnswersArray.push(answer);
-          } else {
-            nonUserAnswersArray.push(answer);
-          }
-        });
-        setUserAnswers(
-          userAnswersArray.sort(
-            (a, b) =>
-              new Date(b.creationTime).getTime() -
-              new Date(a.creationTime).getTime(),
-          ),
-        );
-        setNonUserAnswers(
-          nonUserAnswersArray.sort(
-            (a, b) =>
-              new Date(b.creationTime).getTime() -
-              new Date(a.creationTime).getTime(),
-          ),
-        );
       })
       .catch((error) => {
         console.error("Error fetching question:", error);
       });
-  }, [questionId, user?._id]);
+  }, [questionId]);
+
+  useEffect(() => {
+    if (user && question) {
+      setAnswers(
+        question.answers.sort(
+          (a: Answer, b: Answer) =>
+            new Date(b.creationTime).getTime() -
+            new Date(a.creationTime).getTime(),
+        ),
+      );
+      // Split answers into user's answers and non-user's answers
+      const userAnswersArray: Answer[] = [];
+      const nonUserAnswersArray: Answer[] = [];
+      question.answers.forEach((answer: Answer) => {
+        if (answer.author._id === user._id) {
+          userAnswersArray.push(answer);
+        } else {
+          nonUserAnswersArray.push(answer);
+        }
+      });
+      setUserAnswers(
+        userAnswersArray.sort(
+          (a, b) =>
+            new Date(b.creationTime).getTime() -
+            new Date(a.creationTime).getTime(),
+        ),
+      );
+      setNonUserAnswers(
+        nonUserAnswersArray.sort(
+          (a, b) =>
+            new Date(b.creationTime).getTime() -
+            new Date(a.creationTime).getTime(),
+        ),
+      );
+    }
+  }, [question, user]);
 
   const handleAnsDelete = (answer: Answer): string => {
     let errorMsg = "";
