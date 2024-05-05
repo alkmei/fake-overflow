@@ -1,12 +1,11 @@
 import FormError from "@/components/FormError.tsx";
 import { FormEvent, useState, useEffect } from "react";
-import { sluggify, useAuthentication, validateHyperlinks } from "@/helper";
+import { sluggify, validateHyperlinks } from "@/helper";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Question from "@server/types/question";
 
 export default function AnswerQuestion({ editing }: { editing?: boolean }) {
-  const { user } = useAuthentication();
   const [question, setQuestion] = useState<Question>();
   const [text, setText] = useState("");
   const { aid, qid } = useParams();

@@ -43,23 +43,23 @@ export default function Questions() {
   }, [questions, sort]);
 
   const getQuestionsSortedNewest = (questions: Question[]) =>
-    questions.sort(
+    [...questions].sort(
       (a, b) =>
         new Date(b.creationTime).getTime() - new Date(a.creationTime).getTime(),
     );
 
   const getQuestionsSortedActive = (questions: Question[]) =>
-    questions.sort((a, b) => {
-      const answersA = a.answers;
-      const answersB = b.answers;
+    [...questions].sort((a, b) => {
+      const answersA = [...a.answers];
+      const answersB = [...b.answers];
 
-      const mostRecentAnswersA = answersA.sort(
+      const mostRecentAnswersA = [...answersA].sort(
         (a, b) =>
           new Date(b.creationTime).getTime() -
           new Date(a.creationTime).getTime(),
       );
 
-      const mostRecentAnswersB = answersB.sort(
+      const mostRecentAnswersB = [...answersB].sort(
         (a, b) =>
           new Date(b.creationTime).getTime() -
           new Date(a.creationTime).getTime(),
@@ -77,9 +77,8 @@ export default function Questions() {
       );
     });
 
-  const getQuestionsByUnanswered = (questions: Question[]) => {
-    return questions.filter((question) => question.answers.length === 0);
-  };
+  const getQuestionsByUnanswered = (questions: Question[]) =>
+    questions.filter((question) => question.answers.length === 0);
 
   return (
     <section className="w-full">

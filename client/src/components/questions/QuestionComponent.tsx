@@ -24,7 +24,7 @@ export default function QuestionComponent({
                 : ""
             }
           >
-            {question.answers.length} answer{" "}
+            {question.answers.length} answer
             {question.answers.length === 1 ? "" : "s"}
           </span>
         </p>

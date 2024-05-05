@@ -15,6 +15,7 @@ import PageButtons from "@/components/PageButtons.tsx";
 import Answer from "@server/types/answer";
 import Question from "@server/types/question";
 import axios from "axios";
+import FormError from "@/components/FormError.tsx";
 
 export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const questionId = useParams().qid;
@@ -214,6 +215,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                         >
                           <IconX width={16} height={16} />
                         </button>
+                        <FormError message={deleteError} />
                       </div>
                     )}
                     <div className="flex flex-col justify-between items-start col-[2] row-[1]">

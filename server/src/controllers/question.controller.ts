@@ -14,7 +14,8 @@ export const getQuestions = async (req: Request, res: Response) => {
   try {
     const questions = await QuestionSchema.find()
       .populate("author", "username")
-      .populate("tags", "name");
+      .populate("tags", "name")
+      .populate("answers", "creationTime");
     res.json(questions);
   } catch (err) {
     handleError(err, res);
