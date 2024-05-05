@@ -1,27 +1,32 @@
 import { useAuthentication } from "@/helper.ts";
 import Comment from "@server/types/comment";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import FormError from "@/components/FormError.tsx";
 import axios from "axios";
 import CommentComponent from "@/components/questions/CommentComponent.tsx";
 
 export default function Comments({
-  comments,
+  initComments,
   from,
   id,
 }: {
-  comments: Comment[];
+  initComments: Comment[];
   from?: string;
   id?: string;
 }) {
   const { loggedIn } = useAuthentication();
 
+  const [comments, setComments] = useState<Comment[]>([]);
   const [commentText, setCommentText] = useState("");
   const [commentError, setCommentError] = useState("");
   const [page, setPage] = useState(1);
 
   const numPerPage = 3;
   const lastPage = Math.ceil(comments.length / numPerPage);
+
+  useEffect(() => {
+    setComments(initComments);
+  }, [initComments]);
 
   const incrementPage = () => {
     setPage((prevPage) => prevPage + 1);
@@ -54,7 +59,9 @@ export default function Comments({
               withCredentials: true,
             },
           )
-          .then(() => window.location.reload())
+          .then((res) => {
+            setComments((prevComments) => [...prevComments, res.data]);
+          })
           .catch((err) => {
             console.error(err);
             setCommentError(err.response.data.message);

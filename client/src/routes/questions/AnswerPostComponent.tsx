@@ -97,7 +97,7 @@ export default function AnswerPostComponent({
           </Link>
         </div>
       </div>
-      <Comments comments={post.comments} from="questions" id={post._id} />
+      <Comments initComments={post.comments} from="questions" id={post._id} />
     </div>
   );
 }
