@@ -4,8 +4,17 @@ import Comment from "@server/types/comment";
 import { FormEvent, useState } from "react";
 import FormError from "@/components/FormError.tsx";
 import { IconArrowUp } from "@tabler/icons-react";
+import axios from "axios";
 
-export default function Comments({ comments }: { comments: Comment[] }) {
+export default function Comments({
+  comments,
+  from,
+  id,
+}: {
+  comments: Comment[];
+  from?: string;
+  id?: string;
+}) {
   const { loggedIn } = useAuthentication();
 
   const [commentText, setCommentText] = useState("");
@@ -34,11 +43,24 @@ export default function Comments({ comments }: { comments: Comment[] }) {
     }
 
     if (valid) {
-      // TODO: Send comments POST request for new comment
       const newComment = {
         text: commentText,
       };
-      console.log(newComment);
+      if (from && id) {
+        axios
+          .post(
+            `http://localhost:8000/api/${from}/${id}/comments`,
+            newComment,
+            {
+              withCredentials: true,
+            },
+          )
+          .then(() => window.location.reload())
+          .catch((err) => {
+            console.error(err);
+            setCommentError(err.response.data.message);
+          });
+      }
     }
   };
 

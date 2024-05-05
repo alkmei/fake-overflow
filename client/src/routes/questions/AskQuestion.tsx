@@ -2,7 +2,7 @@ import FormError from "@/components/FormError.tsx";
 import { FormEvent, useState, useEffect } from "react";
 import { useAuthentication, validateHyperlinks } from "@/helper";
 import { useNavigate, useParams } from "react-router-dom";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import Tag from "@server/types/tag";
 
 export default function AskQuestion({ editing }: { editing?: boolean }) {

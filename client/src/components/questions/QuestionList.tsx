@@ -5,10 +5,10 @@ import { useSearchParams } from "react-router-dom";
 
 export default function QuestionList({
   questions,
-  fromProfile,
+  userId,
 }: {
   questions: Question[];
-  fromProfile?: boolean;
+  userId?: string;
 }) {
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
@@ -41,7 +41,11 @@ export default function QuestionList({
           if (question) {
             renderedQuestions.push(
               <div key={i}>
-                <QuestionComponent key={i} question={question} />
+                <QuestionComponent
+                  key={i}
+                  question={question}
+                  userId={userId}
+                />
               </div>,
             );
           }

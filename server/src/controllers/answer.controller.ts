@@ -16,6 +16,25 @@ export const getAnswers = async (req: Request, res: Response) => {
   }
 };
 
+// GET /api/answers/:id
+export const getAnswerById = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const answerId = req.params.id;
+    const answer = await AnswerSchema.findById(answerId)
+      .populate("author")
+      .populate("comments");
+
+    if (!answer) return res.status(404).json({ message: "Answer not found" });
+
+    return res.status(200).json(answer);
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
 // DELETE /api/answers/:id
 export const deleteAnswer = async (
   req: AuthRequest<{ id: string }>,
@@ -50,7 +69,8 @@ export const postCommentToAnswer = async (
     const comment = new CommentSchema({ text: text, author: author!._id });
     const answer = await AnswerSchema.findById(answerId);
     if (!answer) return res.status(404).json({ error: "Answer not found" });
-
+    if (author && author.reputation < 50)
+      return res.status(400).json({ message: "Not enough reputation" });
     answer.comments.push(comment);
     const savedComment = await comment.save();
     await answer.save();

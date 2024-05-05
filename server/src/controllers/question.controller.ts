@@ -220,6 +220,8 @@ export const postCommentToQuestion = async (
     const { text } = req.body;
     const authorId = req.userId;
     const author = await UserSchema.findById(authorId);
+    if (author && author.reputation < 50)
+      return res.status(400).json({ message: "Not enough reputation" });
 
     const comment = new CommentSchema({ text: text, author: author!._id });
     const question = await QuestionSchema.findById(questionId);

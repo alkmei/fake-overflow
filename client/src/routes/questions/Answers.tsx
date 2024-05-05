@@ -8,9 +8,8 @@ import {
 } from "@tabler/icons-react";
 import TagComponent from "@/components/TagComponent.tsx";
 import Comments from "@/components/questions/Comments.tsx";
-import FormError from "@/components/FormError.tsx";
-import { FormEvent, useEffect, useState } from "react";
-import { useAuthentication, validateHyperlinks, getAnswers } from "@/helper.ts";
+import { useEffect, useState } from "react";
+import { useAuthentication } from "@/helper.ts";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import PageButtons from "@/components/PageButtons.tsx";
 import Answer from "@server/types/answer";
@@ -18,18 +17,16 @@ import Question from "@server/types/question";
 import axios from "axios";
 
 export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
-  const questionId = useParams().id;
-  const { loggedIn, username } = useAuthentication();
+  const questionId = useParams().qid;
+  const { loggedIn, user } = useAuthentication();
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [question, setQuestion] = useState<Question>();
+  const [nonUserAnswers, setNonUserAnswers] = useState<Answer[]>([]);
   const [userAnswers, setUserAnswers] = useState<Answer[]>([]);
+  const [deleteError, setDeleteError] = useState("");
 
-  const [text, setText] = useState("");
-  const [textError, setTextError] = useState("");
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
-  const [editingAnswerId, setEditingAnswerId] = useState<number | null>(null);
-  const [editedText, setEditedText] = useState("");
-  const [editError, setEditError] = useState("");
 
   useEffect(() => {
     if (searchParams.get("page")) {
@@ -46,83 +43,56 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
       .get(`http://localhost:8000/api/questions/${questionId}`)
       .then(async (res) => {
         setQuestion(res.data);
+        setAnswers(
+          res.data.answers.sort(
+            (a: Answer, b: Answer) =>
+              new Date(b.creationTime).getTime() -
+              new Date(a.creationTime).getTime(),
+          ),
+        );
+        // Split answers into user's answers and non-user's answers
+        const userAnswersArray: Answer[] = [];
+        const nonUserAnswersArray: Answer[] = [];
+        res.data.answers.forEach((answer: Answer) => {
+          if (answer.author._id === user?._id) {
+            userAnswersArray.push(answer);
+          } else {
+            nonUserAnswersArray.push(answer);
+          }
+        });
+        setUserAnswers(
+          userAnswersArray.sort(
+            (a, b) =>
+              new Date(b.creationTime).getTime() -
+              new Date(a.creationTime).getTime(),
+          ),
+        );
+        setNonUserAnswers(
+          nonUserAnswersArray.sort(
+            (a, b) =>
+              new Date(b.creationTime).getTime() -
+              new Date(a.creationTime).getTime(),
+          ),
+        );
       })
       .catch((error) => {
         console.error("Error fetching question:", error);
       });
-  }, [questionId]);
-
-  //  TODO: split the array into answers by user and answers not by the user
-
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    let valid = true;
-
-    setTextError("");
-
-    if (!validateHyperlinks(text)) {
-      setTextError("Invalid hyperlink");
-      valid = false;
-    }
-
-    if (text.trim() === "") {
-      setTextError("Answer text cannot be empty");
-      valid = false;
-    }
-
-    if (valid) {
-      const newAnswer = {
-        text: text,
-      };
-
-      console.log(newAnswer);
-
-      // // TODO: add new answer then reload to show new answer if successful, make sure user is logged in
-      // axios
-      //     .post("http://localhost:8000/api/answers/", newAnswer, {withCredentials: true})
-      //     .then((res) => {
-      //       console.log(res);
-      //       console.log(res.data);
-      //     });
-    }
-  };
-
-  const handleEdit = (answer: Answer) => {
-    if (!(answer.id !== editingAnswerId)) setEditingAnswerId(null);
-    else setEditingAnswerId(answer.id);
-
-    setEditedText(answer.text);
-  };
-
-  const handleEditSubmit = (event: FormEvent, answer: Answer) => {
-    event.preventDefault();
-    let valid = true;
-
-    setEditError("");
-
-    if (!validateHyperlinks(text)) {
-      setEditError("Invalid hyperlink");
-      valid = false;
-    }
-
-    if (editedText.trim() === "") {
-      setEditError("Edited text cannot be empty");
-      valid = false;
-    }
-
-    if (editedText === answer.text) {
-      setEditError("Edited text is identical to answer text");
-      valid = false;
-    }
-
-    if (valid) {
-      // TODO: send POST request to change answer
-      console.log(editedText);
-    }
-  };
+  }, [questionId, user?._id]);
 
   const handleDelete = (answer: Answer) => {
-    console.log(answer);
+    setDeleteError("");
+    axios
+      .delete(`http://localhost:8000/api/answers/${answer._id}`, {
+        withCredentials: true,
+      })
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.error(err);
+        setDeleteError(err.response.data.message);
+      });
   };
 
   const handleUpvote = (post: Question | Answer) => {
@@ -139,8 +109,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
 
   const numPerPage = 5;
   const lastPage = Math.ceil(question.answers.length / numPerPage);
-  console.log(question);
-  // TODO - Separate the body into its own component
+
   return (
     <section className="flex flex-col gap-5 w-full p-6">
       <section className="w-full">
@@ -186,11 +155,14 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
             </p>
           </div>
         </div>
-        <Comments comments={question.comments} />
+        <Comments
+          comments={question.comments}
+          from="questions"
+          id={question._id}
+        />
       </div>
       <h2 className="text-xl">
-        {question.answers.length}{" "}
-        {question.answers.length === 1 ? "Answer" : "Answers"}
+        {answers.length} {answers.length === 1 ? "Answer" : "Answers"}
       </h2>
       <div className="flex flex-col gap-3 overflow-y-scroll max-h-[650px]">
         <ul id="answer-list">
@@ -203,10 +175,12 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
             ) {
               let answer;
               let editableAns = false;
-              if (i < userAnswers.length) {
-                answer = userAnswers[i];
-                editableAns = true;
-              } else answer = question.answers[i - userAnswers.length];
+              if (fromProfile) {
+                if (i < userAnswers.length) {
+                  answer = userAnswers[i];
+                  editableAns = true;
+                } else answer = nonUserAnswers[i - userAnswers.length];
+              } else answer = answers[i];
 
               if (answer) {
                 renderedAnswers.push(
@@ -228,12 +202,12 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                     </div>
                     {editableAns && (
                       <div className="flex flex-col gap-2 col-[1] items-center">
-                        <button
+                        <Link
+                          to={`/`}
                           className="rounded-full border w-9 h-9 flex justify-center items-center hover:bg-[#fbdbc0]"
-                          onClick={() => handleEdit(answer)}
                         >
                           <IconEdit width={16} height={16} />
-                        </button>
+                        </Link>
                         <button
                           className="rounded-full border w-9 h-9 flex justify-center items-center hover:bg-red-200"
                           onClick={() => handleDelete(answer)}
@@ -245,22 +219,6 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                     <div className="flex flex-col justify-between items-start col-[2] row-[1]">
                       <PostText text={answer.text} />
                     </div>
-                    {editingAnswerId === answer.id && (
-                      <form onSubmit={(e) => handleEditSubmit(e, answer)}>
-                        <textarea
-                          name="edit-answer"
-                          cols={30}
-                          rows={3}
-                          value={editedText}
-                          className="rounded p-2 border w-full mr-10"
-                          onChange={(e) => setEditedText(e.target.value)}
-                        />
-                        <FormError message={editError} />
-                        <button className="bg-blue-500 p-2 text-white rounded hover:bg-blue-600 text-nowrap text-xs mt-2">
-                          Submit Edit
-                        </button>
-                      </form>
-                    )}
                     <div className="col-[2] justify-self-end">
                       <div className="text-xs p-3 max-w-56">
                         <p className="text-gray-600">
@@ -278,7 +236,11 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                         </p>
                       </div>
                     </div>
-                    <Comments comments={answer.comments} />
+                    <Comments
+                      comments={answer.comments}
+                      from="answers"
+                      id={answer._id}
+                    />
                   </div>,
                 );
               }
@@ -289,24 +251,14 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
       </div>
       <PageButtons totalPages={lastPage} />
       {loggedIn && (
-        <form className="inline-block mb-16 border-t" onSubmit={handleSubmit}>
-          <div className="flex flex-col p-2 bg-gray-50 gap-6">
-            <label htmlFor="new-answer" className="text-xl">
-              Your Answer
-            </label>
-            <textarea
-              name="new-answer"
-              cols={30}
-              rows={7}
-              className="rounded p-2 border"
-              onChange={(e) => setText(e.target.value)}
-            />
-          </div>
-          <FormError message={textError} />
-          <button className="bg-blue-500 p-2 text-white rounded hover:bg-blue-600 text-nowrap mt-5">
-            Post Your Answer
-          </button>
-        </form>
+        <div className="inline-block">
+          <Link
+            to={`/questions/${question._id}/answer/`}
+            className="bg-blue-500 p-2 text-white rounded hover:bg-blue-600 text-nowrap"
+          >
+            Answer Question
+          </Link>
+        </div>
       )}
     </section>
   );

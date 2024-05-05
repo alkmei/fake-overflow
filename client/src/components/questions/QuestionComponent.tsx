@@ -8,7 +8,7 @@ export default function QuestionComponent({
   userId,
 }: {
   question: Question;
-  userId?: number;
+  userId?: string;
 }) {
   question.creationTime = new Date(question.creationTime);
 

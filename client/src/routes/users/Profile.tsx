@@ -161,7 +161,7 @@ export default function Profile() {
       </div>
       <div>
         <h2 className="text-2xl mb-5">Answered Questions</h2>
-        <QuestionList questions={answeredQuestions} fromProfile={true} />
+        <QuestionList questions={answeredQuestions} userId={id} />
       </div>
       {user?.isStaff && profileUser.isStaff && (
         <div>

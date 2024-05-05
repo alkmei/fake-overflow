@@ -4,7 +4,6 @@ import { Request, Response } from "express";
 import CommentSchema from "../schema/comment.schema";
 import { isAuthorOrStaff } from "../utils/auth";
 import UserSchema from "../schema/user.schema";
-import QuestionSchema from "../schema/question.schema";
 
 // GET /api/comments
 export const getComments = async (req: Request, res: Response) => {

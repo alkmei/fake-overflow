@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -15,6 +14,7 @@ import Profile from "@/routes/users/Profile.tsx";
 import Answers from "@/routes/questions/Answers.tsx";
 import TagQuestions from "@/routes/questions/TagQuestions.tsx";
 import AuthRoute from "@/components/AuthRoute.tsx";
+import AnswerQuestion from "@/routes/questions/AnswerQuestion.tsx";
 
 const router = createBrowserRouter([
   {
@@ -48,12 +48,28 @@ const router = createBrowserRouter([
           </AuthRoute>
         ),
       },
-      { path: "/questions/:id/:slug", element: <Answers /> },
+      { path: "/questions/:qid/:slug", element: <Answers /> },
       {
-        path: "/questions/edit/:id/answer/",
+        path: "/questions/edit/:qid/answer/:uid",
         element: (
           <AuthRoute>
             <Answers fromProfile={true} />
+          </AuthRoute>
+        ),
+      },
+      {
+        path: "/questions/:qid/answer",
+        element: (
+          <AuthRoute>
+            <AnswerQuestion />
+          </AuthRoute>
+        ),
+      },
+      {
+        path: "/questions/:qid/answer/:aid",
+        element: (
+          <AuthRoute>
+            <AnswerQuestion editing={true} />
           </AuthRoute>
         ),
       },
