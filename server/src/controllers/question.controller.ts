@@ -12,13 +12,51 @@ import CommentSchema from "../schema/comment.schema";
 // GET /api/questions
 export const getQuestions = async (req: Request, res: Response) => {
   try {
-    const questions = await QuestionSchema.find()
+    if (req.query.search && req.query.search !== "") {
+      const questions = await searchQuestions(req.query.search.toString());
+
+      res.json(questions);
+    } else {
+      const questions = await QuestionSchema.find()
+        .populate("author", "username")
+        .populate("tags", "name")
+        .populate("answers", "creationTime");
+      res.json(questions);
+    }
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+const searchQuestions = async (searchQuery: string) => {
+  try {
+    const searchString = searchQuery
+      .toLowerCase()
+      .split(" ")
+      .filter((t) => t.trim() !== "");
+
+    const searchTags = searchString
+      .filter((x) => x.startsWith("[") && x.endsWith("]"))
+      .map((x) => x.slice(1, -1));
+
+    const searchTerms = searchString.filter(
+      (x) => !(x.startsWith("[") && x.endsWith("]")),
+    );
+
+    let questions = await QuestionSchema.find({})
       .populate("author", "username")
       .populate("tags", "name")
       .populate("answers", "creationTime");
-    res.json(questions);
+    return questions.filter(
+      (q) =>
+        searchTerms.some(
+          (term) =>
+            q.title.toLowerCase().includes(term) ||
+            q.text.toLowerCase().includes(term),
+        ) || searchTags.some((tag) => q.tags.some((qTag) => qTag.name === tag)),
+    );
   } catch (err) {
-    handleError(err, res);
+    console.error(err);
   }
 };
 

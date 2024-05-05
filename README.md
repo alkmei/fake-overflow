@@ -45,6 +45,7 @@ npm run start
 - Document Schemas
 - Profile, Tag, Tag Question page
 - Question and answer components
-- New Question, answer, page button functionality
+- New Question, answer, sort, page button functionality
 - Signup and Login functionality
 - Tag, Question, Answer edit and delete
+- Search backend and some answers/questions routes

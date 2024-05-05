@@ -1,6 +1,6 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { IconBrandStackoverflow, IconSearch } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useAuthentication } from "@/helper.ts";
 import { useCookies } from "react-cookie";
 import axios from "axios";
@@ -8,6 +8,8 @@ import axios from "axios";
 export default function Navbar() {
   const { user, loggedIn, setLoggedIn } = useAuthentication();
   const [cookies, setCookies] = useCookies(["access_token"]);
+  const [query, setQuery] = useState("");
+  const [, setSearchQuery] = useSearchParams();
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -28,6 +30,23 @@ export default function Navbar() {
     console.log("Logged in:", loggedIn);
   }, [loggedIn, cookies.access_token]);
 
+  const handleSearchSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setTimeout(() => {
+      setSearchQuery((params) => {
+        const sQuery = new URLSearchParams(params);
+        if (query.trim() === "") sQuery.delete("search");
+        else sQuery.set("search", query);
+        return sQuery.toString();
+      });
+      window.location.reload();
+    });
+  };
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
   return (
     <div className="fixed w-full border-b border-gray-200 bg-white z-50 border-t-[3px] border-t-[#e7700d]">
       <header className="flex items-center gap-4 justify-between h-14 max-w-[1264px] m-auto">
@@ -43,12 +62,15 @@ export default function Navbar() {
             <label htmlFor="search">
               <IconSearch width={18} color="gray" />
             </label>
-            <input
-              type="text"
-              id="search"
-              placeholder="Search..."
-              className="w-full relative outline-none"
-            />
+            <form onSubmit={handleSearchSubmit} className="w-full">
+              <input
+                type="text"
+                id="search"
+                placeholder="Search..."
+                className="w-full relative outline-none"
+                onChange={(e) => handleSearch(e)}
+              />
+            </form>
           </div>
         </div>
         {!loggedIn ? (
