@@ -12,6 +12,7 @@ import { useState } from "react";
 import Answer from "@server/types/answer";
 import Question from "@server/types/question";
 import FormError from "@/components/FormError.tsx";
+import { useAuthentication } from "@/helper.ts";
 
 export default function AnswerPostComponent({
   post,
@@ -26,11 +27,13 @@ export default function AnswerPostComponent({
   voteCallback: (post: Answer | Question, vote: number) => void;
   deleteAnsCallback?: (post: Answer) => string;
 }) {
+  const { user } = useAuthentication();
   const [postVotes, setPostVotes] = useState(post.votes);
   const [deleteError, setDeleteError] = useState("");
 
   const handleVote = (vote: number) => {
-    setPostVotes((prevVotes) => prevVotes + vote);
+    if (user && (user.isStaff || !(user.reputation < 50)))
+      setPostVotes((prevVotes) => prevVotes + vote);
     voteCallback(post, vote);
   };
 

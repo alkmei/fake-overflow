@@ -1,6 +1,6 @@
 import { IconArrowUp } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
-import { timeSinceDate } from "@/helper.ts";
+import { timeSinceDate, useAuthentication } from "@/helper.ts";
 import Comment from "@server/types/comment";
 import { useState } from "react";
 
@@ -11,10 +11,12 @@ export default function CommentComponent({
   comment: Comment;
   voteCallback: (comment: Comment) => void;
 }) {
+  const { user } = useAuthentication();
   const [votes, setVotes] = useState(comment.votes);
 
   const handleVote = () => {
-    setVotes((prevVotes) => prevVotes + 1);
+    if (user && (user.isStaff || !(user.reputation < 50)))
+      setVotes((prevVotes) => prevVotes + 1);
     voteCallback(comment);
   };
   return (

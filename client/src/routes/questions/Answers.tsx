@@ -111,7 +111,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
     if (!loggedIn) navigate("/users/login");
 
     if ((post as Question).summary) {
-      if (user && user.reputation < 50) {
+      if (user && user.reputation < 50 && !user.isStaff) {
         setQuestionVoteError("Not enough reputation");
         return;
       }
@@ -121,7 +121,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
         { withCredentials: true },
       );
     } else {
-      if (user && user.reputation < 50) {
+      if (user && user.reputation < 50 && !user.isStaff) {
         setAnswerVoteError("Not enough reputation");
         return;
       }

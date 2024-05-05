@@ -38,6 +38,7 @@ async function createInitialData(adminUsername: string, adminPassword: string) {
   const adminUser = new UserSchema({
     email: "admin@example.com",
     username: adminUsername,
+    reputation: 1000,
     password: await bcrypt.hash(adminPassword, 10),
     isStaff: true,
   });

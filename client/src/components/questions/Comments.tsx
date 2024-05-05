@@ -78,7 +78,7 @@ export default function Comments({
         { withCredentials: true },
       )
       .then(() => {})
-      .catch(() => console.log("Help me"));
+      .catch((err) => setCommentError(err.response.data.message));
   };
   return (
     <ol className="col-[2] border-t">
