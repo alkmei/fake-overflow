@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { IconBrandStackoverflow, IconSearch } from "@tabler/icons-react";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useAuthentication } from "@/helper.ts";
@@ -9,7 +9,6 @@ export default function Navbar() {
   const { user, loggedIn, setLoggedIn } = useAuthentication();
   const [cookies, setCookies] = useCookies(["access_token"]);
   const [query, setQuery] = useState("");
-  const [, setSearchQuery] = useSearchParams();
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -32,15 +31,8 @@ export default function Navbar() {
 
   const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setTimeout(() => {
-      setSearchQuery((params) => {
-        const sQuery = new URLSearchParams(params);
-        if (query.trim() === "") sQuery.delete("search");
-        else sQuery.set("search", query);
-        return sQuery.toString();
-      });
-      window.location.reload();
-    });
+    if (query) navigate(`/questions/search/${query}`);
+    else navigate(`/questions/`);
   };
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {

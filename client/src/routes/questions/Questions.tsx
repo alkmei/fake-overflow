@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import PageButtons from "@/components/PageButtons.tsx";
 import axios from "axios";
 import Question from "@server/types/question";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 export default function Questions() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -14,25 +14,19 @@ export default function Questions() {
   const lastPage = Math.ceil(questions.length / numPerPage);
 
   const [searchParams] = useSearchParams();
+  const { query } = useParams();
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/questions").then((res) => {
-      setQuestions(res.data);
-    });
-  }, []);
+    axios
+      .get(`http://localhost:8000/api/questions?search=${query}`)
+      .then((res) => {
+        setQuestions(res.data);
+      });
+  }, [query]);
 
   useEffect(() => {
     const tab = searchParams.get("tab");
     if (tab) setSort(tab);
-
-    const query = searchParams.get("search");
-    if (query) {
-      axios
-        .get(`http://localhost:8000/api/questions?search=${query}`)
-        .then((res) => {
-          setQuestions(res.data);
-        });
-    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -91,7 +85,10 @@ export default function Questions() {
 
   return (
     <section className="w-full">
-      <ContentHeader name={"All Questions"} questionCount={questions.length} />
+      <ContentHeader
+        name={query ? "Search Results" : "All Questions"}
+        questionCount={questions.length}
+      />
       <QuestionList questions={sortedQuestions} />
       <PageButtons totalPages={lastPage} />
     </section>

@@ -32,6 +32,7 @@ const router = createBrowserRouter([
     element: <Content />,
     children: [
       { path: "/questions", element: <Questions /> },
+      { path: "/questions/search/:query", element: <Questions /> },
       {
         path: "/questions/ask",
         element: (

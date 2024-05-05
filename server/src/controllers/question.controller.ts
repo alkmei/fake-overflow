@@ -12,9 +12,11 @@ import CommentSchema from "../schema/comment.schema";
 // GET /api/questions
 export const getQuestions = async (req: Request, res: Response) => {
   try {
-    if (req.query.search && req.query.search !== "") {
+    if (
+      req.query.search !== undefined &&
+      req.query.search.toString().trim() !== "undefined"
+    ) {
       const questions = await searchQuestions(req.query.search.toString());
-
       res.json(questions);
     } else {
       const questions = await QuestionSchema.find()

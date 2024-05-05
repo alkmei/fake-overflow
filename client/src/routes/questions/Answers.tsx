@@ -165,6 +165,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
               if (answer) {
                 renderedAnswers.push(
                   <AnswerPostComponent
+                    key={i}
                     post={answer}
                     question={question}
                     editableAns={editableAns}
