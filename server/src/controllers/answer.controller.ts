@@ -5,6 +5,7 @@ import { AuthRequest } from "../../types/express";
 import { isAuthorOrStaff } from "../utils/auth";
 import CommentSchema from "../schema/comment.schema";
 import UserSchema from "../schema/user.schema";
+import QuestionSchema from "../schema/question.schema";
 
 // GET /api/answers
 export const getAnswers = async (req: Request, res: Response) => {
@@ -41,10 +42,21 @@ export const deleteAnswer = async (
   res: Response,
 ) => {
   try {
-    const answers = await AnswerSchema.findById(req.params.id);
-    if (!answers) return res.status(404).json({ message: "No such answer" });
-    if (!(await isAuthorOrStaff(req, answers._id, AnswerSchema)))
+    const answer = await AnswerSchema.findById(req.params.id);
+    if (!answer) return res.status(404).json({ message: "No such answer" });
+    if (!(await isAuthorOrStaff(req, answer._id, AnswerSchema)))
       return res.status(403).json({ message: "Forbidden" });
+
+    const question = await QuestionSchema.findOne({ answers: answer._id });
+    if (!question)
+      return res
+        .status(404)
+        .json({ message: "Answer not associated with any question" });
+
+    question.answers = question.answers.filter(
+      (answerId) => answerId.toString() !== answer._id.toString(),
+    );
+    await question.save();
 
     const deletedAnswer = await AnswerSchema.findByIdAndDelete(req.params.id);
     await CommentSchema.deleteMany({ _id: { $in: deletedAnswer!.comments } });
