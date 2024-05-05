@@ -24,7 +24,8 @@ export default function QuestionComponent({
                 : ""
             }
           >
-            {question.answers.length} answers
+            {question.answers.length} answer{" "}
+            {question.answers.length === 1 ? "" : "s"}
           </span>
         </p>
         <p className="whitespace-nowrap w-24">{question.views} views</p>

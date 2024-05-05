@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Question from "@server/types/question";
 import User from "@server/types/user";
 
 export const timeSinceDate = (dateString: Date) => {
@@ -86,17 +85,4 @@ export const useAuthentication = () => {
   }, []);
 
   return { user, loggedIn, isAdmin, setLoggedIn, setIsAdmin, loading };
-};
-
-export const getAnswers = async (question: Question) => {
-  try {
-    const answersPromises = question.answers.map(async (ansId) => {
-      const res = await axios.get(`http://localhost:8000/api/answers/${ansId}`);
-      return res.data;
-    });
-    return await Promise.all(answersPromises);
-  } catch (error) {
-    console.error("Error fetching answers:", error);
-    return [];
-  }
 };
