@@ -1,5 +1,4 @@
 import UserSchema from "../schema/user.schema";
-import QuestionSchema from "../schema/question.schema";
 import { AuthRequest } from "../../types/express";
 import { Model } from "mongoose";
 
@@ -27,11 +26,4 @@ export const isSelfOrStaff = async (req: AuthRequest, userId: string) => {
   const isSelf = id === userId;
   const isStaff = await UserSchema.exists({ _id: userId, isStaff: true });
   return !!isStaff || isSelf;
-};
-
-export const extractToken = (cookieString: string) => {
-  return cookieString
-    .split(";")
-    .find((cookie) => cookie.trim().startsWith("access_token="))
-    ?.split("=")[1];
 };
