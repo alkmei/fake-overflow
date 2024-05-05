@@ -93,6 +93,26 @@ export const postCommentToAnswer = async (
   }
 };
 
+// PUT /api/answers/:id
+export const updateAnswer = async (
+  req: AuthRequest<{ id: string }, {}, { text: string }>,
+  res: Response,
+) => {
+  try {
+    const answerId = req.params.id;
+    const { text } = req.body;
+    const authorId = req.userId;
+    const author = await UserSchema.findById(authorId);
+    if (!author) return res.status(404).json({ message: "Author not found" });
+    if (!(await isAuthorOrStaff(req, answerId, AnswerSchema)))
+      return res.status(403).json({ message: "Forbidden" });
+
+    await AnswerSchema.findByIdAndUpdate(answerId, { $set: { text } });
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
 // POST /api/answers/:id/votes
 export const voteAnswer = async (
   req: AuthRequest<{ id: string }, {}, { vote: 1 | -1 }>,
