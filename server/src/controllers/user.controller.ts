@@ -175,8 +175,8 @@ export const deleteUser = async (
     });
 
     for (const question of deletedQuestions) {
-      await AnswerSchema.deleteMany({ $in: question.answers });
-      await CommentSchema.deleteMany({ $in: question.comments });
+      await AnswerSchema.deleteMany({ _id: { $in: question.answers } });
+      await CommentSchema.deleteMany({ _id: { $in: question.comments } });
     }
 
     await CommentSchema.deleteMany({
