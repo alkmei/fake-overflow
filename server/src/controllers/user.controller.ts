@@ -8,6 +8,7 @@ import TagSchema from "../schema/tag.schema";
 import QuestionSchema from "../schema/question.schema";
 import AnswerSchema from "../schema/answer.schema";
 import CommentSchema from "../schema/comment.schema";
+import { findOrphanTags } from "../utils/tag";
 
 // GET /api/users/
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -188,8 +189,14 @@ export const deleteUser = async (
       },
     });
 
-    await TagSchema.deleteMany({ author: deletedUser });
     await QuestionSchema.deleteMany({ author: deletedUser });
+
+    const tagsToDelete = await findOrphanTags();
+
+    await TagSchema.deleteMany({
+      _id: { $in: tagsToDelete.map((tag) => tag._id) },
+    });
+
     await AnswerSchema.deleteMany({ author: deletedUser });
     await CommentSchema.deleteMany({ author: deletedUser });
 
