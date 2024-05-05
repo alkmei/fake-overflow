@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/questions/:qid/answer/:aid",
+        path: "/questions/:qid/answer/:aid/edit",
         element: (
           <AuthRoute>
             <AnswerQuestion editing={true} />

@@ -203,7 +203,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                     {editableAns && (
                       <div className="flex flex-col gap-2 col-[1] items-center">
                         <Link
-                          to={`/`}
+                          to={`/questions/${question._id}/answer/${answer._id}/edit`}
                           className="rounded-full border w-9 h-9 flex justify-center items-center hover:bg-[#fbdbc0]"
                         >
                           <IconEdit width={16} height={16} />
