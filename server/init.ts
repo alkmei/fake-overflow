@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-// @ts-ignore
 import bcrypt from "bcrypt";
 import UserSchema from "./src/schema/user.schema";
 import TagSchema from "./src/schema/tag.schema";

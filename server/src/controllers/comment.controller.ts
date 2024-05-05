@@ -23,7 +23,7 @@ export const deleteComment = async (
   try {
     const isAllowed = await isAuthorOrStaff(req, req.params.id, CommentSchema);
     if (!isAllowed) res.status(403).json({ message: "Forbidden" });
-    const comment = await CommentSchema.findByIdAndDelete(req.params.id);
+    await CommentSchema.findByIdAndDelete(req.params.id);
     res.json({ message: "Comment deleted successfully" });
   } catch (err) {
     handleError(err, res);

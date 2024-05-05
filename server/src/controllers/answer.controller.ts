@@ -69,7 +69,7 @@ export const deleteAnswer = async (
 
 // POST /api/answers/:id/comments
 export const postCommentToAnswer = async (
-  req: AuthRequest<{ id: string }, {}, { text: string }>,
+  req: AuthRequest<{ id: string }, unknown, { text: string }>,
   res: Response,
 ) => {
   try {
@@ -95,7 +95,7 @@ export const postCommentToAnswer = async (
 
 // PUT /api/answers/:id
 export const updateAnswer = async (
-  req: AuthRequest<{ id: string }, {}, { text: string }>,
+  req: AuthRequest<{ id: string }, unknown, { text: string }>,
   res: Response,
 ) => {
   try {
@@ -115,7 +115,7 @@ export const updateAnswer = async (
 
 // POST /api/answers/:id/votes
 export const voteAnswer = async (
-  req: AuthRequest<{ id: string }, {}, { vote: 1 | -1 }>,
+  req: AuthRequest<{ id: string }, NonNullable<unknown>, { vote: 1 | -1 }>,
   res: Response,
 ) => {
   try {

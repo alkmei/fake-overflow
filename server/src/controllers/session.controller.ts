@@ -10,7 +10,11 @@ import { AuthRequest } from "../../types/express";
  * POST /api/session
  */
 export const createSession = async (
-  req: Request<{}, {}, { email: string; password: string }>,
+  req: Request<
+    NonNullable<unknown>,
+    NonNullable<unknown>,
+    { email: string; password: string }
+  >,
   res: Response,
 ) => {
   const { email, password } = req.body;
