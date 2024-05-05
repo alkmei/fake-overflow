@@ -8,6 +8,10 @@ import Question from "@server/types/question";
 export default function AnswerQuestion({ editing }: { editing?: boolean }) {
   const [question, setQuestion] = useState<Question>();
   const [text, setText] = useState("");
+  const [textError, setTextError] = useState("");
+  const [formError, setFormError] = useState("");
+
+  const navigate = useNavigate();
   const { aid, qid } = useParams();
 
   useEffect(() => {
@@ -24,10 +28,6 @@ export default function AnswerQuestion({ editing }: { editing?: boolean }) {
       });
     }
   }, [editing, aid]);
-
-  const [textError, setTextError] = useState("");
-  const [formError, setFormError] = useState("");
-  const navigate = useNavigate();
 
   if (question === undefined)
     return <h3 className="m-2 ml-5 text-xl">Question to answer not found</h3>;
@@ -55,17 +55,19 @@ export default function AnswerQuestion({ editing }: { editing?: boolean }) {
       };
 
       if (editing) {
-        // axios
-        //   .put(`http://localhost:8000/api/questions/`, newAnswer, {
-        //     withCredentials: true,
-        //   })
-        //   .then((res) => {
-        //     console.log(res.data);
-        //     navigate("/questions");
-        //   })
-        //   .catch((err) => {
-        //     setFormError(err.response.request.statusText);
-        //   });
+        try {
+          const res = axios.put(
+            `http://localhost:8000/api/answers/${aid}`,
+            newAnswer,
+            {
+              withCredentials: true,
+            },
+          );
+          console.log(res);
+          navigate(`/questions/${qid}/${sluggify(question.title)}`);
+        } catch (err) {
+          console.error(err);
+        }
       } else {
         axios
           .post(
