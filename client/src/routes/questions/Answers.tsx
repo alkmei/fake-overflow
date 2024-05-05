@@ -15,7 +15,7 @@ import axios from "axios";
 import AnswerPostComponent from "@/components/AnswerPostComponent.tsx";
 
 export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
-  const questionId = useParams().qid;
+  const { qid, uid } = useParams();
   const { loggedIn, user } = useAuthentication();
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [question, setQuestion] = useState<Question>();
@@ -40,17 +40,17 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/questions/${questionId}`)
+      .get(`http://localhost:8000/api/questions/${qid}`)
       .then((res) => {
         setQuestion(res.data);
       })
       .catch((error) => {
         console.error("Error fetching question:", error);
       });
-  }, [questionId]);
+  }, [qid]);
 
   useEffect(() => {
-    if (user && question) {
+    if (question) {
       setAnswers(
         question.answers.sort(
           (a: Answer, b: Answer) =>
@@ -62,7 +62,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
       const userAnswersArray: Answer[] = [];
       const nonUserAnswersArray: Answer[] = [];
       question.answers.forEach((answer: Answer) => {
-        if (answer.author._id === user._id) {
+        if (answer.author._id === uid) {
           userAnswersArray.push(answer);
         } else {
           nonUserAnswersArray.push(answer);
@@ -83,28 +83,26 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
         ),
       );
     }
-  }, [question, user]);
+  }, [question, uid]);
 
-  const handleAnsDelete = (answer: Answer): string => {
-    let errorMsg = "";
-    axios
-      .delete(`http://localhost:8000/api/answers/${answer._id}`, {
+  const handleAnsDelete = async (answer: Answer): Promise<string> => {
+    try {
+      await axios.delete(`http://localhost:8000/api/answers/${answer._id}`, {
         withCredentials: true,
-      })
-      .then(() => {
-        setAnswers((prevAnswers) =>
-          prevAnswers.filter((a) => a._id !== answer._id),
-        );
-        setUserAnswers((prevAnswers) =>
-          prevAnswers.filter((a) => a._id !== answer._id),
-        );
-        return "";
-      })
-      .catch((err) => {
-        console.error(err);
-        errorMsg = err.response.data.message;
       });
-    return errorMsg;
+      setAnswers((prevAnswers) =>
+        prevAnswers.filter((a) => a._id !== answer._id),
+      );
+      setUserAnswers((prevAnswers_1) =>
+        prevAnswers_1.filter((a_1) => a_1._id !== answer._id),
+      );
+      return "";
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        return err.response.data.message;
+      }
+      return "Error deleting answer";
+    }
   };
 
   const handleVote = async (post: Question | Answer, vote: number) => {

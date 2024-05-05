@@ -25,7 +25,7 @@ export default function AnswerPostComponent({
   question?: Question;
   editableAns?: boolean;
   voteCallback: (post: Answer | Question, vote: number) => void;
-  deleteAnsCallback?: (post: Answer) => string;
+  deleteAnsCallback?: (post: Answer) => Promise<string>;
 }) {
   const { user } = useAuthentication();
   const [postVotes, setPostVotes] = useState(post.votes);
@@ -37,8 +37,8 @@ export default function AnswerPostComponent({
     voteCallback(post, vote);
   };
 
-  const handleDelete = (answer: Answer) => {
-    if (deleteAnsCallback) setDeleteError(deleteAnsCallback(answer));
+  const handleDelete = async (answer: Answer) => {
+    if (deleteAnsCallback) setDeleteError(await deleteAnsCallback(answer));
   };
 
   return (

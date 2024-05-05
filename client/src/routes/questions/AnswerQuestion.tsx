@@ -56,17 +56,17 @@ export default function AnswerQuestion({ editing }: { editing?: boolean }) {
 
       if (editing) {
         try {
-          const res = axios.put(
+          await axios.put(
             `http://localhost:8000/api/answers/${aid}`,
             newAnswer,
             {
               withCredentials: true,
             },
           );
-          console.log(res);
           navigate(`/questions/${qid}/${sluggify(question.title)}`);
         } catch (err) {
-          console.error(err);
+          if (axios.isAxiosError(err) && err.response)
+            setFormError(err.response.data.message);
         }
       } else {
         axios

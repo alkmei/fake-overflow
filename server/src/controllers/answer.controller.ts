@@ -108,6 +108,7 @@ export const updateAnswer = async (
       return res.status(403).json({ message: "Forbidden" });
 
     await AnswerSchema.findByIdAndUpdate(answerId, { $set: { text } });
+    res.status(200).json({ message: "Successfully edited answer" });
   } catch (err) {
     handleError(err, res);
   }
