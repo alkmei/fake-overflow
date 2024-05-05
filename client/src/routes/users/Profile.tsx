@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { sluggify, timeSinceDate } from "@/helper.ts";
+import { sluggify, timeSinceDate, useAuthentication } from "@/helper.ts";
 import TagList from "@/components/TagList.tsx";
 import QuestionList from "@/components/questions/QuestionList.tsx";
 import { IconEdit, IconX } from "@tabler/icons-react";
@@ -10,7 +10,8 @@ import Question from "@server/types/question";
 import Tag from "@server/types/tag";
 
 export default function Profile() {
-  const [user, setUser] = useState<User>();
+  const { user } = useAuthentication();
+  const [profileUser, setProfileUser] = useState<User>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answeredQuestions, setAnsweredQuestions] = useState<Question[]>([]);
   const [userTags, setUserTags] = useState<Tag[]>([]);
@@ -21,7 +22,7 @@ export default function Profile() {
     axios
       .get(`http://localhost:8000/api/users/${id}`)
       .then((res) => {
-        setUser(res.data);
+        setProfileUser(res.data);
       })
       .catch((err) => {
         console.log("Error fetching user:", err);
@@ -60,20 +61,31 @@ export default function Profile() {
       });
   }, [id]);
 
-  if (user === undefined) return <p>User Not Found...</p>;
+  const handleQuestionDelete = (qid: string) => {
+    axios
+      .delete(`http://localhost:8000/api/questions/${qid}`, {
+        withCredentials: true,
+      })
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  if (profileUser === undefined) return <p>User Not Found...</p>;
 
   return (
     <div className="flex flex-col gap-5 m-10 ml-10 w-full">
       <div className="flex justify-between mb-2">
         <div className="flex flex-col gap-3">
-          <h2 className="text-4xl">{user.username}</h2>
+          <h2 className="text-4xl">{profileUser.username}</h2>
           <p className="text-gray-500">
-            Member since {timeSinceDate(user.creationTime)}
+            Member since {timeSinceDate(profileUser.creationTime)}
           </p>
         </div>
         <div className="">
           <h3 className="text-gray-400 text-sm font-bold">REPUTATION</h3>
-          <p className="text-3xl">{user.reputation}</p>
+          <p className="text-3xl">{profileUser.reputation}</p>
         </div>
       </div>
       <div>
@@ -88,17 +100,22 @@ export default function Profile() {
                       {q.title}
                     </Link>
                   </h3>
-                  <div className="flex flex-row gap-2">
-                    <Link
-                      to={`/questions/edit/${q.id}`}
-                      className="rounded-full border w-7 h-7 flex justify-center items-center hover:bg-[#fbdbc0]"
-                    >
-                      <IconEdit width={16} height={16} />
-                    </Link>
-                    <button className="rounded-full border w-7 h-7 flex justify-center items-center hover:bg-red-200">
-                      <IconX width={16} height={16} />
-                    </button>
-                  </div>
+                  {(user?._id === id || user?.isStaff) && (
+                    <div className="flex flex-row gap-2">
+                      <Link
+                        to={`/questions/edit/${q.id}`}
+                        className="rounded-full border w-7 h-7 flex justify-center items-center hover:bg-[#fbdbc0]"
+                      >
+                        <IconEdit width={16} height={16} />
+                      </Link>
+                      <button
+                        className="rounded-full border w-7 h-7 flex justify-center items-center hover:bg-red-200"
+                        onClick={() => handleQuestionDelete(q.id)}
+                      >
+                        <IconX width={16} height={16} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))
@@ -109,7 +126,7 @@ export default function Profile() {
       </div>
       <div>
         <h2 className="text-2xl mb-5">Created Tags</h2>
-        <TagList tags={userTags} />
+        <TagList tags={userTags} viewEdit={user?._id === id || user?.isStaff} />
       </div>
       <div>
         <h2 className="text-2xl mb-5">Answered Questions</h2>

@@ -7,7 +7,7 @@ import axios from "axios";
 export default function Questions() {
   const [questions, setQuestions] = useState([]);
   const numPerPage = 5;
-  const lastPage = Math.floor(questions.length / numPerPage) + 1;
+  const lastPage = Math.ceil(questions.length / numPerPage);
 
   useEffect(() => {
     axios.get("http://localhost:8000/api/questions").then((res) => {

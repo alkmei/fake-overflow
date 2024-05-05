@@ -27,7 +27,7 @@ export default function TagQuestions() {
 
   // console.log(questions);
   const numPerPage = 5;
-  const lastPage = Math.floor(questions.length / numPerPage) + 1;
+  const lastPage = Math.ceil(questions.length / numPerPage);
 
   return (
     <section className="w-full">

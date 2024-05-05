@@ -16,7 +16,6 @@ import PageButtons from "@/components/PageButtons.tsx";
 import Answer from "@server/types/answer";
 import Question from "@server/types/question";
 import axios from "axios";
-import { tempQuestions } from "@/TempData.ts";
 
 export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   const questionId = useParams().id;
@@ -139,7 +138,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
   if (question === undefined) return <p>Question Not Found...</p>;
 
   const numPerPage = 5;
-  const lastPage = Math.floor(question.answers.length / numPerPage) + 1;
+  const lastPage = Math.ceil(question.answers.length / numPerPage);
   console.log(question);
   // TODO - Separate the body into its own component
   return (

@@ -10,7 +10,9 @@ export const addTagsToDB = async (authorId: ObjectId, tags: string[]) => {
     author!.reputation >= 50
       ? tags
           .filter((t) => !existingTags.some((et) => et.name === t))
-          .map((t) => new TagSchema({ name: t, author: authorId }))
+          .map(
+            (t) => new TagSchema({ name: t.toLowerCase(), author: authorId }),
+          )
       : [];
   await TagSchema.bulkSave(newTags);
 

@@ -64,11 +64,9 @@ export const updateTag = async (
     );
     const isTagShared = authorIds.size > 1;
 
-    const isStaff = (await UserSchema.findById(req.userId))!.isStaff;
-
-    if (isTagShared && !isStaff) {
+    if (isTagShared) {
       return res.status(403).json({
-        message: "Forbidden: Only staff members can update a shared tag",
+        message: "Forbidden: Cannot update shared tag",
       });
     }
 
@@ -79,6 +77,46 @@ export const updateTag = async (
     } else {
       res.status(403).json({ message: "Forbidden" });
     }
+  } catch (err) {
+    handleError(err, res);
+  }
+};
+
+// DELETE /api/tag/:id
+export const deleteTag = async (
+  req: AuthRequest<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const tagId = req.params.id;
+
+    const isAllowed = await isAuthorOrStaff(req, tagId, TagSchema);
+
+    if (!isAllowed) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    const questions = await QuestionSchema.find(
+      { tags: tagId },
+      { author: 1, _id: 0 },
+    );
+    const authorIds = new Set(
+      questions.map((question) => question.author.toString()),
+    );
+    const isTagShared = authorIds.size > 1;
+
+    if (isTagShared) {
+      return res.status(403).json({
+        message: "Forbidden: Cannot delete shared tag",
+      });
+    }
+
+    const deletedTag = await TagSchema.findByIdAndDelete(tagId);
+
+    if (!deletedTag) {
+      return res.status(404).json({ message: "Tag not found" });
+    }
+
+    res.json({ message: "Tag deleted successfully" });
   } catch (err) {
     handleError(err, res);
   }

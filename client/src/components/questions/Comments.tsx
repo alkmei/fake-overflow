@@ -13,7 +13,7 @@ export default function Comments({ comments }: { comments: Comment[] }) {
   const [page, setPage] = useState(1);
 
   const numPerPage = 3;
-  const lastPage = Math.floor(comments.length / numPerPage) + 1;
+  const lastPage = Math.ceil(comments.length / numPerPage);
 
   const incrementPage = () => {
     setPage((prevPage) => prevPage + 1);

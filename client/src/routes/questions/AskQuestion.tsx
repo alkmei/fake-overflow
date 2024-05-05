@@ -1,10 +1,9 @@
 import FormError from "@/components/FormError.tsx";
 import { FormEvent, useState, useEffect } from "react";
-import { validateHyperlinks } from "@/helper";
+import { useAuthentication, validateHyperlinks } from "@/helper";
 import { useNavigate, useParams } from "react-router-dom";
-import { tempQuestions } from "@/TempData.ts";
-import { useAuthentication } from "@/helper";
 import axios from "axios";
+import Tag from "@server/types/tag";
 
 export default function AskQuestion({ editing }: { editing?: boolean }) {
   const { user } = useAuthentication();
@@ -17,13 +16,12 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
   // if editing a question, load in data
   useEffect(() => {
     if (editing) {
-      console.log(id);
-      // TODO: Get question from server by id
-      const question = tempQuestions[0];
-      setTitle(question.title);
-      setText(question.text);
-      setTags(question.tags.map((tag) => tag.name).join(" "));
-      setSummary(question.summary);
+      axios.get(`http://localhost:8000/api/questions/${id}`).then((res) => {
+        setTitle(res.data.title);
+        setText(res.data.text);
+        setTags(res.data.tags.map((tag: Tag) => tag.name).join(" "));
+        setSummary(res.data.summary);
+      });
     }
   }, [editing, id]);
 
@@ -93,11 +91,44 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
         tags: Array.from(tagSet),
       };
 
-      console.log(newQuestion);
+      let auth = true;
+      axios
+        .get("http://localhost:8000/api/tags")
+        .then((res) => {
+          const existingTags = res.data;
+          const newTags = newQuestion.tags.filter(
+            (tag) =>
+              !existingTags.some(
+                (existingTag: { name: string }) => existingTag.name === tag,
+              ),
+          );
+          if (
+            newTags.length > 0 &&
+            user &&
+            user.reputation < 50 &&
+            !user.isStaff
+          ) {
+            auth = false;
+            setFormError("Cannot add new tags with less than 50 reputation");
+          }
+        })
+        .catch((err) => {
+          setFormError(err.response.data.message);
+        });
 
-      if (editing) {
-        // TODO: edit question
-      } else {
+      if (editing && auth) {
+        axios
+          .put(`http://localhost:8000/api/questions/${id}`, newQuestion, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log(res.data);
+            navigate("/questions");
+          })
+          .catch((err) => {
+            setFormError(err.response.request.statusText);
+          });
+      } else if (auth) {
         axios
           .post("http://localhost:8000/api/questions/", newQuestion, {
             withCredentials: true,

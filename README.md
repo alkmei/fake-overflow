@@ -47,3 +47,4 @@ npm run start
 - Question and answer components
 - New Question, answer, page button functionality
 - Signup and Login functionality
+- Tag, Question, Answer edit and delete

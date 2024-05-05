@@ -128,11 +128,13 @@ export const updateQuestion = async (
     if (!question)
       return res.status(404).json({ message: "Question not found" });
 
-    if (body.tags) {
+    if (body.title) question.title = body.title;
+    if (body.text) question.text = body.text;
+    if (body.summary) question.summary = body.summary;
+    if (body.tags)
       question.tags = await addTagsToDB(question.author._id, body.tags);
-    }
 
-    question.save();
+    await question.save();
 
     const tagsToDelete = await findOrphanTags();
 
