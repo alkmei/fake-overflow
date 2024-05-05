@@ -4,11 +4,15 @@ import { handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 import QuestionSchema from "../schema/question.schema";
 import { isAuthorOrStaff } from "../utils/auth";
-import UserSchema from "../schema/user.schema";
 
 // GET /api/tags?s=
 export const getTags = async (
-  req: Request<{}, {}, {}, { s: string }>,
+  req: Request<
+    NonNullable<unknown>,
+    NonNullable<unknown>,
+    NonNullable<unknown>,
+    { s: string }
+  >,
   res: Response,
 ) => {
   try {
@@ -41,7 +45,7 @@ export const getTag = async (req: Request<{ id: string }>, res: Response) => {
 
 // PUT /api/tags/:id
 export const updateTag = async (
-  req: AuthRequest<{ id: string }, {}, { name: string }>,
+  req: AuthRequest<{ id: string }, NonNullable<unknown>, { name: string }>,
   res: Response,
 ) => {
   try {

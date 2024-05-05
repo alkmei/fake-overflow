@@ -14,7 +14,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await UserSchema.find({}, { password: 0 });
     res.json(users);
-  } catch (err: any) {
+  } catch (err) {
     handleError(err, res);
   }
 };
@@ -90,7 +90,11 @@ export const getTagsOfUser = async (
 
 // POST /api/users
 export const createUser = async (
-  req: Request<{}, {}, { email: string; username: string; password: string }>,
+  req: Request<
+    NonNullable<unknown>,
+    NonNullable<unknown>,
+    { email: string; username: string; password: string }
+  >,
   res: Response,
 ) => {
   const { email, username } = req.body;
@@ -101,12 +105,11 @@ export const createUser = async (
         .status(400)
         .json({ message: "A user with this email already exists!" });
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const dbUser = await UserSchema.create({
+    const resUser = await UserSchema.create({
       email: email,
       username: username,
       password: hashedPassword,
     });
-    const { password, ...resUser } = dbUser.toObject();
     res.status(201).json(resUser);
   } catch (err) {
     handleError(err, res);
@@ -117,7 +120,7 @@ export const createUser = async (
 export const updateUser = async (
   req: AuthRequest<
     { id: string },
-    {},
+    NonNullable<unknown>,
     {
       email?: string;
       username?: string;

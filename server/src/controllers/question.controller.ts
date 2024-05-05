@@ -45,7 +45,7 @@ const searchQuestions = async (searchQuery: string) => {
       (x) => !(x.startsWith("[") && x.endsWith("]")),
     );
 
-    let questions = await QuestionSchema.find({})
+    const questions = await QuestionSchema.find({})
       .populate("author", "username")
       .populate("tags", "name")
       .populate("answers", "creationTime");
@@ -117,8 +117,8 @@ export const getQuestionById = async (
 // POST /api/questions
 export const createQuestion = async (
   req: AuthRequest<
-    {},
-    {},
+    NonNullable<unknown>,
+    NonNullable<unknown>,
     { title: string; text: string; summary: string; tags: string[] }
   >,
   res: Response,
@@ -149,7 +149,7 @@ export const createQuestion = async (
 export const updateQuestion = async (
   req: AuthRequest<
     { id: string },
-    {},
+    NonNullable<unknown>,
     { title?: string; text?: string; summary?: string; tags?: string[] }
   >,
   res: Response,
@@ -228,7 +228,7 @@ export const deleteQuestion = async (
 
 // POST /api/questions/:id/answers
 export const postAnswer = async (
-  req: AuthRequest<{ id: string }, {}, { text: string }>,
+  req: AuthRequest<{ id: string }, NonNullable<unknown>, { text: string }>,
   res: Response,
 ) => {
   try {
@@ -253,7 +253,7 @@ export const postAnswer = async (
 
 // POST /api/questions/:id/comments
 export const postCommentToQuestion = async (
-  req: AuthRequest<{ id: string }, {}, { text: string }>,
+  req: AuthRequest<{ id: string }, NonNullable<unknown>, { text: string }>,
   res: Response,
 ) => {
   try {
@@ -280,7 +280,7 @@ export const postCommentToQuestion = async (
 
 // POST /api/questions/:id/votes
 export const voteQuestion = async (
-  req: AuthRequest<{ id: string }, {}, { vote: 1 | -1 }>,
+  req: AuthRequest<{ id: string }, NonNullable<unknown>, { vote: 1 | -1 }>,
   res: Response,
 ) => {
   try {

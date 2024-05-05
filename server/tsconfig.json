@@ -13,7 +13,7 @@
     "strict": true,
     "skipLibCheck": true,
     "typeRoots": ["./types", "./node_modules/@types"],
-    "types": ["jest","node"]
+    "types": ["jest","node"],
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*", "tests/**/*"]
 }
