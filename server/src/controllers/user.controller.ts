@@ -157,12 +157,14 @@ export const deleteUser = async (
   req: AuthRequest<{ id: string }>,
   res: Response,
 ) => {
+  const userId = req.userId;
   const id = req.params.id;
   try {
     const user = await UserSchema.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
-    const isAllowed = await isSelfOrStaff(req, user.id);
-    if (!isAllowed) return res.status(401).json({ message: "Forbidden" });
+    const deleter = await UserSchema.findById(userId);
+    if (!deleter || !deleter.isStaff)
+      return res.status(401).json({ message: "Forbidden" });
     await UserSchema.findByIdAndDelete(id);
     res.status(204).json({ message: "User successfully deleted" });
   } catch (err) {

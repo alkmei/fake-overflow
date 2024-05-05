@@ -84,7 +84,8 @@ export default function TagList({
         setDeleteError(err.response.data.message);
       });
   };
-
+  if (tags.length === 0)
+    return <h3 className="m-5 ml-9 text-xl">No Tags Found</h3>;
   if (!tagQuestions) return <p>Page Loading...</p>;
 
   return (

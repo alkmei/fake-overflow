@@ -8,17 +8,22 @@ import axios from "axios";
 import User from "@server/types/user";
 import Question from "@server/types/question";
 import Tag from "@server/types/tag";
+import FormError from "@/components/FormError.tsx";
 
 export default function Profile() {
   const { user } = useAuthentication();
   const [profileUser, setProfileUser] = useState<User>();
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [deleteUserWarning, setDeleteUserWarning] = useState("");
+  const [userToBeDeleted, setUserToBeDeleted] = useState<User>();
   const [answeredQuestions, setAnsweredQuestions] = useState<Question[]>([]);
   const [userTags, setUserTags] = useState<Tag[]>([]);
 
   const { id } = useParams();
 
   useEffect(() => {
+    // Get profile user
     axios
       .get(`http://localhost:8000/api/users/${id}`)
       .then((res) => {
@@ -27,9 +32,17 @@ export default function Profile() {
       .catch((err) => {
         console.log("Error fetching user:", err);
       });
-  }, [id]);
 
-  useEffect(() => {
+    // Get all users
+    axios
+      .get("http://localhost:8000/api/users/")
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch((err) => {
+        console.log("Error fetching users:", err);
+      });
+
     // Get questions posted by user
     axios
       .get(`http://localhost:8000/api/users/${id}/questions`)
@@ -70,6 +83,24 @@ export default function Profile() {
         window.location.reload();
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleUserDelete = (u: User) => {
+    if (userToBeDeleted !== u) {
+      setUserToBeDeleted(u);
+      setDeleteUserWarning(`Are you sure you want to delete ${u.username}?`);
+    } else {
+      axios
+        .delete(`http://localhost:8000/api/users/${u._id}`, {
+          withCredentials: true,
+        })
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          setDeleteUserWarning(err.response.data.message);
+        });
+    }
   };
 
   if (profileUser === undefined) return <p>User Not Found...</p>;
@@ -132,6 +163,37 @@ export default function Profile() {
         <h2 className="text-2xl mb-5">Answered Questions</h2>
         <QuestionList questions={answeredQuestions} fromProfile={true} />
       </div>
+      {user?.isStaff && profileUser.isStaff && (
+        <div>
+          <h2 className="text-2xl mb-5">Users</h2>
+          <ul className="flex flex-col gap-2 ml-3">
+            {users.length !== 0 ? (
+              users.map((u, index) => (
+                <div className="flex flex-col" key={index}>
+                  <div className="flex flex-row justify-between border p-4 rounded-md">
+                    <h3 className="text-blue-600 hover:text-blue-900 break-all mb-0.5 self-center">
+                      <Link to={`/users/${u._id}`}>{u.username}</Link>
+                    </h3>
+                    {u === userToBeDeleted && (
+                      <FormError message={deleteUserWarning} />
+                    )}
+                    <div className="flex flex-row gap-2">
+                      <button
+                        className="rounded-full border w-7 h-7 flex justify-center items-center hover:bg-red-200"
+                        onClick={() => handleUserDelete(u)}
+                      >
+                        <IconX width={16} height={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <h3 className="m-2 ml-5 text-xl">No Users Found</h3>
+            )}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

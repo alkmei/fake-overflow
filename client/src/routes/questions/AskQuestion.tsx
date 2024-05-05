@@ -2,7 +2,7 @@ import FormError from "@/components/FormError.tsx";
 import { FormEvent, useState, useEffect } from "react";
 import { useAuthentication, validateHyperlinks } from "@/helper";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Tag from "@server/types/tag";
 
 export default function AskQuestion({ editing }: { editing?: boolean }) {
@@ -32,7 +32,7 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
   const [formError, setFormError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     let valid = true;
 
@@ -92,29 +92,29 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
       };
 
       let auth = true;
-      axios
-        .get("http://localhost:8000/api/tags")
-        .then((res) => {
-          const existingTags = res.data;
-          const newTags = newQuestion.tags.filter(
-            (tag) =>
-              !existingTags.some(
-                (existingTag: { name: string }) => existingTag.name === tag,
-              ),
-          );
-          if (
-            newTags.length > 0 &&
-            user &&
-            user.reputation < 50 &&
-            !user.isStaff
-          ) {
-            auth = false;
-            setFormError("Cannot add new tags with less than 50 reputation");
-          }
-        })
-        .catch((err) => {
-          setFormError(err.response.data.message);
-        });
+      try {
+        const res = await axios.get("http://localhost:8000/api/tags");
+        const existingTags = res.data;
+        const newTags = newQuestion.tags.filter(
+          (tag) =>
+            !existingTags.some(
+              (existingTag: { name: string }) => existingTag.name === tag,
+            ),
+        );
+        if (
+          newTags.length > 0 &&
+          user &&
+          user.reputation < 50 &&
+          !user.isStaff
+        ) {
+          auth = false;
+          setFormError("Cannot add new tags with less than 50 reputation");
+        }
+      } catch (err) {
+        console.error(err);
+        setFormError("Error validating tags");
+        auth = false;
+      }
 
       if (editing && auth) {
         axios
