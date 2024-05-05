@@ -18,7 +18,7 @@ export default function Tags() {
       <section className="w-full">
         <ContentHeader name={"Tags"} noSort={true} />
       </section>
-      <TagList tags={tags} />
+      <TagList initTags={tags} viewEdit={false} />
     </div>
   );
 }

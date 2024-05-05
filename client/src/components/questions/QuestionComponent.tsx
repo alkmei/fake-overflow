@@ -1,7 +1,7 @@
 import { sluggify, timeSinceDate } from "@/helper";
 import { Link } from "react-router-dom";
 import Question from "@server/types/question";
-import TagComponent from "@/components/TagComponent.tsx";
+import TagName from "@/components/TagName.tsx";
 
 export default function QuestionComponent({
   question,
@@ -48,7 +48,7 @@ export default function QuestionComponent({
         <div className="flex justify-between flex-wrap items-center">
           <ul className="flex flex-wrap gap-3">
             {question.tags.map((tag) => {
-              return <TagComponent key={tag.name} name={tag.name} />;
+              return <TagName key={tag.name} name={tag.name} />;
             })}
           </ul>
           <p className="text-sm text-gray-500 flex justify-end ml-auto gap-1 max-w-[62rem]">

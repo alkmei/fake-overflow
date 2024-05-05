@@ -5,7 +5,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import PostText from "@/components/questions/PostText.tsx";
-import TagComponent from "@/components/TagComponent.tsx";
+import TagName from "@/components/TagName.tsx";
 import { Link } from "react-router-dom";
 import Comments from "@/components/questions/Comments.tsx";
 import { useState } from "react";
@@ -77,7 +77,7 @@ export default function AnswerPostComponent({
         {(post as Question).tags && (
           <ol className="flex items-center justify-center gap-2">
             {(post as Question).tags.map((tag) => (
-              <TagComponent key={tag.id} name={tag.name} />
+              <TagName key={tag.id} name={tag.name} />
             ))}
           </ol>
         )}

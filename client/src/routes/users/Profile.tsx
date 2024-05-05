@@ -80,7 +80,9 @@ export default function Profile() {
         withCredentials: true,
       })
       .then(() => {
-        window.location.reload();
+        setQuestions((prevQuestions) =>
+          prevQuestions.filter((q) => q._id !== qid),
+        );
       })
       .catch((err) => console.log(err));
   };
@@ -95,7 +97,7 @@ export default function Profile() {
           withCredentials: true,
         })
         .then(() => {
-          window.location.reload();
+          setUsers((prevUsers) => prevUsers.filter((pUser) => pUser !== u));
         })
         .catch((err) => {
           setDeleteUserWarning(err.response.data.message);
@@ -157,7 +159,10 @@ export default function Profile() {
       </div>
       <div>
         <h2 className="text-2xl mb-5">Created Tags</h2>
-        <TagList tags={userTags} viewEdit={user?._id === id || user?.isStaff} />
+        <TagList
+          initTags={userTags}
+          viewEdit={user?._id === id || user?.isStaff}
+        />
       </div>
       <div>
         <h2 className="text-2xl mb-5">Answered Questions</h2>
