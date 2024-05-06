@@ -6,7 +6,7 @@ import { DEV_SECRET, handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 
 /**
- * Despite the use of "session" this controller uses JWT for authentication
+ * Despite the use of the word "session" this controller uses JWT for authentication
  * POST /api/session
  */
 export const createSession = async (

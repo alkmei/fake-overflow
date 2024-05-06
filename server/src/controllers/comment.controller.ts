@@ -6,7 +6,7 @@ import { isAuthorOrStaff } from "../utils/auth";
 import UserSchema from "../schema/user.schema";
 
 // GET /api/comments
-export const getComments = async (req: Request, res: Response) => {
+export const getComments = async (_req: Request, res: Response) => {
   try {
     const comment = await CommentSchema.find().populate("author");
     return res.status(200).json(comment);
