@@ -4,6 +4,7 @@ import { handleError } from "../utils";
 import { AuthRequest } from "../../types/express";
 import QuestionSchema from "../schema/question.schema";
 import { isAuthorOrStaff } from "../utils/auth";
+import UserSchema from "../schema/user.schema";
 
 // GET /api/tags?s=
 export const getTags = async (
@@ -68,7 +69,9 @@ export const updateTag = async (
     );
     const isTagShared = authorIds.size > 1;
 
-    if (isTagShared) {
+    const user = await UserSchema.findById(req.userId);
+    if (!user) return res.status(401).json({ message: "Invalid user" });
+    if (isTagShared && !user.isStaff) {
       return res.status(403).json({
         message: "Forbidden: Cannot update shared tag",
       });
