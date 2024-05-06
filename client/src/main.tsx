@@ -12,7 +12,6 @@ import Tags from "@/routes/Tags.tsx";
 import AskQuestion from "@/routes/questions/AskQuestion.tsx";
 import Profile from "@/routes/users/Profile.tsx";
 import Answers from "@/routes/questions/Answers.tsx";
-import TagQuestions from "@/routes/questions/TagQuestions.tsx";
 import AuthRoute from "@/components/AuthRoute.tsx";
 import AnswerQuestion from "@/routes/questions/AnswerQuestion.tsx";
 
@@ -74,7 +73,7 @@ const router = createBrowserRouter([
           </AuthRoute>
         ),
       },
-      { path: "/questions/tagged/:tag", element: <TagQuestions /> },
+      { path: "/questions/tagged/:tag", element: <Questions /> },
       { path: "/tags", element: <Tags /> },
       { path: "/users/:id", element: <Profile /> },
     ],

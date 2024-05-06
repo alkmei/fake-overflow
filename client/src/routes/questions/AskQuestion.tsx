@@ -81,6 +81,11 @@ export default function AskQuestion({ editing }: { editing?: boolean }) {
       valid = false;
     }
 
+    if (summary.length > 140) {
+      setSummaryError("Summary must be 140 characters or less");
+      valid = false;
+    }
+
     if (valid) {
       const tagSet = new Set(tags.trim().split(/\s+/));
 

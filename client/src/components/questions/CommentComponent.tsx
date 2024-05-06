@@ -11,23 +11,24 @@ export default function CommentComponent({
   comment: Comment;
   voteCallback: (comment: Comment) => void;
 }) {
-  const { user } = useAuthentication();
+  const { loggedIn } = useAuthentication();
   const [votes, setVotes] = useState(comment.votes);
 
   const handleVote = () => {
-    if (user && (user.isStaff || !(user.reputation < 50)))
-      setVotes((prevVotes) => prevVotes + 1);
+    setVotes((prevVotes) => prevVotes + 1);
     voteCallback(comment);
   };
   return (
     <>
       <li className="border-b py-1 text-sm flex flex-row gap-3">
-        <button
-          className="rounded-full border w-5 h-5 flex justify-center items-center hover:bg-[#fbdbc0]"
-          onClick={() => handleVote()}
-        >
-          <IconArrowUp width={14} height={14} />
-        </button>
+        {loggedIn && (
+          <button
+            className="rounded-full border w-5 h-5 flex justify-center items-center hover:bg-[#fbdbc0]"
+            onClick={() => handleVote()}
+          >
+            <IconArrowUp width={14} height={14} />
+          </button>
+        )}
         <p className="text-sm text-gray-500 min-w-6 px-1">{votes}</p>
         <div>
           <span>{comment.text}</span> –{" "}

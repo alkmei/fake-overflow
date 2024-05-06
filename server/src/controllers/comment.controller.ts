@@ -40,8 +40,6 @@ export const voteComment = async (
     const voterId = req.userId;
     const voter = await UserSchema.findById(voterId);
     if (!voter) return res.status(404).json({ message: "No such voter" });
-    if (voter.reputation < 50 && !voter.isStaff)
-      return res.status(400).json({ message: "Not enough reputation" });
     const comment = await CommentSchema.findById(commentId);
     if (!comment) return res.status(404).json({ error: "Comment not found" });
     comment.votes += 1;

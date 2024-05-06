@@ -10,6 +10,7 @@ import {
 import PageButtons from "@/components/PageButtons.tsx";
 import Answer from "@server/types/answer";
 import Question from "@server/types/question";
+import Comment from "@server/types/comment";
 import FormError from "@/components/FormError.tsx";
 import axios from "axios";
 import AnswerPostComponent from "@/components/AnswerPostComponent.tsx";
@@ -105,6 +106,17 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
     }
   };
 
+  const handleNewComment = (comment: Comment, answer: Answer) => {
+    setAnswers((prevAnswers) => {
+      return prevAnswers.map(
+        (ans) =>
+          (ans._id === answer._id
+            ? { ...ans, comments: [...ans.comments, comment] }
+            : ans) as Answer,
+      );
+    });
+  };
+
   const handleVote = async (post: Question | Answer, vote: number) => {
     if (!loggedIn) navigate("/users/login");
 
@@ -123,6 +135,15 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
         setAnswerVoteError("Not enough reputation");
         return;
       }
+      setAnswers((prevAnswers) =>
+        prevAnswers.map(
+          (answer) =>
+            (answer._id === post._id
+              ? { ...answer, votes: answer.votes + vote }
+              : answer) as Answer,
+        ),
+      );
+
       await axios.post(
         `http://localhost:8000/api/answers/${post._id}/votes`,
         { vote: vote },
@@ -173,6 +194,7 @@ export default function Answers({ fromProfile }: { fromProfile?: boolean }) {
                     editableAns={editableAns}
                     voteCallback={handleVote}
                     deleteAnsCallback={handleAnsDelete}
+                    newCommentCallback={handleNewComment}
                   />,
                 );
               }

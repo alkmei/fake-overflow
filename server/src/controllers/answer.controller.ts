@@ -86,8 +86,8 @@ export const postCommentToAnswer = async (
     answer.comments.push(comment);
     const savedComment = await comment.save();
     await answer.save();
-
-    res.status(201).json(savedComment);
+    const populatedComment = await savedComment.populate("author");
+    res.status(201).json(populatedComment);
   } catch (err) {
     handleError(err, res);
   }

@@ -9,10 +9,14 @@ export default function Comments({
   initComments,
   from,
   id,
+  voteCallback,
+  newCommentCallback,
 }: {
   initComments: Comment[];
   from?: string;
   id?: string;
+  voteCallback?: (comment: Comment) => void;
+  newCommentCallback?: (comment: Comment) => void;
 }) {
   const { loggedIn } = useAuthentication();
 
@@ -61,6 +65,7 @@ export default function Comments({
           )
           .then((res) => {
             setComments((prevComments) => [...prevComments, res.data]);
+            if (newCommentCallback) newCommentCallback(res.data);
           })
           .catch((err) => {
             console.error(err);
@@ -79,7 +84,9 @@ export default function Comments({
       )
       .then(() => {})
       .catch((err) => setCommentError(err.response.data.message));
+    if (voteCallback) voteCallback(comment);
   };
+
   return (
     <ol className="col-[2] border-t">
       {(() => {

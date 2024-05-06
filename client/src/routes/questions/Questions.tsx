@@ -11,23 +11,46 @@ export default function Questions() {
   const [sortedQuestions, setSortedQuestions] = useState<Question[]>([]);
   const [sort, setSort] = useState("newest");
   const numPerPage = 5;
-  const lastPage = Math.ceil(questions.length / numPerPage);
+  const lastPage = Math.ceil(sortedQuestions.length / numPerPage);
 
-  const [searchParams] = useSearchParams();
-  const { query } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { query, tag } = useParams();
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/api/questions?search=${query}`)
-      .then((res) => {
-        setQuestions(res.data);
-      });
-  }, [query]);
+    if (tag) {
+      axios
+        .get(`http://localhost:8000/api/tags/${tag}/questions`)
+        .then((res) => {
+          setQuestions(res.data);
+        })
+        .catch((err) => {
+          console.log("Error fetching questions:", err);
+        });
+    } else {
+      axios
+        .get(`http://localhost:8000/api/questions?search=${query}`)
+        .then((res) => {
+          setQuestions(res.data);
+        })
+        .catch((err) => {
+          console.log("Error fetching questions:", err);
+        });
+    }
+  }, [query, tag]);
 
   useEffect(() => {
     const tab = searchParams.get("tab");
     if (tab) setSort(tab);
-  }, [searchParams]);
+
+    const page = parseInt(searchParams.get("page") ?? "1", 10);
+    if (page > lastPage) {
+      setSearchParams((params) => {
+        const query = new URLSearchParams(params);
+        query.set("page", "1");
+        return query;
+      });
+    }
+  }, [lastPage, searchParams, setSearchParams]);
 
   useEffect(() => {
     switch (sort) {
@@ -86,8 +109,14 @@ export default function Questions() {
   return (
     <section className="w-full">
       <ContentHeader
-        name={query ? "Search Results" : "All Questions"}
-        questionCount={questions.length}
+        name={
+          tag
+            ? `Questions tagged [${tag}]`
+            : query
+              ? "Search Results"
+              : "All Questions"
+        }
+        questionCount={sortedQuestions.length}
       />
       <QuestionList questions={sortedQuestions} />
       <PageButtons totalPages={lastPage} />
