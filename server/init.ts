@@ -50,12 +50,6 @@ async function createInitialData(adminUsername: string, adminPassword: string) {
   });
   await tag1.save();
 
-  const tag2 = new TagSchema({
-    name: "python",
-    author: adminUser._id,
-  });
-  await tag2.save();
-
   // Create initial question
   const question = new QuestionSchema({
     title: "How to reverse a string in JavaScript?",

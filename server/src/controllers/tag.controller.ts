@@ -111,9 +111,11 @@ export const deleteTag = async (
     );
     const isTagShared = authorIds.size > 1;
 
-    if (isTagShared) {
+    const user = await UserSchema.findById(req.userId);
+    if (!user) return res.status(401).json({ message: "Invalid user" });
+    if (isTagShared && !user.isStaff) {
       return res.status(403).json({
-        message: "Forbidden: Cannot delete shared tag",
+        message: "Forbidden: Cannot update shared tag",
       });
     }
 

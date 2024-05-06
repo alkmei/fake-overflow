@@ -38,6 +38,7 @@ You can run jest unit tests from the server folder. Make sure MongoDB is started
 ```shell
 npm test
 ```
+Warning: You will need to reset the database after running.
 
 ## Team Member 1 Contribution - Alvin
 - Design for navbar, sidebar, and welcome, login, registration, answers pages
