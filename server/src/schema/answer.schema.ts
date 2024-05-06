@@ -6,7 +6,7 @@ const answers = new Schema<Answer>(
   {
     text: { type: String, required: true },
     author: { type: Schema.ObjectId, ref: "User", required: true },
-    comments: [{ type: Schema.ObjectId, ref: "Answer" }],
+    comments: [{ type: Schema.ObjectId, ref: "Comment" }],
     votes: { type: Number, default: 0 },
     creationTime: { type: Date, default: Date.now },
   },
