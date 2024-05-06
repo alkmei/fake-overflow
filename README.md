@@ -34,6 +34,11 @@ Start the express server from the server folder with
 npm run start
 ```
 
+You can run jest unit tests from the server folder. Make sure MongoDB is started with the proper config.
+```shell
+npm test
+```
+
 ## Team Member 1 Contribution - Alvin
 - Design for navbar, sidebar, and welcome, login, registration, answers pages
 - Backend mongoose initialize script
