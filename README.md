@@ -42,6 +42,7 @@ npm run start
 - Backend comments routes
 - Backend tags routes
 - Backend answers routes
+- UML diagrams
 
 ## Team Member 2 Contribution - Andrew
 - Document Schemas
