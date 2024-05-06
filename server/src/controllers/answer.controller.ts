@@ -8,7 +8,7 @@ import UserSchema from "../schema/user.schema";
 import QuestionSchema from "../schema/question.schema";
 
 // GET /api/answers
-export const getAnswers = async (req: Request, res: Response) => {
+export const getAnswers = async (_req: Request, res: Response) => {
   try {
     const answers = await AnswerSchema.find({}).populate("author");
     return res.status(200).json(answers);
