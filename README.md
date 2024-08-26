@@ -1,5 +1,7 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/tRxoBzS5)
-Add design docs in *images/*
+# Fake Overflow
+> stack overflow clone made using the MERN stack.
+
+This Stack Overflow clone was made in two months for a class. It closely resembles Stack Overflow in functionality, having user management and other CRUD functionality.
 
 ## Instructions to set up and run project
 ### Frontend
@@ -40,21 +42,3 @@ npm test
 ```
 Warning: You will need to reset the database after running.
 
-## Team Member 1 Contribution - Alvin
-- Design for navbar, sidebar, and welcome, login, registration, answers pages
-- Backend mongoose initialize script
-- Backend user and auth routes
-- Backend question routes
-- Backend comments routes
-- Backend tags routes
-- Backend answers routes
-- UML diagrams
-
-## Team Member 2 Contribution - Andrew
-- Document Schemas
-- Profile, Tag, Tag Question page
-- Question and answer components
-- New Question, answer, sort, page button functionality
-- Signup and Login functionality
-- Tag, Question, Answer edit and delete
-- Search backend and some answers/questions routes
