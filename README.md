@@ -1,4 +1,5 @@
 # Fake Overflow
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 > stack overflow clone made using the MERN stack.
 
 This Stack Overflow clone was made in two months for a class. It closely resembles Stack Overflow in functionality, having user management and other CRUD functionality.
